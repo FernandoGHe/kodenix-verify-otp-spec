@@ -1,0 +1,89 @@
+openapi: 3.0.3
+info:
+  title: Kodenix Verify Provider Internal API
+  version: 2.0.0
+paths:
+  /internal/v1/providers/send:
+    post:
+      summary: Enviar OTP mediante proveedor seleccionado
+      security: [{ InternalServiceAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProviderSendRequest' }
+      responses:
+        '200': { description: Resultado proveedor, content: { application/json: { schema: { $ref: '#/components/schemas/ProviderSendResponse' } } } }
+  /internal/v1/providers/health:
+    get:
+      summary: Health de proveedores
+      security: [{ InternalServiceAuth: [] }]
+      responses:
+        '200': { description: Estado, content: { application/json: { schema: { $ref: '#/components/schemas/ProviderHealthResponse' } } } }
+  /internal/v1/providers/callbacks/{providerName}:
+    post:
+      summary: Callback interno normalizado de proveedor
+      parameters: [{ name: providerName, in: path, required: true, schema: { type: string } }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProviderCallback' }
+      responses:
+        '202': { description: Aceptado }
+components:
+  securitySchemes:
+    InternalServiceAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    ProviderSendRequest:
+      type: object
+      required: [operationId, challengeId, channel, target, message]
+      properties:
+        operationId: { type: string }
+        challengeId: { type: string }
+        channel: { type: string, enum: [whatsapp, sms, email] }
+        provider: { type: string }
+        target:
+          type: object
+          properties:
+            phone: { type: string }
+            email: { type: string }
+        message:
+          type: object
+          properties:
+            templateId: { type: string }
+            variables: { type: object, additionalProperties: true }
+    ProviderSendResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        accepted: { type: boolean }
+        provider: { type: string }
+        providerMessageId: { type: string }
+        status: { type: string, enum: [ACCEPTED, SENT, FAILED, UNAVAILABLE, TIMEOUT] }
+        errorCode: { type: string }
+        rawResponse: { type: object, additionalProperties: true }
+    ProviderHealthResponse:
+      type: object
+      properties:
+        providers:
+          type: array
+          items:
+            type: object
+            properties:
+              provider: { type: string }
+              channel: { type: string }
+              healthy: { type: boolean }
+              latencyMs: { type: integer }
+              lastError: { type: string }
+    ProviderCallback:
+      type: object
+      properties:
+        providerMessageId: { type: string }
+        operationId: { type: string }
+        challengeId: { type: string }
+        status: { type: string, enum: [DELIVERED, FAILED, READ, BOUNCED] }
+        reason: { type: string }
+        occurredAt: { type: string, format: date-time }

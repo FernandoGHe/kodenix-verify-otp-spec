@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kodenix Verify OTP Specification</title>
+  <style>
+    :root {
+      --bg: #050816;
+      --panel: rgba(255,255,255,.06);
+      --panel-hover: rgba(34,211,238,.08);
+      --border: rgba(255,255,255,.14);
+      --border-hover: #22d3ee;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --soft: #cbd5e1;
+      --accent: #22d3ee;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, rgba(34,211,238,.16), transparent 32rem), radial-gradient(circle at bottom right, rgba(124,58,237,.14), transparent 34rem), var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    main { max-width: 1120px; margin: 0 auto; padding: 56px 24px 72px; }
+    .eyebrow { color: var(--accent); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: 13px; margin-bottom: 12px; }
+    h1 { font-size: clamp(36px, 5vw, 58px); line-height: 1.05; margin: 0 0 16px; }
+    .lead { max-width: 840px; color: var(--soft); font-size: 19px; margin: 0; }
+    .meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+    .pill { border: 1px solid var(--border); border-radius: 999px; padding: 7px 12px; color: var(--muted); background: rgba(255,255,255,.04); font-size: 14px; }
+    section { margin-top: 44px; }
+    h2 { margin: 0 0 16px; font-size: 24px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); gap: 16px; }
+    a.card { display: block; min-height: 122px; padding: 20px; border: 1px solid var(--border); border-radius: 18px; background: var(--panel); color: var(--text); text-decoration: none; transition: .18s ease; }
+    a.card:hover { transform: translateY(-2px); border-color: var(--border-hover); background: var(--panel-hover); }
+    .card strong { display: block; font-size: 17px; margin-bottom: 8px; }
+    .card span { color: var(--muted); font-size: 14px; }
+    .footer { margin-top: 52px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--muted); font-size: 14px; }
+    code { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="eyebrow">Kodenix Verify</div>
+    <h1>OTP SDK Specification</h1>
+    <p class="lead">Documentación técnica para SDK OTP Web, Android e iOS, APIs, licenciamiento, seguridad, fallback WhatsApp → SMS → Email, conteo de transacciones, operación, QA y diagramas.</p>
+    <div class="meta">
+      <div class="pill">GitHub Ready</div>
+      <div class="pill">OpenAPI / Swagger</div>
+      <div class="pill">Mermaid Diagrams</div>
+      <div class="pill">Licensing & Usage Control</div>
+    </div>
+    <section>
+      <h2>Entrada principal</h2>
+      <div class="grid">
+        <a class="card" href="./README.md"><strong>README</strong><span>Inicio general, estructura y navegación del paquete.</span></a>
+        <a class="card" href="./MANIFEST.md"><strong>Manifest</strong><span>Inventario completo de documentos, APIs, diagramas y anexos.</span></a>
+        <a class="card" href="./docs/00-documentation-governance.md"><strong>Documentation Governance</strong><span>Fuente oficial de cada tema.</span></a>
+      </div>
+    </section>
+    <section>
+      <h2>Documentación funcional y técnica</h2>
+      <div class="grid">
+        <a class="card" href="./docs/01-functional-scope.md"><strong>Functional Scope</strong><span>Alcance, capacidades, límites y responsabilidades.</span></a>
+        <a class="card" href="./docs/02-requirements.md"><strong>Requirements</strong><span>Requerimientos funcionales, no funcionales y de seguridad.</span></a>
+        <a class="card" href="./docs/03-licensing-and-usage-control.md"><strong>Licensing & Usage Control</strong><span>Licencias, entitlements, URL/app binding, cuotas y restricciones.</span></a>
+        <a class="card" href="./docs/04-transaction-counting-and-billing.md"><strong>Transaction Counting & Billing</strong><span>Conteo por OTP enviado, reglas de cobro, cuotas y métricas.</span></a>
+        <a class="card" href="./docs/05-security-specification.md"><strong>Security Specification</strong><span>API keys, sdkToken, allowed origins, package binding y hardening.</span></a>
+        <a class="card" href="./docs/06-fallback-and-channel-availability.md"><strong>Fallback & Channel Availability</strong><span>WhatsApp primario, SMS/Email alternos, canal caído y target faltante.</span></a>
+        <a class="card" href="./docs/12-error-catalog.md"><strong>Error Catalog</strong><span>Errores normalizados para SDK, API, proveedores y operación.</span></a>
+        <a class="card" href="./docs/13-webhooks.md"><strong>Webhooks</strong><span>Eventos hacia el backend del cliente.</span></a>
+      </div>
+    </section>
+    <section>
+      <h2>APIs y Swagger</h2>
+      <div class="grid">
+        <a class="card" href="./swagger-ui/index.html"><strong>Swagger UI</strong><span>Visualizador interactivo de contratos OpenAPI.</span></a>
+        <a class="card" href="./openapi/README.md"><strong>OpenAPI Index</strong><span>Catálogo de archivos YAML.</span></a>
+        <a class="card" href="./openapi/otp-public-api.yaml"><strong>OTP Public API</strong><span>Contrato principal de operación OTP para SDK e integradores.</span></a>
+        <a class="card" href="./openapi/admin-api.yaml"><strong>Admin API</strong><span>Administración de clientes, apps, reglas, branding y proveedores.</span></a>
+        <a class="card" href="./openapi/licensing-api.yaml"><strong>Licensing API</strong><span>Licencias, entitlements, cuotas, uso y validaciones.</span></a>
+        <a class="card" href="./openapi/webhooks-api.yaml"><strong>Webhooks API</strong><span>Eventos enviados al backend del cliente.</span></a>
+      </div>
+    </section>
+    <section>
+      <h2>Diagramas y operación</h2>
+      <div class="grid">
+        <a class="card" href="./diagrams/README.md"><strong>Diagrams</strong><span>Diagramas Mermaid embebidos para visualización en repositorio.</span></a>
+        <a class="card" href="./operations/runbook.md"><strong>Operations Runbook</strong><span>Runbooks, incident response, outage, monitoreo y soporte.</span></a>
+        <a class="card" href="./backend/backend-handoff.md"><strong>Backend Handoff</strong><span>Implementación backend, servicios, configuraciones y reglas.</span></a>
+        <a class="card" href="./sdk/sdk-contract-common.md"><strong>SDK Contracts</strong><span>Inicialización y callbacks para Web, Android e iOS.</span></a>
+        <a class="card" href="./qa/test-cases.md"><strong>QA Test Cases</strong><span>Casos funcionales, seguridad y criterios de aceptación.</span></a>
+        <a class="card" href="./postman/kodenix-verify-otp-v2.postman_collection.json"><strong>Postman</strong><span>Colección de pruebas manuales y automatizadas.</span></a>
+      </div>
+    </section>
+    <div class="footer"><p>Kodenix Verify OTP Specification.</p></div>
+  </main>
+</body>
+</html>

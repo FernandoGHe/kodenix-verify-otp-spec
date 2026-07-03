@@ -1,0 +1,41 @@
+flowchart TB
+  subgraph Client
+    Web[Web App]
+    Android[Android App]
+    IOS[iOS App]
+    SDK[OTP SDK]
+  end
+  subgraph Customer
+    CBE[Backend Cliente]
+  end
+  subgraph KodenixCloud
+    WAF[WAF / API Gateway]
+    API[OTP API]
+    ADMIN[Admin API]
+    WORKER[Queue Workers]
+    REDIS[(Redis HA)]
+    PG[(PostgreSQL HA)]
+    QUEUE[(Queue)]
+    OBS[Logs Metrics Traces]
+  end
+  subgraph Providers
+    Meta[Meta WhatsApp]
+    Twilio[Twilio/Vonage SMS]
+    SES[SES/SendGrid/Resend]
+  end
+  Web --> SDK
+  Android --> SDK
+  IOS --> SDK
+  SDK --> WAF
+  CBE --> WAF
+  WAF --> API
+  WAF --> ADMIN
+  API --> REDIS
+  API --> PG
+  API --> QUEUE
+  QUEUE --> WORKER
+  WORKER --> Meta
+  WORKER --> Twilio
+  WORKER --> SES
+  API --> OBS
+  WORKER --> OBS

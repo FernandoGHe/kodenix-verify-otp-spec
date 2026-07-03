@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kodenix Verify OTP - Swagger UI</title>
+  <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css" />
+  <style>
+    body { margin: 0; background: #f7f7f7; }
+    header { padding: 16px 24px; background: #0B1020; color: #F8FAFC; font-family: system-ui, sans-serif; }
+    header h1 { margin: 0 0 8px; font-size: 20px; }
+    header p { margin: 0 0 12px; color: #CBD5E1; }
+    select { padding: 8px 10px; border-radius: 8px; min-width: 320px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Kodenix Verify OTP - Swagger UI</h1>
+    <p>Selecciona el contrato OpenAPI que quieres visualizar.</p>
+    <select id="spec-select">
+      <option value="../openapi/admin-api.yaml">admin-api.yaml</option>
+<option value="../openapi/analytics-api.yaml">analytics-api.yaml</option>
+<option value="../openapi/licensing-api.yaml">licensing-api.yaml</option>
+<option value="../openapi/otp-public-api.yaml">otp-public-api.yaml</option>
+<option value="../openapi/provider-internal-api.yaml">provider-internal-api.yaml</option>
+<option value="../openapi/webhooks-api.yaml">webhooks-api.yaml</option>
+    </select>
+  </header>
+  <div id="swagger-ui"></div>
+  <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+  <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-standalone-preset.js"></script>
+  <script>
+    let ui;
+    function loadSpec(url) {
+      ui = SwaggerUIBundle({
+        url,
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
+        layout: 'BaseLayout'
+      });
+    }
+    const select = document.getElementById('spec-select');
+    select.addEventListener('change', (event) => loadSpec(event.target.value));
+    loadSpec(select.value || '../openapi/admin-api.yaml');
+  </script>
+</body>
+</html>

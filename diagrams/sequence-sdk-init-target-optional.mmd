@@ -1,0 +1,18 @@
+sequenceDiagram
+  participant App as App
+  participant SDK as SDK
+  participant API as OTP API
+
+  App->>SDK: start({operationId, sdkToken, target?})
+  SDK->>API: GET /v1/otp/config
+  API-->>SDK: targetState(hasPhone, hasEmail, allowUserInput)
+  alt No target and allowUserInput=true
+    SDK-->>App: Mostrar pantalla captura teléfono/email
+    App->>SDK: Usuario captura target
+    SDK->>API: PATCH /v1/otp/target
+    API-->>SDK: target actualizado
+  else No target and allowUserInput=false
+    SDK-->>App: onError OTP_TARGET_REQUIRED
+  else Target suficiente
+    SDK->>API: POST /v1/otp/send
+  end

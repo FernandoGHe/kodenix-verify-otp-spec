@@ -1,0 +1,32 @@
+sequenceDiagram
+  participant SDK
+  participant API as OTP API
+  participant LIC as License Service
+  participant WA as WhatsApp Provider
+  participant SMS as SMS Provider
+  participant EMAIL as Email Provider
+
+  SDK->>API: POST /v1/otp/send channel=auto
+  API->>LIC: Validar WhatsApp licencia/cuota/target phone
+  LIC-->>API: OK
+  API->>API: usage whatsapp billable on SEND_ACCEPTED
+  API->>WA: send OTP
+  WA-->>API: Failed/Unavailable
+  API->>API: Evaluar fallback
+  alt phone existe y SMS permitido
+    API->>LIC: Validar SMS licencia/cuota
+    LIC-->>API: OK
+    API->>API: usage sms billable on SEND_ACCEPTED
+    API->>SMS: send OTP
+    SMS-->>API: Sent
+    API-->>SDK: SENT by SMS fallback.used=true
+  else falta phone o SMS no permitido
+    alt email existe y Email permitido
+      API->>LIC: Validar Email
+      API->>EMAIL: send OTP
+      EMAIL-->>API: Sent
+      API-->>SDK: SENT by Email fallback.used=true
+    else no existe target alterno
+      API-->>SDK: OTP_FALLBACK_TARGET_MISSING
+    end
+  end

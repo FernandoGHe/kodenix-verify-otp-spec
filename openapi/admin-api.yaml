@@ -1,0 +1,137 @@
+openapi: 3.0.3
+info:
+  title: Kodenix Verify Admin API
+  version: 2.0.0
+paths:
+  /v1/admin/clients:
+    post:
+      summary: Crear cliente
+      security: [{ ApiKeyAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Client' }
+      responses:
+        '201': { description: Creado, content: { application/json: { schema: { $ref: '#/components/schemas/Client' } } } }
+    get:
+      summary: Listar clientes
+      security: [{ ApiKeyAuth: [] }]
+      responses:
+        '200': { description: Lista }
+  /v1/admin/applications:
+    post:
+      summary: Crear aplicación
+      security: [{ ApiKeyAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Application' }
+      responses:
+        '201': { description: Creada }
+  /v1/admin/applications/{applicationId}/rules:
+    put:
+      summary: Configurar reglas OTP
+      security: [{ ApiKeyAuth: [] }]
+      parameters: [{ name: applicationId, in: path, required: true, schema: { type: string } }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/OtpRules' }
+      responses:
+        '200': { description: Reglas actualizadas }
+  /v1/admin/applications/{applicationId}/branding:
+    put:
+      summary: Configurar branding SDK
+      security: [{ ApiKeyAuth: [] }]
+      parameters: [{ name: applicationId, in: path, required: true, schema: { type: string } }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Branding' }
+      responses:
+        '200': { description: Branding actualizado }
+  /v1/admin/applications/{applicationId}/channels:
+    put:
+      summary: Configurar canales y prioridad
+      security: [{ ApiKeyAuth: [] }]
+      parameters: [{ name: applicationId, in: path, required: true, schema: { type: string } }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                channels:
+                  type: array
+                  items: { $ref: '#/components/schemas/ChannelConfig' }
+      responses:
+        '200': { description: Canales actualizados }
+  /v1/admin/api-keys:
+    post:
+      summary: Crear API key server-to-server
+      security: [{ ApiKeyAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [clientId, environment]
+              properties:
+                clientId: { type: string }
+                environment: { type: string }
+                scopes: { type: array, items: { type: string } }
+      responses:
+        '201': { description: API key creada }
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-Kodenix-Admin-Key
+  schemas:
+    Client:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        status: { type: string, enum: [ACTIVE, SUSPENDED] }
+    Application:
+      type: object
+      properties:
+        id: { type: string }
+        clientId: { type: string }
+        name: { type: string }
+        status: { type: string }
+    OtpRules:
+      type: object
+      properties:
+        otpLength: { type: integer }
+        ttlSeconds: { type: integer }
+        maxAttempts: { type: integer }
+        maxResends: { type: integer }
+        fallbackMode: { type: string, enum: [disabled, manual, automatic] }
+        fallbackOrder: { type: array, items: { type: string } }
+        allowUserInput: { type: boolean }
+        allowTargetUpdate: { type: boolean }
+    Branding:
+      type: object
+      properties:
+        appName: { type: string }
+        logoUrl: { type: string }
+        primaryColor: { type: string }
+        darkMode: { type: boolean }
+        showPoweredBy: { type: boolean }
+    ChannelConfig:
+      type: object
+      properties:
+        channel: { type: string, enum: [whatsapp, sms, email] }
+        enabled: { type: boolean }
+        priority: { type: integer }
+        provider: { type: string }
+        templateId: { type: string }

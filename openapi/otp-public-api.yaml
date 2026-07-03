@@ -1,0 +1,507 @@
+openapi: 3.0.3
+info:
+  title: Kodenix Verify OTP Public API
+  version: 2.0.0
+  description: API pública para operaciones OTP, configuración SDK, envío, validación, fallback y estado.
+servers:
+  - url: https://sandbox-api.kodenix.net
+    description: Sandbox
+  - url: https://api.kodenix.net
+    description: Production
+tags:
+  - name: OTP Operations
+  - name: SDK Runtime
+  - name: OTP Send
+  - name: OTP Verify
+  - name: OTP Status
+paths:
+  /v1/otp/operations:
+    post:
+      tags: [OTP Operations]
+      summary: Crear operación OTP y emitir sdkToken
+      operationId: createOtpOperation
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: '#/components/parameters/KodenixOrigin'
+        - $ref: '#/components/parameters/KodenixPlatform'
+        - $ref: '#/components/parameters/KodenixPackageName'
+        - $ref: '#/components/parameters/KodenixBundleId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOtpOperationRequest'
+      responses:
+        '201':
+          description: Operación creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateOtpOperationResponse'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/LicenseRejected' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+  /v1/otp/config:
+    get:
+      tags: [SDK Runtime]
+      summary: Obtener configuración runtime para SDK
+      operationId: getOtpSdkConfig
+      security:
+        - SdkTokenAuth: []
+      parameters:
+        - name: operationId
+          in: query
+          required: true
+          schema: { type: string }
+        - $ref: '#/components/parameters/KodenixOrigin'
+        - $ref: '#/components/parameters/KodenixPlatform'
+      responses:
+        '200':
+          description: Configuración SDK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OtpSdkConfigResponse'
+        '403': { $ref: '#/components/responses/LicenseRejected' }
+  /v1/otp/send:
+    post:
+      tags: [OTP Send]
+      summary: Enviar OTP por canal solicitado o automático
+      operationId: sendOtp
+      security:
+        - SdkTokenAuth: []
+      parameters:
+        - $ref: '#/components/parameters/KodenixOrigin'
+        - $ref: '#/components/parameters/KodenixPlatform'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendOtpRequest'
+      responses:
+        '200':
+          description: OTP enviado o fallback enviado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendOtpResponse'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '402': { $ref: '#/components/responses/OverQuota' }
+        '403': { $ref: '#/components/responses/LicenseRejected' }
+        '409': { $ref: '#/components/responses/FallbackTargetMissing' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+        '503': { $ref: '#/components/responses/ProviderUnavailable' }
+  /v1/otp/verify:
+    post:
+      tags: [OTP Verify]
+      summary: Validar OTP
+      operationId: verifyOtp
+      security:
+        - SdkTokenAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyOtpRequest'
+      responses:
+        '200':
+          description: Resultado de validación, incluso código incorrecto recuperable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyOtpResponse'
+        '410': { $ref: '#/components/responses/OtpExpired' }
+        '423': { $ref: '#/components/responses/OtpBlocked' }
+  /v1/otp/resend:
+    post:
+      tags: [OTP Send]
+      summary: Reenviar OTP
+      operationId: resendOtp
+      security:
+        - SdkTokenAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResendOtpRequest'
+      responses:
+        '200':
+          description: OTP reenviado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendOtpResponse'
+        '409': { $ref: '#/components/responses/FallbackTargetMissing' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+  /v1/otp/target:
+    patch:
+      tags: [SDK Runtime]
+      summary: Actualizar target de operación cuando el SDK captura teléfono/email
+      operationId: updateOtpTarget
+      security:
+        - SdkTokenAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTargetRequest'
+      responses:
+        '200':
+          description: Target actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateTargetResponse'
+  /v1/otp/cancel:
+    post:
+      tags: [OTP Operations]
+      summary: Cancelar operación OTP
+      operationId: cancelOtpOperation
+      security:
+        - SdkTokenAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelOtpRequest'
+      responses:
+        '200':
+          description: Operación cancelada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OtpStatusResponse'
+  /v1/otp/status/{operationId}:
+    get:
+      tags: [OTP Status]
+      summary: Consultar estado de operación
+      operationId: getOtpStatus
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: operationId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Estado de operación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OtpStatusResponse'
+  /v1/otp/events/{operationId}:
+    get:
+      tags: [OTP Status]
+      summary: Consultar eventos de operación
+      operationId: getOtpEvents
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: operationId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Eventos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  events:
+                    type: array
+                    items: { $ref: '#/components/schemas/OtpEvent' }
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-Kodenix-Api-Key
+    SdkTokenAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    KodenixOrigin:
+      name: X-Kodenix-Origin
+      in: header
+      required: false
+      schema: { type: string, example: 'https://onboarding.cliente.com' }
+    KodenixPlatform:
+      name: X-Kodenix-Platform
+      in: header
+      required: false
+      schema: { type: string, enum: [web, android, ios, backend] }
+    KodenixPackageName:
+      name: X-Kodenix-Package-Name
+      in: header
+      required: false
+      schema: { type: string, example: 'com.cliente.app' }
+    KodenixBundleId:
+      name: X-Kodenix-Bundle-Id
+      in: header
+      required: false
+      schema: { type: string, example: 'com.cliente.ios' }
+  schemas:
+    CreateOtpOperationRequest:
+      type: object
+      required: [clientId, applicationId, licenseId, platform, environment]
+      properties:
+        clientId: { type: string }
+        applicationId: { type: string }
+        licenseId: { type: string }
+        platform: { type: string, enum: [web, android, ios] }
+        environment: { type: string, enum: [sandbox, qa, staging, production] }
+        externalId: { type: string, description: ID del usuario/flujo en sistema cliente }
+        target: { $ref: '#/components/schemas/OtpTarget' }
+        requestedChannels:
+          type: array
+          items: { type: string, enum: [whatsapp, sms, email] }
+        metadata:
+          type: object
+          additionalProperties: true
+    CreateOtpOperationResponse:
+      type: object
+      properties:
+        success: { type: boolean, example: true }
+        operationId: { type: string, example: otp_op_123 }
+        sdkToken: { type: string, example: eyJhbGciOi... }
+        licenseId: { type: string }
+        expiresIn: { type: integer, example: 600 }
+        status: { type: string, example: CREATED }
+        targetState: { $ref: '#/components/schemas/TargetState' }
+    OtpTarget:
+      type: object
+      properties:
+        phone: { type: string, example: '+525512345678' }
+        email: { type: string, example: cliente@mail.com }
+    TargetState:
+      type: object
+      properties:
+        hasPhone: { type: boolean }
+        hasEmail: { type: boolean }
+        requiredForInitialChannel: { type: boolean }
+        missingForFallback:
+          type: array
+          items: { type: string, enum: [phone, email] }
+        allowUserInput: { type: boolean }
+    OtpSdkConfigResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        operationId: { type: string }
+        licenseId: { type: string }
+        rules: { $ref: '#/components/schemas/OtpRules' }
+        channels:
+          type: array
+          items: { $ref: '#/components/schemas/OtpChannelConfig' }
+        targetState: { $ref: '#/components/schemas/TargetState' }
+        ui: { $ref: '#/components/schemas/OtpUiConfig' }
+        texts:
+          type: object
+          additionalProperties: { type: string }
+    OtpRules:
+      type: object
+      properties:
+        otpLength: { type: integer, example: 6 }
+        ttlSeconds: { type: integer, example: 300 }
+        maxAttempts: { type: integer, example: 3 }
+        maxResends: { type: integer, example: 3 }
+        resendCooldownSeconds: { type: integer, example: 30 }
+        fallbackMode: { type: string, enum: [disabled, manual, automatic], example: automatic }
+        fallbackOrder:
+          type: array
+          items: { type: string, enum: [whatsapp, sms, email] }
+        billingPolicy: { type: string, enum: [COUNT_ON_SEND_ACCEPTED] }
+        allowUserInput: { type: boolean }
+        allowTargetUpdate: { type: boolean }
+    OtpChannelConfig:
+      type: object
+      properties:
+        channel: { type: string, enum: [whatsapp, sms, email] }
+        enabled: { type: boolean }
+        priority: { type: integer }
+        available: { type: boolean }
+        unavailableReason: { type: string, nullable: true }
+        maskedTarget: { type: string, nullable: true }
+    OtpUiConfig:
+      type: object
+      properties:
+        showInitialScreen: { type: boolean }
+        showChannelSelector: { type: boolean }
+        primaryColor: { type: string, example: '#22D3EE' }
+        backgroundColor: { type: string, example: '#050816' }
+        textColor: { type: string, example: '#F8FAFC' }
+        logoUrl: { type: string }
+        darkMode: { type: boolean }
+        borderRadius: { type: integer }
+    SendOtpRequest:
+      type: object
+      required: [operationId]
+      properties:
+        operationId: { type: string }
+        channel: { type: string, enum: [whatsapp, sms, email, auto], default: auto }
+        target: { $ref: '#/components/schemas/OtpTarget' }
+        fallbackAllowed: { type: boolean, default: true }
+    SendOtpResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        operationId: { type: string }
+        challengeId: { type: string }
+        status: { type: string, example: SENT }
+        channel: { type: string, enum: [whatsapp, sms, email] }
+        maskedTarget: { type: string }
+        expiresIn: { type: integer }
+        resendAvailableIn: { type: integer }
+        fallback: { $ref: '#/components/schemas/FallbackInfo' }
+        billing: { $ref: '#/components/schemas/BillingInfo' }
+        error: { $ref: '#/components/schemas/KodenixError' }
+    FallbackInfo:
+      type: object
+      properties:
+        used: { type: boolean }
+        attempted: { type: boolean }
+        from: { type: string, nullable: true }
+        to: { type: string, nullable: true }
+        reason: { type: string, nullable: true }
+        nextAvailableChannels:
+          type: array
+          items: { type: string }
+    BillingInfo:
+      type: object
+      properties:
+        billable: { type: boolean }
+        policy: { type: string, example: COUNT_ON_SEND_ACCEPTED }
+        billingEventId: { type: string, nullable: true }
+        events:
+          type: array
+          items:
+            type: object
+            properties:
+              channel: { type: string }
+              billable: { type: boolean }
+              reason: { type: string }
+    VerifyOtpRequest:
+      type: object
+      required: [operationId, code]
+      properties:
+        operationId: { type: string }
+        challengeId: { type: string }
+        code: { type: string, example: '123456' }
+    VerifyOtpResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        verified: { type: boolean }
+        operationId: { type: string }
+        verificationId: { type: string }
+        status: { type: string, example: VERIFIED }
+        remainingAttempts: { type: integer }
+        error: { $ref: '#/components/schemas/KodenixError' }
+    ResendOtpRequest:
+      type: object
+      required: [operationId]
+      properties:
+        operationId: { type: string }
+        channel: { type: string, enum: [whatsapp, sms, email, auto] }
+        fallbackAllowed: { type: boolean, default: true }
+    UpdateTargetRequest:
+      type: object
+      required: [operationId, target]
+      properties:
+        operationId: { type: string }
+        target: { $ref: '#/components/schemas/OtpTarget' }
+        reason: { type: string, example: FALLBACK_TARGET_CAPTURED }
+    UpdateTargetResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        operationId: { type: string }
+        targetState: { $ref: '#/components/schemas/TargetState' }
+    CancelOtpRequest:
+      type: object
+      required: [operationId]
+      properties:
+        operationId: { type: string }
+        reason: { type: string, example: USER_CANCELLED }
+    OtpStatusResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        operationId: { type: string }
+        status: { type: string }
+        licenseId: { type: string }
+        attempts: { type: integer }
+        maxAttempts: { type: integer }
+        resends: { type: integer }
+        maxResends: { type: integer }
+        expiresAt: { type: string, format: date-time }
+        verifiedAt: { type: string, format: date-time, nullable: true }
+        billingSummary: { $ref: '#/components/schemas/BillingInfo' }
+    OtpEvent:
+      type: object
+      properties:
+        eventId: { type: string }
+        eventType: { type: string }
+        operationId: { type: string }
+        channel: { type: string, nullable: true }
+        provider: { type: string, nullable: true }
+        createdAt: { type: string, format: date-time }
+        payload: { type: object, additionalProperties: true }
+    KodenixError:
+      type: object
+      properties:
+        code: { type: string }
+        message: { type: string }
+        recoverable: { type: boolean }
+        action: { type: string }
+  responses:
+    BadRequest:
+      description: Solicitud inválida
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/SendOtpResponse' }
+    Unauthorized:
+      description: No autorizado
+    LicenseRejected:
+      description: Rechazo por licencia, origen, app o canal
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success: { type: boolean, example: false }
+              error: { $ref: '#/components/schemas/KodenixError' }
+    OverQuota:
+      description: Cuota agotada
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success: { type: boolean, example: false }
+              error: { $ref: '#/components/schemas/KodenixError' }
+    RateLimited:
+      description: Rate limit excedido
+    FallbackTargetMissing:
+      description: No existe teléfono/email para canal alterno
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/SendOtpResponse' }
+    ProviderUnavailable:
+      description: Proveedor no disponible sin fallback posible
+    OtpExpired:
+      description: OTP expirado
+    OtpBlocked:
+      description: Operación bloqueada

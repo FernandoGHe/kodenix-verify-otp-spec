@@ -1,0 +1,30 @@
+sequenceDiagram
+  participant App as App Cliente
+  participant BE as Backend Cliente
+  participant API as Kodenix OTP API
+  participant LIC as License Service
+  participant SDK as SDK
+  participant PROV as Proveedor
+
+  App->>BE: Solicita iniciar OTP
+  BE->>API: POST /v1/otp/operations API Key + licenseId + origin/app
+  API->>LIC: Validar licencia, origen/app, cuota, canal
+  LIC-->>API: OK
+  API-->>BE: operationId + sdkToken
+  BE-->>App: operationId + sdkToken
+  App->>SDK: start(operationId, sdkToken, target opcional)
+  SDK->>API: GET /v1/otp/config
+  API-->>SDK: Config + targetState + canales disponibles
+  SDK->>API: POST /v1/otp/send channel=auto
+  API->>LIC: Validar licencia/cuota antes de envío
+  LIC-->>API: OK
+  API->>API: Crear OTP_SEND_ACCEPTED + usage billable
+  API->>PROV: Enviar WhatsApp
+  PROV-->>API: Accepted/Sent
+  API-->>SDK: SENT + billingEventId
+  SDK->>API: POST /v1/otp/verify
+  API-->>SDK: VERIFIED
+  SDK-->>App: onSuccess
+  App->>BE: Confirmar resultado
+  BE->>API: GET /v1/otp/status/{operationId}
+  API-->>BE: VERIFIED

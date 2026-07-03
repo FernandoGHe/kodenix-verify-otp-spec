@@ -1,0 +1,88 @@
+erDiagram
+  CLIENT ||--o{ APPLICATION : owns
+  APPLICATION ||--o{ LICENSE : has
+  LICENSE ||--o{ LICENSE_ENTITLEMENT : grants
+  LICENSE ||--|| QUOTA_POLICY : uses
+  LICENSE ||--o{ USAGE_EVENT : records
+  APPLICATION ||--o{ OTP_OPERATION : creates
+  OTP_OPERATION ||--o{ OTP_CHALLENGE : has
+  OTP_OPERATION ||--o{ OTP_ATTEMPT : has
+  OTP_OPERATION ||--o{ OTP_EVENT : logs
+  OTP_CHALLENGE ||--o{ USAGE_EVENT : bills
+
+  CLIENT {
+    string id
+    string name
+    string status
+  }
+  APPLICATION {
+    string id
+    string client_id
+    string name
+    string environment
+  }
+  LICENSE {
+    string id
+    string client_id
+    string application_id
+    string environment
+    string status
+    string billing_model
+    datetime valid_from
+    datetime valid_until
+  }
+  LICENSE_ENTITLEMENT {
+    string id
+    string license_id
+    string platform
+    string allowed_origins
+    string allowed_packages
+    string allowed_bundles
+    string allowed_channels
+  }
+  QUOTA_POLICY {
+    string id
+    string license_id
+    int monthly_otp_sent_limit
+    int daily_otp_sent_limit
+    boolean hard_limit
+  }
+  USAGE_EVENT {
+    string id
+    string license_id
+    string operation_id
+    string challenge_id
+    string type
+    string channel
+    boolean billable
+    string reason
+    datetime created_at
+  }
+  OTP_OPERATION {
+    string id
+    string license_id
+    string status
+    string target_phone_masked
+    string target_email_masked
+    datetime created_at
+  }
+  OTP_CHALLENGE {
+    string id
+    string operation_id
+    string channel
+    string otp_hash
+    string status
+    datetime expires_at
+  }
+  OTP_ATTEMPT {
+    string id
+    string operation_id
+    boolean success
+    string failure_reason
+  }
+  OTP_EVENT {
+    string id
+    string operation_id
+    string event_type
+    string payload
+  }

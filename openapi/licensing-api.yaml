@@ -1,0 +1,302 @@
+openapi: 3.0.3
+info:
+  title: Kodenix Verify Licensing API
+  version: 2.0.0
+  description: API para administración y validación de licencias, entitlements, cuotas y uso.
+servers:
+  - url: https://api.kodenix.net
+tags:
+  - name: Licenses
+  - name: Entitlements
+  - name: Usage
+  - name: Runtime Validation
+paths:
+  /v1/admin/licenses:
+    post:
+      tags: [Licenses]
+      summary: Crear licencia
+      operationId: createLicense
+      security: [{ ApiKeyAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateLicenseRequest' }
+      responses:
+        '201':
+          description: Licencia creada
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/License' }
+    get:
+      tags: [Licenses]
+      summary: Listar licencias
+      operationId: listLicenses
+      security: [{ ApiKeyAuth: [] }]
+      parameters:
+        - name: clientId
+          in: query
+          schema: { type: string }
+        - name: applicationId
+          in: query
+          schema: { type: string }
+        - name: status
+          in: query
+          schema: { type: string }
+      responses:
+        '200':
+          description: Lista
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: '#/components/schemas/License' }
+  /v1/admin/licenses/{licenseId}:
+    get:
+      tags: [Licenses]
+      summary: Obtener licencia
+      operationId: getLicense
+      security: [{ ApiKeyAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/LicenseId'
+      responses:
+        '200':
+          description: Licencia
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/License' }
+    put:
+      tags: [Licenses]
+      summary: Actualizar licencia
+      operationId: updateLicense
+      security: [{ ApiKeyAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/LicenseId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateLicenseRequest' }
+      responses:
+        '200':
+          description: Actualizada
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/License' }
+  /v1/admin/licenses/{licenseId}/suspend:
+    post:
+      tags: [Licenses]
+      summary: Suspender licencia
+      operationId: suspendLicense
+      security: [{ ApiKeyAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/LicenseId' }]
+      responses:
+        '200': { description: Suspendida, content: { application/json: { schema: { $ref: '#/components/schemas/License' } } } }
+  /v1/admin/licenses/{licenseId}/reactivate:
+    post:
+      tags: [Licenses]
+      summary: Reactivar licencia
+      operationId: reactivateLicense
+      security: [{ ApiKeyAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/LicenseId' }]
+      responses:
+        '200': { description: Reactivada, content: { application/json: { schema: { $ref: '#/components/schemas/License' } } } }
+  /v1/admin/licenses/{licenseId}/rotate:
+    post:
+      tags: [Licenses]
+      summary: Rotar secreto/licencia técnica
+      operationId: rotateLicense
+      security: [{ ApiKeyAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/LicenseId' }]
+      responses:
+        '200': { description: Rotada, content: { application/json: { schema: { $ref: '#/components/schemas/LicenseRotationResponse' } } } }
+  /v1/admin/licenses/{licenseId}/entitlements:
+    post:
+      tags: [Entitlements]
+      summary: Agregar entitlement de plataforma/origen/app
+      operationId: addLicenseEntitlement
+      security: [{ ApiKeyAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/LicenseId' }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LicenseEntitlement' }
+      responses:
+        '201': { description: Creado, content: { application/json: { schema: { $ref: '#/components/schemas/LicenseEntitlement' } } } }
+  /v1/admin/licenses/{licenseId}/usage:
+    get:
+      tags: [Usage]
+      summary: Consultar consumo de licencia
+      operationId: getLicenseUsage
+      security: [{ ApiKeyAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/LicenseId'
+        - name: from
+          in: query
+          schema: { type: string, format: date }
+        - name: to
+          in: query
+          schema: { type: string, format: date }
+      responses:
+        '200':
+          description: Consumo
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/UsageSummary' }
+  /v1/licenses/validate:
+    post:
+      tags: [Runtime Validation]
+      summary: Validar licencia en runtime
+      operationId: validateLicenseRuntime
+      security: [{ ApiKeyAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ValidateLicenseRequest' }
+      responses:
+        '200':
+          description: Resultado validación
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ValidateLicenseResponse' }
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-Kodenix-Api-Key
+  parameters:
+    LicenseId:
+      name: licenseId
+      in: path
+      required: true
+      schema: { type: string }
+  schemas:
+    CreateLicenseRequest:
+      type: object
+      required: [clientId, applicationId, environment, billingModel, quotaPolicy]
+      properties:
+        clientId: { type: string }
+        applicationId: { type: string }
+        environment: { type: string, enum: [sandbox, qa, staging, production] }
+        status: { type: string, enum: [TRIAL, ACTIVE], default: ACTIVE }
+        validFrom: { type: string, format: date-time }
+        validUntil: { type: string, format: date-time }
+        billingModel: { type: string, enum: [OTP_SENT], default: OTP_SENT }
+        quotaPolicy: { $ref: '#/components/schemas/QuotaPolicy' }
+        entitlements:
+          type: array
+          items: { $ref: '#/components/schemas/LicenseEntitlement' }
+    UpdateLicenseRequest:
+      allOf:
+        - $ref: '#/components/schemas/CreateLicenseRequest'
+    License:
+      type: object
+      properties:
+        id: { type: string, example: lic_001 }
+        clientId: { type: string }
+        applicationId: { type: string }
+        environment: { type: string }
+        status: { type: string, enum: [TRIAL, ACTIVE, SUSPENDED, EXPIRED, REVOKED, OVER_QUOTA, READ_ONLY] }
+        billingModel: { type: string, enum: [OTP_SENT] }
+        validFrom: { type: string, format: date-time }
+        validUntil: { type: string, format: date-time }
+        quotaPolicy: { $ref: '#/components/schemas/QuotaPolicy' }
+        entitlements:
+          type: array
+          items: { $ref: '#/components/schemas/LicenseEntitlement' }
+    LicenseEntitlement:
+      type: object
+      required: [platform, allowedChannels]
+      properties:
+        id: { type: string }
+        platform: { type: string, enum: [web, android, ios] }
+        allowedOrigins:
+          type: array
+          items: { type: string, example: 'https://onboarding.cliente.com' }
+        allowedPackageNames:
+          type: array
+          items: { type: string, example: 'com.cliente.app' }
+        allowedCertificateFingerprints:
+          type: array
+          items: { type: string }
+        allowedBundleIds:
+          type: array
+          items: { type: string, example: 'com.cliente.ios' }
+        allowedTeamIds:
+          type: array
+          items: { type: string }
+        allowedChannels:
+          type: array
+          items: { type: string, enum: [whatsapp, sms, email] }
+        minSdkVersion: { type: string, example: '1.0.0' }
+        maxSdkVersion: { type: string, nullable: true }
+    QuotaPolicy:
+      type: object
+      properties:
+        monthlyOtpSentLimit: { type: integer, example: 100000 }
+        dailyOtpSentLimit: { type: integer, example: 10000 }
+        whatsappMonthlyLimit: { type: integer, example: 70000 }
+        smsMonthlyLimit: { type: integer, example: 25000 }
+        emailMonthlyLimit: { type: integer, example: 5000 }
+        hardLimit: { type: boolean, default: true }
+    ValidateLicenseRequest:
+      type: object
+      required: [clientId, applicationId, licenseId, platform, environment]
+      properties:
+        clientId: { type: string }
+        applicationId: { type: string }
+        licenseId: { type: string }
+        platform: { type: string, enum: [web, android, ios] }
+        environment: { type: string }
+        origin: { type: string }
+        packageName: { type: string }
+        certificateFingerprint: { type: string }
+        bundleId: { type: string }
+        teamId: { type: string }
+        requestedChannel: { type: string, enum: [whatsapp, sms, email] }
+    ValidateLicenseResponse:
+      type: object
+      properties:
+        valid: { type: boolean }
+        licenseId: { type: string }
+        allowedChannels:
+          type: array
+          items: { type: string }
+        quotaRemaining: { type: integer }
+        error:
+          type: object
+          properties:
+            code: { type: string }
+            message: { type: string }
+            action: { type: string }
+    UsageSummary:
+      type: object
+      properties:
+        licenseId: { type: string }
+        periodFrom: { type: string, format: date }
+        periodTo: { type: string, format: date }
+        totalOtpSentBillable: { type: integer }
+        byChannel:
+          type: object
+          properties:
+            whatsapp: { type: integer }
+            sms: { type: integer }
+            email: { type: integer }
+        quota:
+          type: object
+          properties:
+            limit: { type: integer }
+            remaining: { type: integer }
+            percentUsed: { type: number }
+    LicenseRotationResponse:
+      type: object
+      properties:
+        licenseId: { type: string }
+        rotatedAt: { type: string, format: date-time }
+        newPublicKeyId: { type: string }

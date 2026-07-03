@@ -1,0 +1,31 @@
+stateDiagram-v2
+  [*] --> CREATED
+  CREATED --> LICENSE_VALIDATING
+  LICENSE_VALIDATING --> LICENSE_REJECTED: invalid origin/app/quota
+  LICENSE_VALIDATING --> CONFIG_LOADED: valid
+  CONFIG_LOADED --> PENDING_TARGET: missing target and input allowed
+  PENDING_TARGET --> CONFIG_LOADED: target updated
+  CONFIG_LOADED --> PENDING_DELIVERY: send requested
+  PENDING_DELIVERY --> SEND_ACCEPTED: accepted for provider/queue
+  SEND_ACCEPTED --> SENT: provider sent
+  SEND_ACCEPTED --> FAILED_DELIVERY: provider failed
+  SENT --> DELIVERED: provider callback optional
+  FAILED_DELIVERY --> FALLBACK_EVALUATING
+  FALLBACK_EVALUATING --> FALLBACK_IN_PROGRESS: alternate target/channel available
+  FALLBACK_EVALUATING --> FAILED_DELIVERY: no fallback target/channel
+  FALLBACK_IN_PROGRESS --> SEND_ACCEPTED: fallback send accepted
+  SENT --> PENDING_VERIFICATION: user enters code
+  DELIVERED --> PENDING_VERIFICATION
+  PENDING_VERIFICATION --> VERIFIED: valid code
+  PENDING_VERIFICATION --> INVALID_ATTEMPT: invalid code
+  INVALID_ATTEMPT --> PENDING_VERIFICATION: attempts remain
+  INVALID_ATTEMPT --> BLOCKED: max attempts
+  SENT --> EXPIRED: ttl reached
+  DELIVERED --> EXPIRED: ttl reached
+  CREATED --> CANCELLED
+  SENT --> CANCELLED
+  VERIFIED --> [*]
+  BLOCKED --> [*]
+  EXPIRED --> [*]
+  CANCELLED --> [*]
+  LICENSE_REJECTED --> [*]

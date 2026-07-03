@@ -1,0 +1,15 @@
+sequenceDiagram
+  participant BE as Backend Cliente
+  participant API as Kodenix API
+  participant LIC as License Service
+  participant SDK as SDK
+
+  BE->>API: POST /otp/operations with private API key
+  API->>LIC: Validate license + origin/app entitlement
+  LIC-->>API: Valid + allowed channels + quota
+  API->>API: Issue short-lived sdkToken bound to operationId/licenseId
+  API-->>BE: sdkToken
+  BE-->>SDK: sdkToken
+  SDK->>API: Bearer sdkToken
+  API->>API: Validate token claims + request origin/app
+  API-->>SDK: Runtime response

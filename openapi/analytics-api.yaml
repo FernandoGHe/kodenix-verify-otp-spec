@@ -1,0 +1,82 @@
+openapi: 3.0.3
+info:
+  title: Kodenix Verify Analytics and Usage API
+  version: 2.0.0
+paths:
+  /v1/analytics/usage:
+    get:
+      summary: Consultar uso agregado
+      security: [{ ApiKeyAuth: [] }]
+      parameters:
+        - name: clientId
+          in: query
+          schema: { type: string }
+        - name: licenseId
+          in: query
+          schema: { type: string }
+        - name: from
+          in: query
+          schema: { type: string, format: date }
+        - name: to
+          in: query
+          schema: { type: string, format: date }
+        - name: groupBy
+          in: query
+          schema: { type: string, enum: [day, channel, provider, license, application] }
+      responses:
+        '200': { description: Uso agregado, content: { application/json: { schema: { $ref: '#/components/schemas/UsageReport' } } } }
+  /v1/analytics/transactions:
+    get:
+      summary: Consultar eventos transaccionales
+      security: [{ ApiKeyAuth: [] }]
+      parameters:
+        - name: licenseId
+          in: query
+          schema: { type: string }
+        - name: billable
+          in: query
+          schema: { type: boolean }
+      responses:
+        '200': { description: Eventos, content: { application/json: { schema: { $ref: '#/components/schemas/UsageEventsResponse' } } } }
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-Kodenix-Api-Key
+  schemas:
+    UsageReport:
+      type: object
+      properties:
+        totalOtpSentBillable: { type: integer }
+        totalVerified: { type: integer }
+        totalFallbackSent: { type: integer }
+        byChannel:
+          type: object
+          properties:
+            whatsapp: { type: integer }
+            sms: { type: integer }
+            email: { type: integer }
+        items:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    UsageEventsResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              usageEventId: { type: string }
+              type: { type: string, example: otp_sent_billable }
+              licenseId: { type: string }
+              operationId: { type: string }
+              challengeId: { type: string }
+              channel: { type: string }
+              provider: { type: string }
+              billable: { type: boolean }
+              reason: { type: string }
+              createdAt: { type: string, format: date-time }

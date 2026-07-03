@@ -1,0 +1,18 @@
+flowchart LR
+  App[App Cliente Web Android iOS] --> SDK[Kodenix OTP SDK]
+  BackendCliente[Backend Cliente] --> OTPAPI[Kodenix OTP API]
+  SDK --> OTPAPI
+  OTPAPI --> Auth[Auth + License Middleware]
+  Auth --> License[License Service]
+  OTPAPI --> Rules[Rules Engine]
+  OTPAPI --> Otp[OTP Service]
+  Otp --> Redis[(Redis OTP/Rate Limit)]
+  Otp --> DB[(PostgreSQL)]
+  Otp --> Usage[Usage/Billing Service]
+  Otp --> ProviderRouter[Provider Router]
+  ProviderRouter --> WA[WhatsApp Provider]
+  ProviderRouter --> SMS[SMS Provider]
+  ProviderRouter --> Email[Email Provider]
+  Usage --> DB
+  OTPAPI --> Audit[Audit Service]
+  Audit --> DB

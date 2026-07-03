@@ -1,0 +1,17 @@
+flowchart TD
+  A[Solicitud send OTP] --> B{Licencia válida?}
+  B -- No --> X[Rechazar sin conteo]
+  B -- Sí --> C{Canal primario healthy?}
+  C -- Sí --> D[Enviar canal primario]
+  D --> E[Crear usage billable]
+  D --> F{Proveedor aceptó?}
+  F -- Sí --> G[SENT]
+  F -- No --> H[Evaluar fallback]
+  C -- No --> H
+  H --> I{Canal alterno permitido?}
+  I -- No --> Y[OTP_NO_FALLBACK_AVAILABLE]
+  I -- Sí --> J{Existe target alterno?}
+  J -- No --> Z[OTP_FALLBACK_TARGET_MISSING]
+  J -- Sí --> K[Enviar fallback]
+  K --> L[Crear usage billable fallback]
+  K --> M[SENT fallback]

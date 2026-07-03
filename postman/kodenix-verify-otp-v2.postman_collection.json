@@ -1,0 +1,72 @@
+{
+  "info": {
+    "name": "Kodenix Verify OTP v2",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create OTP Operation",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "X-Kodenix-Api-Key", "value": "{{apiKey}}"},
+          {"key": "X-Kodenix-Origin", "value": "https://onboarding.cliente.com"},
+          {"key": "X-Kodenix-Platform", "value": "web"},
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "url": "{{baseUrl}}/v1/otp/operations",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"clientId\": \"client_001\",\n  \"applicationId\": \"app_001\",\n  \"licenseId\": \"lic_001\",\n  \"platform\": \"web\",\n  \"environment\": \"production\",\n  \"target\": {\n    \"phone\": \"+525512345678\"\n  },\n  \"requestedChannels\": [\"whatsapp\", \"sms\", \"email\"]\n}"
+        }
+      }
+    },
+    {
+      "name": "Get SDK Config",
+      "request": {
+        "method": "GET",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{sdkToken}}"},
+          {"key": "X-Kodenix-Origin", "value": "https://onboarding.cliente.com"}
+        ],
+        "url": "{{baseUrl}}/v1/otp/config?operationId={{operationId}}"
+      }
+    },
+    {
+      "name": "Send OTP Auto",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{sdkToken}}"},
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "url": "{{baseUrl}}/v1/otp/send",
+        "body": {"mode": "raw", "raw": "{\n  \"operationId\": \"{{operationId}}\",\n  \"channel\": \"auto\",\n  \"fallbackAllowed\": true\n}"}
+      }
+    },
+    {
+      "name": "Update Target",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{sdkToken}}"},
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "url": "{{baseUrl}}/v1/otp/target",
+        "body": {"mode": "raw", "raw": "{\n  \"operationId\": \"{{operationId}}\",\n  \"target\": {\n    \"email\": \"cliente@mail.com\"\n  },\n  \"reason\": \"FALLBACK_TARGET_CAPTURED\"\n}"}
+      }
+    },
+    {
+      "name": "Verify OTP",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{sdkToken}}"},
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "url": "{{baseUrl}}/v1/otp/verify",
+        "body": {"mode": "raw", "raw": "{\n  \"operationId\": \"{{operationId}}\",\n  \"code\": \"123456\"\n}"}
+      }
+    }
+  ]
+}

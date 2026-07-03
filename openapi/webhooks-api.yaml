@@ -1,0 +1,45 @@
+openapi: 3.0.3
+info:
+  title: Kodenix Verify Webhooks
+  version: 2.0.0
+paths:
+  /client-defined-webhook-url:
+    post:
+      summary: Endpoint que implementa el cliente para recibir eventos Kodenix
+      parameters:
+        - name: X-Kodenix-Event-Id
+          in: header
+          required: true
+          schema: { type: string }
+        - name: X-Kodenix-Timestamp
+          in: header
+          required: true
+          schema: { type: string }
+        - name: X-Kodenix-Signature
+          in: header
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/WebhookEvent' }
+      responses:
+        '200': { description: Recibido }
+        '202': { description: Aceptado }
+components:
+  schemas:
+    WebhookEvent:
+      type: object
+      required: [id, type, operationId, createdAt]
+      properties:
+        id: { type: string }
+        type:
+          type: string
+          enum: [otp.sent, otp.delivery_failed, otp.fallback_sent, otp.verified, otp.expired, otp.blocked, otp.cancelled, license.over_quota, provider.outage_detected]
+        clientId: { type: string }
+        applicationId: { type: string }
+        licenseId: { type: string }
+        operationId: { type: string }
+        createdAt: { type: string, format: date-time }
+        data: { type: object, additionalProperties: true }
