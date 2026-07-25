@@ -71,6 +71,21 @@ for (const file of [path.join(root, "README.md"), path.join(root, "index.html"),
   }
 }
 
+const version = JSON.parse(read("version.json")).version;
+if (!/^[a-f0-9]{12}$/.test(version)) failures.push("version.json: version de build invalida");
+for (const extension of ["css", "js"]) {
+  const asset = `docs-html/assets/docs.${version}.${extension}`;
+  if (!fs.existsSync(path.join(root, asset))) failures.push(`${asset}: asset versionado faltante`);
+}
+for (const file of walk(path.join(root, "docs-html")).filter(item => item.endsWith(".html"))) {
+  const contents = fs.readFileSync(file, "utf8");
+  if (/docs\.(?:css|js)/.test(contents)) failures.push(`${path.relative(root, file)}: referencia un asset sin version`);
+  for (const match of contents.matchAll(/docs\.([a-f0-9]{12})\.(?:css|js)/g)) {
+    if (match[1] !== version) failures.push(`${path.relative(root, file)}: referencia asset de otra version`);
+  }
+}
+requireText("docs-html/assets/docs.js", /cache:\s*['"]no-store['"]/, "consulta de version sin cache");
+
 if (failures.length) {
   console.error(failures.join("\n"));
   process.exit(1);

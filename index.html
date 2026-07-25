@@ -148,5 +148,26 @@
       update();
     })();
   </script>
+  <script>
+    (function(){
+      if(!window.fetch)return;
+      var key='kodenix-docs-build';
+      fetch('./version.json?_='+Date.now(),{cache:'no-store'}).then(function(response){
+        return response.ok?response.json():null;
+      }).then(function(latest){
+        if(!latest||!latest.version)return;
+        var previous=null;
+        try{previous=localStorage.getItem(key);localStorage.setItem(key,latest.version);}catch(e){}
+        var url=new URL(window.location.href);
+        if(previous&&previous!==latest.version&&url.searchParams.get('__docs')!==latest.version){
+          url.searchParams.set('__docs',latest.version);
+          window.location.replace(url.toString());
+        }else if(url.searchParams.has('__docs')){
+          url.searchParams.delete('__docs');
+          window.history.replaceState(null,'',url.toString());
+        }
+      }).catch(function(){ /* El sitio sigue disponible sin el chequeo. */ });
+    })();
+  </script>
 </body>
 </html>
