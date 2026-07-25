@@ -95,6 +95,8 @@ este repositorio documental.
 
 ## SDK contracts
 
+> Android 0.1.0 ofrece un mock funcional fuera de producción. El transporte HTTP de la nueva API Java está pendiente; esta versión no se presenta como lista para producción.
+
 - [Common SDK Contract](docs-html/sdk/sdk-contract-common/)
 - [Web SDK Contract](docs-html/sdk/sdk-web-contract/)
 - [Android SDK Contract](docs-html/sdk/sdk-android-contract/)

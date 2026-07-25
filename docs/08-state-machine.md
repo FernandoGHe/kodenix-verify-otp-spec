@@ -32,3 +32,5 @@ CANCELLED
 - `PENDING_TARGET` se usa cuando el SDK requiere teléfono/email adicional.
 
 Ver `diagrams/state-machine.mmd`.
+
+Cancelar un `OtpRequest` Android es control local y no cambia esta máquina; `KodenixOtpClient.cancel` sí solicita `CANCELLED`. El mock reproduce transiciones principales en memoria, pero no representa entrega, facturación o licencia autoritativa.

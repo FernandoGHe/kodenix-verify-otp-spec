@@ -169,3 +169,7 @@ Configuración:
   "fallbackOrder": ["whatsapp", "sms", "email"]
 }
 ```
+
+## Android 0.1.0
+
+El mock permite probar `send(channel, fallbackAllowed)` y errores de target/canal, pero no consulta proveedores ni ejecuta fallback real. El transporte productivo no debe reintentar automáticamente `send` o `resend`: no son acciones idempotentes y el fallback debe obedecer la política del backend.

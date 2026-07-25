@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Android: guia de integracion · Kodenix Verify</title><meta name="docs-version" content="3023bd43e609" /><link rel="stylesheet" href="../../../assets/docs.3023bd43e609.css" /></head>
+<title>Android: integración real y modo mock · Kodenix Verify</title><meta name="docs-version" content="127ddd2b27eb" /><link rel="stylesheet" href="../../../assets/docs.127ddd2b27eb.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 <div class="nav-section">admin</div><a class="nav-link" href="../../../admin/admin-portal-spec/">Admin Portal Spec</a>
 <a class="nav-link" href="../../../admin/tenant-license-configuration/">Tenant License Configuration</a>
@@ -27,7 +27,7 @@
 <a class="nav-link" href="../../14-sla-and-availability/">14 - SLA y Disponibilidad</a>
 <a class="nav-link" href="../../15-release-versioning/">15 - Versionado y Releases</a>
 <a class="nav-link" href="../../16-published-documentation-surface/">Published Documentation Surface</a>
-<a class="nav-link active" href="./">Android: guia de integracion</a>
+<a class="nav-link active" href="./">Android: integración real y modo mock</a>
 <div class="nav-section">Principal</div><a class="nav-link" href="../../../MANIFEST/">Manifest - Kodenix Verify OTP</a>
 <div class="nav-section">openapi</div><a class="nav-link" href="../../../openapi/README/">OpenAPI Catalog</a>
 <div class="nav-section">operations</div><a class="nav-link" href="../../../operations/capacity-planning/">Capacity Planning</a>
@@ -46,182 +46,256 @@
 <a class="nav-link" href="../../../sdk/ui-ux-spec/">UI/UX Spec</a>
 <div class="nav-section">Principal</div><a class="nav-link" href="../../../swagger-ui/README/">Swagger UI</a>
 </div></aside><main class="content"><article class="doc"><div class="top-actions"><a class="btn" href="../../../../">Landing</a><a class="btn" href="../../../../swagger-ui/">Swagger UI</a></div><div class="crumb">docs/android/getting-started.md</div>
-<h1>Android: guia de integracion</h1>
-<p>Esta es la guia completa para integrar <strong>Kodenix Verify OTP</strong> en Android. El
-README del proyecto Android
-se mantiene como referencia rapida para quienes trabajan directamente en ese
-subproyecto; este documento es la fuente de integracion para clientes.</p>
+<h1>Android: integración real y modo mock</h1>
+<p>Guía pública de <strong>Kodenix Verify OTP Android 0.1.0</strong>. La versión actual permite
+integrar y validar de extremo a extremo un flujo mock en memoria. El transporte
+HTTP para backend Kodenix todavía no está conectado a la nueva API Java; por
+tanto, la integración no-mock descrita al final es un contrato planificado y no
+debe considerarse lista para producción.</p>
 <h2>Requisitos</h2>
 <ul>
 <li>Android API 24 o posterior (<code>minSdk 24</code>).</li>
-<li><code>compileSdk 36</code> para compilar el proyecto de referencia.</li>
-<li>Kotlin 2.0.21.</li>
-<li>Java 11 como nivel de bytecode y toolchain compatible.</li>
-<li>AndroidX. Para usar <code>otp-ui</code>, una aplicacion con Jetpack Compose.</li>
+<li>Proyecto AndroidX y Java 8 o posterior.</li>
+<li>Kotlin es opcional para <code>otp-core</code> y <code>otp-ui-views</code>.</li>
+<li>Kotlin y Jetpack Compose son obligatorios para <code>otp-ui-compose</code>.</li>
 </ul>
-<h2>Elegir el artefacto</h2>
+<h2>Artefactos 0.1.0</h2>
+<table>
+<thead>
+<tr>
+<th>Artefacto</th>
+<th align="right">Java legacy</th>
+<th align="right">Kotlin moderno</th>
+<th align="right">Compose</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>otp-core</code></td>
+<td align="right">Sí</td>
+<td align="right">Sí</td>
+<td align="right">No</td>
+<td>API Java headless, modelos y flujo mock.</td>
+</tr>
+<tr>
+<td><code>otp-core-ktx</code></td>
+<td align="right">No requerido</td>
+<td align="right">Sí</td>
+<td align="right">No</td>
+<td>Extensiones <code>suspend</code> sobre <code>otp-core</code>.</td>
+</tr>
+<tr>
+<td><code>otp-ui-views</code></td>
+<td align="right">Sí</td>
+<td align="right">Sí</td>
+<td align="right">No</td>
+<td>Flujo visual basado en Views/Activity.</td>
+</tr>
+<tr>
+<td><code>otp-ui-compose</code></td>
+<td align="right">No</td>
+<td align="right">Sí</td>
+<td align="right">Sí</td>
+<td>Pantalla Compose reutilizable.</td>
+</tr>
+</tbody></table>
+<h3>Java con Views</h3>
 <pre><code class="language-kotlin">dependencies {
-    // Cliente headless, red, modelos y API publica.
     implementation(&quot;com.kodenix.verify:otp-core:0.1.0&quot;)
-
-    // MVVM y pantalla Jetpack Compose; incluye otp-core transitivamente.
-    implementation(&quot;com.kodenix.verify:otp-ui:0.1.0&quot;)
+    implementation(&quot;com.kodenix.verify:otp-ui-views:0.1.0&quot;)
 }
 </code></pre>
-<p>Use <code>otp-core</code> si la aplicacion aporta su propia UI o solo necesita coordinar el
-flujo. Use <code>otp-ui</code> para la experiencia Compose mantenida por Kodenix. El modulo
-<code>app</code> es una demostracion y no se publica como libreria. Dentro del repositorio
-Android se usan <code>project(&quot;:otp-core&quot;)</code> y <code>project(&quot;:otp-ui&quot;)</code>; para pruebas locales los AAR y
-sus POM pueden publicarse con <code>gradlew.bat publishToMavenLocal</code>.</p>
-<h2>Seguridad y sesion temporal</h2>
-<p>La aplicacion movil <strong>nunca debe contener una API key privada</strong>, incluido
-<code>X-Kodenix-Api-Key</code>. El backend del integrador crea la operacion con sus
-credenciales privadas y entrega a la app solamente:</p>
-<ul>
-<li><code>operationId</code>, identificador de la operacion;</li>
-<li><code>sdkToken</code>, token temporal y limitado a esa operacion.</li>
-</ul>
-<p>No persista el <code>sdkToken</code> ni lo escriba en logs. Cada llamada a <code>KodenixOtp.create</code>
-crea un cliente aislado y conserva el token solo en memoria.</p>
-<h2>Inicializacion</h2>
-<pre><code class="language-kotlin">val client = KodenixOtp.create(
-    context = applicationContext,
-    configuration = KodenixOtpConfiguration(
-        environment = OtpEnvironment.SANDBOX,
-    ),
-    session = OtpSession(
-        operationId = backendResponse.operationId,
-        sdkToken = backendResponse.sdkToken,
-        target = OtpTarget(phone = &quot;+525512345678&quot;), // opcional
-        preferredChannel = OtpChannel.WHATSAPP,
-        autoSend = true,
-    ),
-)
-</code></pre>
-<p>Los ambientes disponibles son <code>SANDBOX</code>, <code>QA</code>, <code>STAGING</code> y <code>PRODUCTION</code>. La
-seleccion debe coincidir con el ambiente en el que el backend creo la operacion.</p>
-<h3>Target opcional</h3>
-<p><code>OtpTarget</code> acepta telefono, email o ambos. Puede omitirse al crear la sesion. Si
-la politica permite captura, la UI emite <code>onTargetRequired()</code> y solicita el dato;
-en modo headless el integrador lo proporciona con <code>updateTarget</code>. No envie PII a
-un ambiente distinto del de la operacion.</p>
-<h2>Integracion headless con <code>otp-core</code></h2>
-<p>Las funciones son <code>suspend</code>; invoquelas desde una coroutine y trate ambos casos de
-<code>OtpResult</code>.</p>
-<pre><code class="language-kotlin">when (val config = client.loadConfiguration()) {
-    is OtpResult.Success -&gt; render(config.value)
-    is OtpResult.Failure -&gt; showError(config.error)
+<h3>Kotlin sin Compose</h3>
+<pre><code class="language-kotlin">dependencies {
+    implementation(&quot;com.kodenix.verify:otp-core:0.1.0&quot;)
+    implementation(&quot;com.kodenix.verify:otp-core-ktx:0.1.0&quot;)
 }
+</code></pre>
+<h3>Kotlin con Compose</h3>
+<pre><code class="language-kotlin">dependencies {
+    implementation(&quot;com.kodenix.verify:otp-core-ktx:0.1.0&quot;)
+    implementation(&quot;com.kodenix.verify:otp-ui-compose:0.1.0&quot;)
+}
+</code></pre>
+<h2>Sesión y seguridad</h2>
+<p>El backend del integrador crea la operación y entrega a la app solamente
+<code>operationId</code> y un <code>sdkToken</code> temporal. También puede entregar <code>target</code>,
+<code>preferredChannel</code> y <code>autoSend</code>.</p>
+<pre><code class="language-java">OtpSession minimal = new OtpSession(operationId, sdkToken);
 
-client.updateTarget(OtpTarget(email = &quot;cliente@example.com&quot;))
-
-when (val sent = client.send(OtpChannel.EMAIL)) {
-    is OtpResult.Success -&gt; {
-        val challengeId = sent.value.challengeId
-        val verified = client.verify(&quot;123456&quot;, challengeId)
+OtpSession complete = new OtpSession(
+    operationId,
+    sdkToken,
+    new OtpTarget(&quot;+525512345678&quot;, null), // opcional
+    OtpChannel.WHATSAPP,
+    true
+);
+</code></pre>
+<p>Nunca incluya en una app <code>X-Kodenix-Api-Key</code>, API keys privadas, credenciales de
+servidor o proveedores, contraseñas de keystore ni tokens permanentes. No persista
+ni registre el <code>sdkToken</code>, el OTP o targets completos.</p>
+<h2>Modo mock funcional</h2>
+<p>El mock se selecciona explícitamente con <code>createMock</code>, funciona solo fuera de
+<code>PRODUCTION</code>, no usa servicios externos ni persistencia y mantiene su estado en
+memoria. No valida licencias de forma autoritativa. El código aceptado por defecto
+es <code>123456</code>.</p>
+<pre><code class="language-java">KodenixOtpConfiguration configuration =
+    new KodenixOtpConfiguration(OtpEnvironment.SANDBOX);
+KodenixOtpClient client = KodenixOtp.createMock(
+    context, configuration, new OtpSession(operationId, sdkToken)
+);
+</code></pre>
+<p>Un escenario permite códigos de 4, 6 u 8 dígitos, cooldown y máximo de intentos:</p>
+<pre><code class="language-java">MockOtpScenario scenario = new MockOtpScenario(&quot;246810&quot;, 6, 30, 3);
+KodenixOtpClient client = KodenixOtp.createMock(
+    context, configuration, session, scenario
+);
+</code></pre>
+<p>El mock cubre carga de configuración, target enmascarado, <code>send</code>, <code>resend</code>,
+<code>verify</code>, <code>cancel</code>, <code>updateTarget</code>, código inválido y bloqueo por intentos. Rechaza
+<code>OtpEnvironment.PRODUCTION</code>. Nunca use ni recomiende <code>createMock()</code> en producción.</p>
+<h2>API Java headless</h2>
+<p>Los callbacks se entregan en el hilo principal. Cada operación devuelve un
+<code>OtpRequest</code>; llamar <code>OtpRequest.cancel()</code> cancela esa solicitud local y suprime su
+callback. Es distinto de <code>client.cancel(...)</code>, que cancela la operación OTP.</p>
+<pre><code class="language-java">OtpRequest load = client.loadConfiguration(new OtpCallback&lt;OtpRuntimeConfiguration&gt;() {
+    @Override public void onSuccess(OtpRuntimeConfiguration value) {
+        int otpLength = value.getRules().getOtpLength();
     }
-    is OtpResult.Failure -&gt; showError(sent.error)
-}
+    @Override public void onError(OtpError error) { handle(error); }
+});
 
-client.resend()
-client.cancel()
+client.updateTarget(new OtpTarget(null, &quot;cliente@example.com&quot;), callback);
+client.send(OtpChannel.AUTO, callback);
+client.send(OtpChannel.WHATSAPP, false, callback); // sin fallback
+client.resend(callback);
+client.verify(code, challengeId, callback); // valide longitud desde configuración
 </code></pre>
-<h3>Servicios disponibles</h3>
+<p>Cancelaciones:</p>
+<pre><code class="language-java">load.cancel();                  // solo la solicitud local; no llega callback
+client.cancel(operationCallback); // cancela la operación OTP
+</code></pre>
+<p>Servicios de <code>KodenixOtpClient</code>:</p>
 <table>
 <thead>
 <tr>
 <th>Servicio</th>
-<th>Proposito</th>
+<th>Resultado</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>loadConfiguration()</code></td>
-<td>Carga reglas, textos, canales y disponibilidad.</td>
+<td><code>loadConfiguration(callback)</code></td>
+<td>Reglas, canales y textos.</td>
 </tr>
 <tr>
-<td><code>updateTarget(target, reason)</code></td>
-<td>Proporciona o actualiza telefono/email si la politica lo permite.</td>
+<td><code>updateTarget(target, callback)</code></td>
+<td>Actualiza teléfono/email permitido.</td>
 </tr>
 <tr>
-<td><code>send(channel, target, fallbackAllowed)</code></td>
-<td>Envia el OTP por un canal o seleccion automatica.</td>
+<td><code>send(channel, callback)</code></td>
+<td>Envía con fallback permitido.</td>
 </tr>
 <tr>
-<td><code>resend(channel, fallbackAllowed)</code></td>
-<td>Reenvia respetando cooldown, limites y fallback.</td>
+<td><code>send(channel, fallbackAllowed, callback)</code></td>
+<td>Control explícito de fallback.</td>
 </tr>
 <tr>
-<td><code>verify(code, challengeId)</code></td>
-<td>Verifica el codigo recibido.</td>
+<td><code>resend(callback)</code></td>
+<td>Reenvía respetando cooldown.</td>
 </tr>
 <tr>
-<td><code>cancel(reason)</code></td>
-<td>Cancela la operacion.</td>
+<td><code>verify(code, challengeId, callback)</code></td>
+<td>Verifica con longitud dinámica.</td>
+</tr>
+<tr>
+<td><code>cancel(callback)</code></td>
+<td>Cancela la operación.</td>
 </tr>
 </tbody></table>
-<p>Los endpoints protegidos con API key privada, como creacion de <code>operations</code>,
-consulta administrativa de <code>status</code> y <code>events</code>, pertenecen al backend del
-integrador y no se exponen como servicios moviles.</p>
-<h2>Integracion con Jetpack Compose</h2>
-<pre><code class="language-kotlin">setContent {
-    KodenixOtpScreen(
-        client = client,
-        callbacks = object : OtpCallbacks {
-            override fun onTargetRequired() = analytics(&quot;target_required&quot;)
-            override fun onOtpSent(result: OtpSendResult) = analytics(&quot;otp_sent&quot;)
-            override fun onVerificationSuccess(result: OtpVerificationResult) {
-                finishOtpFlow(result.operationId)
-            }
-            override fun onError(error: OtpError) = showError(error)
-        },
-    )
+<h2>Kotlin KTX headless</h2>
+<p><code>otp-core-ktx</code> adapta callbacks a coroutines. La cancelación de la coroutine
+cancela el <code>OtpRequest</code> subyacente.</p>
+<pre><code class="language-kotlin">try {
+    val runtime = client.loadConfigurationAwait()
+    val sent = client.send(OtpChannel.AUTO, fallbackAllowed = true)
+    val verified = client.verify(code, sent.challengeId)
+    client.resendAwait()
+    client.cancelAwait()
+} catch (error: OtpException) {
+    handle(error.error)
 }
 </code></pre>
-<p><code>KodenixOtpScreen</code> crea su <code>OtpViewModel</code>, carga la configuracion y representa la
-captura de target, seleccion de canal, envio, fallback, ingreso y verificacion del
-codigo. El integrador conserva la navegacion exterior y reacciona a callbacks.</p>
-<h2>Callbacks</h2>
-<p><code>OtpCallbacks</code> ofrece implementaciones vacias, por lo que solo es necesario
-sobrescribir los eventos relevantes:</p>
+<h2>UI con Views</h2>
+<pre><code class="language-java">Intent intent = KodenixOtpActivity.createIntent(context, configuration, session);
+launcher.launch(intent);
+</code></pre>
+<p>Lea el resultado mediante <code>KodenixOtpResult.EXTRA_STATUS</code>,
+<code>EXTRA_OPERATION_ID</code>, <code>EXTRA_VERIFICATION_ID</code>, <code>EXTRA_ERROR_CODE</code>,
+<code>EXTRA_RECOVERABLE</code> y <code>EXTRA_ACTION</code>. La UI no devuelve secretos, targets
+completos ni huellas de certificado. Incluye longitud dinámica, autoavance,
+accesibilidad, feedback de error/éxito, cooldown y reenvío.</p>
+<p>En 0.1.0 <code>KodenixOtpActivity</code> crea internamente un cliente mock y rechaza
+<code>PRODUCTION</code>; es una experiencia sandbox mientras se conecta el transporte real.</p>
+<h2>UI con Compose</h2>
+<pre><code class="language-kotlin">val client = KodenixOtp.createMock(context, configuration, session)
+
+KodenixOtpScreen(
+    client = client,
+    onFinished = { result -&gt; finishOtpFlow(result.operationId) },
+)
+</code></pre>
+<p>La pantalla carga reglas, envía, muestra el target enmascarado, adapta la longitud
+del OTP, verifica automáticamente al completarse, controla cooldown/reenvío y
+presenta estados de error, éxito y cancelación.</p>
+<h2>Errores</h2>
+<p>Trate <code>OtpError.getCode()</code>, <code>isRecoverable()</code>, <code>getAction()</code> y
+<code>getHttpStatus()</code> sin mostrar detalles internos:</p>
+<pre><code class="language-java">private void handle(OtpError error) {
+    if (error.isRecoverable()) showRetry(error.getCode());
+    else finishWithError(error.getCode(), error.getAction());
+}
+</code></pre>
+<p>El catálogo incluye errores de licencia, target, canal, fallback, proveedor,
+entrega, rate limit, código inválido/expirado, máximo de intentos, operación y red.</p>
+<h2>Contrato no-mock planificado</h2>
+<p><code>KodenixOtp.create(...)</code> <strong>no forma parte de la API funcional 0.1.0</strong>. Cuando se
+implemente, el transporte deberá ejecutar HTTP fuera del hilo principal, entregar
+callbacks en el hilo principal, autenticar con <code>Authorization: Bearer &lt;sdkToken&gt;</code>
+y enviar la identidad Android requerida. No deberá reintentar automáticamente
+<code>send</code> o <code>resend</code>, persistir/loguear datos sensibles ni exponer endpoints internos.
+Deberá propagar errores de red y servidor mediante <code>OtpError</code>.</p>
+<p>El uso previsto, que no compila contra la fachada 0.1.0 actual, será:</p>
+<pre><code class="language-java">KodenixOtpClient client = KodenixOtp.create(
+    context,
+    new KodenixOtpConfiguration(OtpEnvironment.PRODUCTION),
+    new OtpSession(operationId, sdkToken, target, OtpChannel.WHATSAPP, true)
+);
+</code></pre>
+<h2>Identidad y licenciamiento Android planificados</h2>
+<p>El backend será la autoridad. La identidad esperada combina:</p>
 <ul>
-<li>ciclo de configuracion: <code>onReady</code>, <code>onConfigLoaded</code>, <code>onTargetRequired</code>;</li>
-<li>envio: <code>onOtpSending</code>, <code>onOtpSent</code>, <code>onFallbackInProgress</code>,
-<code>onFallbackTargetMissing</code>;</li>
-<li>verificacion: <code>onOtpVerifying</code>, <code>onVerificationSuccess</code>,
-<code>onVerificationFailed</code>;</li>
-<li>terminales: <code>onExpired</code>, <code>onBlocked</code>, <code>onCancelled</code>, <code>onError</code>.</li>
+<li>package name/applicationId;</li>
+<li>SHA-256 de los certificados de firma;</li>
+<li>plataforma, ambiente y versión del SDK.</li>
 </ul>
-<p>No registre el codigo OTP, el token temporal ni targets sin enmascarar dentro de
-estos callbacks.</p>
-<h2>Licenciamiento Android</h2>
-<p>El SDK obtiene y envia automaticamente la identidad de la app. El backend valida
-la licencia mediante la combinacion de:</p>
-<ul>
-<li>package name de la aplicacion;</li>
-<li>SHA-256 del certificado con el que esta firmada;</li>
-<li>ambiente (<code>sandbox</code>, <code>qa</code>, <code>staging</code> o <code>production</code>);</li>
-<li>version del SDK.</li>
-</ul>
-<p>Registre por separado las huellas de debug, QA y release que se autoricen. Una
-coincidencia de package name sin la huella SHA-256 correcta no es suficiente.</p>
-<h2>Estado de licencia del codigo Android</h2>
-<p>El archivo <code>LICENSE</code> del repositorio Android esta
-marcado <strong>DRAFT - LEGAL REVIEW REQUIRED BEFORE DISTRIBUTION</strong>. Es un borrador para
-revision legal y <strong>no representa una licencia comercial aprobada ni autoriza la
-distribucion</strong>. La publicacion externa de codigo o artefactos debe esperar la
-aprobacion y el acuerdo comercial aplicables.</p>
+<p>Cada product flavor y ambiente debe registrar sus valores autorizados. En API
+24–27 se consideran las firmas legacy; en API 28+ se usa <code>SigningInfo</code>, incluyendo
+múltiples firmantes e historial para rotación de certificados. La recolección y
+envío automático de esta identidad pertenece al transporte real pendiente.</p>
+<p>El OpenAPI actual aún no declara completamente los headers
+<code>X-Kodenix-Package-Name</code>, <code>X-Kodenix-Certificate-Sha256</code>,
+<code>X-Kodenix-Environment</code>, <code>X-Kodenix-Sdk-Version</code> y <code>X-Kodenix-Platform</code>. Esta
+discrepancia debe resolverse en <code>openapi/otp-public-api.yaml</code> antes de conectar el
+transporte; esta actualización documental no cambia silenciosamente el contrato.</p>
+<h2>Estado legal</h2>
+<p>La licencia del SDK Android está marcada <strong>DRAFT — LEGAL REVIEW REQUIRED BEFORE
+DISTRIBUTION</strong>. No es una licencia comercial aprobada ni autoriza distribución.</p>
 <h2>Referencias</h2>
 <ul>
-<li><a href="../../sdk/sdk-contract-common.md">Contrato comun de SDK</a></li>
+<li><a href="../../sdk/sdk-contract-common.md">Contrato común de SDK</a></li>
 <li><a href="../../sdk/sdk-android-contract.md">Contrato Android</a></li>
-<li><a href="../../openapi/otp-public-api.yaml">OpenAPI publico OTP</a></li>
-<li><a href="../12-error-catalog.md">Catalogo de errores</a></li>
+<li><a href="../12-error-catalog.md">Catálogo de errores</a></li>
+<li><a href="../05-security-specification.md">Seguridad</a></li>
 </ul>
-<h2>Actualizacion de esta guia</h2>
-<p>El SDK y la documentacion tienen ciclos de release independientes. Cada cambio en
-la API publica o version del SDK requiere una tarea separada de sincronizacion de
-esta guia, contratos, ejemplos y pruebas. <code>npm run docs:check</code> valida la coherencia
-interna; con <code>KODENIX_ANDROID_SDK_PATH</code> definido tambien compara contra un checkout
-local del repositorio Android.</p>
 
-</article></main></div><script src="../../../assets/docs.3023bd43e609.js"></script></body></html>
+</article></main></div><script src="../../../assets/docs.127ddd2b27eb.js"></script></body></html>

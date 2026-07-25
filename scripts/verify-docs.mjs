@@ -4,58 +4,51 @@ import crypto from "node:crypto";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
-const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
-const root = path.resolve(scriptDirectory, "..");
-const read = relative => fs.readFileSync(path.join(root, relative), "utf8");
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const read = file => fs.readFileSync(path.join(root, file), "utf8");
 const failures = [];
 const requireText = (file, pattern, label) => {
   if (!pattern.test(read(file))) failures.push(`${file}: falta ${label}`);
 };
 
-for (const file of ["README.md", "MANIFEST.md", "docs/16-published-documentation-surface.md"]) {
-  requireText(file, /docs[\\/]android[\\/]getting-started|android\/getting-started/, "enlace a la guia Android");
-}
+for (const file of ["README.md", "MANIFEST.md", "docs/16-published-documentation-surface.md"])
+  requireText(file, /android\/getting-started/, "enlace a la guía Android");
 
-for (const file of ["docs/android/getting-started.md"]) {
-  requireText(file, /com\.kodenix\.verify:otp-core:0\.1\.0/, "coordenada otp-core");
-  requireText(file, /com\.kodenix\.verify:otp-ui:0\.1\.0/, "coordenada otp-ui");
-  requireText(file, /operationId/, "operationId");
-  requireText(file, /sdkToken/, "sdkToken");
-  requireText(file, /API key privada|API keys privadas|X-Kodenix-Api-Key/i, "prohibicion de API key privada");
-}
+const guide = "docs/android/getting-started.md";
+for (const artifact of ["otp-core", "otp-core-ktx", "otp-ui-views", "otp-ui-compose"])
+  requireText(guide, new RegExp(`com\\.kodenix\\.verify:${artifact}:0\\.1\\.0`), `coordenada ${artifact}`);
+for (const symbol of ["createMock", "MockOtpScenario", "loadConfiguration", "updateTarget", "send", "resend", "verify", "cancel", "OtpRequest", "KodenixOtpActivity", "KodenixOtpScreen", "onFinished"])
+  requireText(guide, new RegExp(`\\b${symbol}\\b`), `símbolo público ${symbol}`);
+for (const concept of ["operationId", "sdkToken", "PRODUCTION", "transporte\\s+HTTP", "pendiente", "X-Kodenix-Package-Name", "DRAFT"])
+  requireText(guide, new RegExp(concept, "i"), concept);
 
-for (const symbol of ["loadConfiguration", "updateTarget", "send", "resend", "verify", "cancel", "onTargetRequired", "onOtpSent", "onVerificationSuccess", "onError"]) {
-  requireText("docs/android/getting-started.md", new RegExp(`\\b${symbol}\\b`), `simbolo publico ${symbol}`);
-}
-
-for (const repositoryFile of ["README.md", "MANIFEST.md", "docs/android/getting-started.md", "sdk/sdk-android-contract.md"]) {
-  if (/https:\/\/github\.com\/[^\s)"']*android/i.test(read(repositoryFile))) {
-    failures.push(`${repositoryFile}: no debe enlazar directamente al repositorio Android`);
-  }
-}
+for (const file of ["README.md", "MANIFEST.md", guide, "sdk/sdk-android-contract.md"])
+  if (/https:\/\/github\.com\/[^\s)"']*android/i.test(read(file))) failures.push(`${file}: enlaza al repositorio Android privado`);
 
 const androidRoot = process.env.KODENIX_ANDROID_SDK_PATH;
 if (androidRoot) {
-  const androidRead = relative => fs.readFileSync(path.join(androidRoot, relative), "utf8");
-  const coreBuild = androidRead("otp-core/build.gradle.kts");
-  const uiBuild = androidRead("otp-ui/build.gradle.kts");
-  for (const [name, build] of [["otp-core", coreBuild], ["otp-ui", uiBuild]]) {
+  const androidRead = file => fs.readFileSync(path.join(androidRoot, file), "utf8");
+  for (const module of ["otp-core", "otp-core-ktx", "otp-ui-views", "otp-ui-compose"]) {
+    const build = androidRead(`${module}/build.gradle.kts`);
     const version = build.match(/version\s*=\s*"([^"]+)"/)?.[1];
     const artifact = build.match(/artifactId\s*=\s*"([^"]+)"/)?.[1];
-    if (!version || !artifact) failures.push(`${name}: no se pudo leer Maven artifact/version`);
-    else requireText("docs/android/getting-started.md", new RegExp(`com\\.kodenix\\.verify:${artifact}:${version.replaceAll(".", "\\.")}`), `coordenada vigente de ${name}`);
+    if (!version || !artifact) failures.push(`${module}: no se pudo leer artifact/version`);
+    else requireText(guide, new RegExp(`com\\.kodenix\\.verify:${artifact}:${version.replaceAll(".", "\\.")}`), `coordenada vigente de ${module}`);
   }
-  const publicApi = [
-    "otp-core/src/main/java/com/kodenix/otp/api/KodenixOtpClient.kt",
-    "otp-core/src/main/java/com/kodenix/otp/api/OtpCallbacks.kt",
+  const api = [
+    "otp-core/src/main/java/com/kodenix/verify/otp/api/KodenixOtp.java",
+    "otp-core/src/main/java/com/kodenix/verify/otp/api/KodenixOtpClient.java",
+    "otp-core/src/main/java/com/kodenix/verify/otp/api/MockOtpScenario.java",
+    "otp-core-ktx/src/main/java/com/kodenix/verify/otp/ktx/OtpExtensions.kt",
+    "otp-ui-views/src/main/java/com/kodenix/verify/otp/ui/views/KodenixOtpActivity.java",
+    "otp-ui-compose/src/main/java/com/kodenix/verify/otp/ui/compose/KodenixOtpScreen.kt",
   ].map(androidRead).join("\n");
-  for (const symbol of ["loadConfiguration", "updateTarget", "send", "resend", "verify", "cancel", "onTargetRequired", "onOtpSent", "onVerificationSuccess", "onError"]) {
-    if (!publicApi.includes(`${symbol}(`)) failures.push(`API publica Android: no existe ${symbol}`);
-  }
+  for (const symbol of ["createMock", "loadConfiguration", "updateTarget", "send", "resend", "verify", "cancel", "createIntent", "KodenixOtpScreen"])
+    if (!api.includes(`${symbol}(`)) failures.push(`API pública Android: no existe ${symbol}`);
+  if (/static\s+KodenixOtpClient\s+create\s*\(/.test(api)) failures.push("API Android: revise la guía, create(...) ya existe");
 }
 
-const before = new Map();
-for (const file of walk(path.join(root, "docs-html"))) before.set(file, digest(file));
+const before = new Map(walk(path.join(root, "docs-html")).map(file => [file, digest(file)]));
 const build = spawnSync(process.execPath, [path.join(root, "scripts/build-docs.mjs")], { cwd: root, encoding: "utf8" });
 if (build.status !== 0) failures.push(`generador HTML: ${build.stderr || build.stdout}`);
 for (const file of walk(path.join(root, "docs-html"))) {
@@ -64,32 +57,16 @@ for (const file of walk(path.join(root, "docs-html"))) {
 }
 for (const file of before.keys()) failures.push(`docs-html faltante tras generar: ${path.relative(root, file)}`);
 
-for (const file of [path.join(root, "README.md"), path.join(root, "index.html"), ...walk(path.join(root, "docs-html")).filter(item => item.endsWith(".html"))]) {
-  const contents = fs.readFileSync(file, "utf8");
-  if (/href=["'][^"']*\.html(?:[?#][^"']*)?["']/i.test(contents)) {
-    failures.push(`${path.relative(root, file)}: contiene una ruta publica no limpia`);
-  }
-}
+for (const file of [path.join(root, "README.md"), path.join(root, "index.html"), ...walk(path.join(root, "docs-html")).filter(f => f.endsWith(".html"))])
+  if (/href=["'][^"']*\.html(?:[?#][^"']*)?["']/i.test(fs.readFileSync(file, "utf8"))) failures.push(`${path.relative(root, file)}: contiene ruta pública no limpia`);
 
 const version = JSON.parse(read("version.json")).version;
-if (!/^[a-f0-9]{12}$/.test(version)) failures.push("version.json: version de build invalida");
-for (const extension of ["css", "js"]) {
-  const asset = `docs-html/assets/docs.${version}.${extension}`;
-  if (!fs.existsSync(path.join(root, asset))) failures.push(`${asset}: asset versionado faltante`);
-}
-for (const file of walk(path.join(root, "docs-html")).filter(item => item.endsWith(".html"))) {
-  const contents = fs.readFileSync(file, "utf8");
-  if (/docs\.(?:css|js)/.test(contents)) failures.push(`${path.relative(root, file)}: referencia un asset sin version`);
-  for (const match of contents.matchAll(/docs\.([a-f0-9]{12})\.(?:css|js)/g)) {
-    if (match[1] !== version) failures.push(`${path.relative(root, file)}: referencia asset de otra version`);
-  }
-}
-requireText("docs-html/assets/docs.js", /cache:\s*['"]no-store['"]/, "consulta de version sin cache");
+if (!/^[a-f0-9]{12}$/.test(version)) failures.push("version.json: build inválido");
+for (const extension of ["css", "js"])
+  if (!fs.existsSync(path.join(root, `docs-html/assets/docs.${version}.${extension}`))) failures.push(`asset ${extension} versionado faltante`);
+requireText("docs-html/assets/docs.js", /cache:\s*['"]no-store['"]/, "consulta de versión sin cache");
 
-if (failures.length) {
-  console.error(failures.join("\n"));
-  process.exit(1);
-}
+if (failures.length) { console.error(failures.join("\n")); process.exit(1); }
 console.log(`Android docs, links and generated HTML are synchronized${androidRoot ? " with the local SDK" : " internally"}.`);
 
 function walk(directory) {

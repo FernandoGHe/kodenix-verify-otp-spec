@@ -1,5 +1,7 @@
 # Manifest - Kodenix Verify OTP
 
+- [CHANGELOG.md](CHANGELOG.md)
+
 Inventario del paquete de especificación.
 
 ## Documentación principal

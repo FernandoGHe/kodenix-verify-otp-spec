@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>05 - Especificación de Seguridad · Kodenix Verify</title><meta name="docs-version" content="3023bd43e609" /><link rel="stylesheet" href="../../assets/docs.3023bd43e609.css" /></head>
+<title>05 - Especificación de Seguridad · Kodenix Verify</title><meta name="docs-version" content="127ddd2b27eb" /><link rel="stylesheet" href="../../assets/docs.127ddd2b27eb.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 <div class="nav-section">admin</div><a class="nav-link" href="../../admin/admin-portal-spec/">Admin Portal Spec</a>
 <a class="nav-link" href="../../admin/tenant-license-configuration/">Tenant License Configuration</a>
@@ -27,7 +27,7 @@
 <a class="nav-link" href="../14-sla-and-availability/">14 - SLA y Disponibilidad</a>
 <a class="nav-link" href="../15-release-versioning/">15 - Versionado y Releases</a>
 <a class="nav-link" href="../16-published-documentation-surface/">Published Documentation Surface</a>
-<a class="nav-link" href="../android/getting-started/">Android: guia de integracion</a>
+<a class="nav-link" href="../android/getting-started/">Android: integración real y modo mock</a>
 <div class="nav-section">Principal</div><a class="nav-link" href="../../MANIFEST/">Manifest - Kodenix Verify OTP</a>
 <div class="nav-section">openapi</div><a class="nav-link" href="../../openapi/README/">OpenAPI Catalog</a>
 <div class="nav-section">operations</div><a class="nav-link" href="../../operations/capacity-planning/">Capacity Planning</a>
@@ -98,6 +98,8 @@
 }
 </code></pre>
 <h3>Android</h3>
+<p>La identidad planificada incluye package name/applicationId, todos los SHA-256 de firma aplicables, plataforma, ambiente y versión del SDK. Debe soportar flavors, firmantes múltiples e historial de rotación. El backend es siempre la autoridad; el mock local no acredita una licencia.</p>
+<p>El SDK recibe únicamente <code>operationId</code> y <code>sdkToken</code> temporal. Nunca se distribuyen en la app API keys privadas, claves privadas, credenciales de servidor/proveedor, contraseñas de keystore ni tokens permanentes. El OpenAPI público aún debe incorporar explícitamente los headers de identidad Android antes del transporte productivo.</p>
 <p>Validar package y certificate fingerprint.</p>
 <h3>iOS</h3>
 <p>Validar bundle ID y Team ID si está configurado.</p>
@@ -173,4 +175,4 @@ X-Kodenix-Signature: sha256=...
 </tr>
 </tbody></table>
 
-</article></main></div><script src="../../assets/docs.3023bd43e609.js"></script></body></html>
+</article></main></div><script src="../../assets/docs.127ddd2b27eb.js"></script></body></html>

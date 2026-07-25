@@ -51,3 +51,7 @@
 - verifying
 - success
 - error
+
+## Estado de transporte por plataforma
+
+La documentación de cada SDK debe distinguir mock, sandbox y producción. En Android 0.1.0 el mock es funcional, pero el transporte HTTP de la nueva API Java está pendiente; no debe inferirse disponibilidad productiva. Cancelar una solicitud local impide su callback; cancelar la operación es una acción de dominio independiente.

@@ -13,6 +13,7 @@
 | LICENSE_PACKAGE_NOT_ALLOWED | 403 | No | Autorizar package/fingerprint |
 | LICENSE_BUNDLE_NOT_ALLOWED | 403 | No | Autorizar bundle/team |
 | LICENSE_CHANNEL_NOT_ALLOWED | 403 | No | Habilitar canal |
+| LICENSE_ENVIRONMENT_NOT_ALLOWED | 403 | No | Usar un ambiente autorizado |
 
 ## Target / canal
 
@@ -43,4 +44,16 @@
 | OTP_EXPIRED | 410 | Sí | Reenviar |
 | OTP_MAX_ATTEMPTS_REACHED | 423 | No | Crear nueva operación |
 | OTP_ALREADY_VERIFIED | 409 | No | Continuar flujo |
+
+## SDK y red
+
+| Código | HTTP | Recuperable | Acción |
+|---|---:|---:|---|
+| SDK_INVALID_CONFIGURATION | — | No | Corregir ambiente o configuración |
+| SDK_UNSUPPORTED_VERSION | 400/426 | No | Actualizar el SDK |
+| SDK_REQUEST_CANCELLED | — | Sí | Decidir si iniciar otra solicitud |
+| OTP_NETWORK_ERROR | —/504 | Sí | Recuperar conectividad; reintentar solo si es seguro |
+| OTP_SDK_ERROR | — | Depende | Corregir configuración o actualizar el SDK |
+
+Android entrega código, mensaje, recuperabilidad, acción, HTTP opcional y causa en `OtpError`. No deben mostrarse causas internas ni registrarse tokens, OTP o targets.
 | OTP_OPERATION_NOT_FOUND | 404 | No | Crear operación |
