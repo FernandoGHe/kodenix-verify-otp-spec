@@ -6,11 +6,24 @@
   <title>Kodenix Verify OTP - Swagger UI</title>
   <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css" />
   <style>
-    body { margin: 0; background: #f7f7f7; }
-    header { padding: 16px 24px; background: #0B1020; color: #F8FAFC; font-family: system-ui, sans-serif; }
+    :root { color-scheme: dark; }
+    body { margin: 0; background: #0c1218; }
+    header { padding: 16px 24px; background: #101820; color: #F8FAFC; font-family: system-ui, sans-serif; border-bottom:1px solid #2a3742; }
     header h1 { margin: 0 0 8px; font-size: 20px; }
     header p { margin: 0 0 12px; color: #CBD5E1; }
-    select { padding: 8px 10px; border-radius: 8px; min-width: 320px; }
+    select { padding:8px 10px; border:1px solid #3a4a56; border-radius:5px; min-width:320px; background:#131c24; color:#edf2f5; }
+    .theme-toggle { position:fixed; top:16px; right:18px; z-index:20; border:1px solid #33434f; border-radius:5px; background:#131c24; color:#dce5ea; padding:8px 12px; font:600 12px/1.2 system-ui,sans-serif; cursor:pointer; }
+    .swagger-ui,.swagger-ui .info .title,.swagger-ui .info p,.swagger-ui .info li,.swagger-ui .opblock-tag,.swagger-ui .opblock .opblock-summary-description,.swagger-ui .parameter__name,.swagger-ui table thead tr td,.swagger-ui table thead tr th { color:#dce5ea; }
+    .swagger-ui .scheme-container,.swagger-ui section.models,.swagger-ui .model-box { background:#131c24; box-shadow:none; border-color:#2a3742; }
+    .swagger-ui .opblock-tag { border-bottom-color:#2a3742; }
+    html[data-theme="light"] { color-scheme:light; }
+    html[data-theme="light"] body { background:#f5f7fa; }
+    html[data-theme="light"] header { background:#fff; color:#18324a; border-bottom-color:#dfe4ea; }
+    html[data-theme="light"] header p { color:#52616e; }
+    html[data-theme="light"] select { background:#fff; color:#172431; border-color:#ccd4dc; }
+    html[data-theme="light"] .theme-toggle { background:#fff; color:#233846; border-color:#ccd4dc; }
+    html[data-theme="light"] .swagger-ui,html[data-theme="light"] .swagger-ui .info .title,html[data-theme="light"] .swagger-ui .info p,html[data-theme="light"] .swagger-ui .info li,html[data-theme="light"] .swagger-ui .opblock-tag,html[data-theme="light"] .swagger-ui .opblock .opblock-summary-description,html[data-theme="light"] .swagger-ui .parameter__name,html[data-theme="light"] .swagger-ui table thead tr td,html[data-theme="light"] .swagger-ui table thead tr th { color:#172431; }
+    html[data-theme="light"] .swagger-ui .scheme-container,html[data-theme="light"] .swagger-ui section.models,html[data-theme="light"] .swagger-ui .model-box { background:#fff; border-color:#dfe4ea; }
   </style>
 </head>
 <body>
@@ -29,6 +42,7 @@
   <div id="swagger-ui"></div>
   <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
   <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-standalone-preset.js"></script>
+  <script src="../docs-html/assets/docs.js"></script>
   <script>
     let ui;
     function loadSpec(url) {

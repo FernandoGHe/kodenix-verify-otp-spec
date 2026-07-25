@@ -40,24 +40,40 @@
     .footer { margin-top: 52px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--muted); font-size: 14px; }
     code { color: var(--accent); }
 
-    /* Restrained, professional documentation theme */
-    :root { --bg:#f5f7fa; --panel:#fff; --panel-hover:#f8fafc; --border:#dfe4ea; --border-hover:#8ca0b3; --text:#172431; --muted:#64717d; --soft:#354553; --accent:#0b6b73; }
-    body { background:var(--bg); }
+    /* Restrained, professional night theme */
+    :root { --bg:#0c1218; --panel:#131c24; --panel-hover:#17232d; --border:#2a3742; --border-hover:#537182; --text:#edf2f5; --muted:#91a0ab; --soft:#c2cdd4; --accent:#55b6bd; }
+    body { background:linear-gradient(180deg,#0e151c 0,#0c1218 34rem); }
     main { max-width:1180px; padding:64px 32px 80px; }
     .eyebrow { font-size:12px; letter-spacing:.11em; margin-bottom:14px; }
-    h1 { color:#18324a; font-size:clamp(38px,5vw,56px); font-weight:720; letter-spacing:-.035em; line-height:1.08; }
+    h1 { color:#f2f6f8; font-size:clamp(38px,5vw,56px); font-weight:720; letter-spacing:-.035em; line-height:1.08; }
     .lead { font-size:18px; }
     .meta { gap:8px; margin-top:28px; padding-top:22px; border-top:1px solid var(--border); }
-    .pill { border-radius:5px; padding:6px 10px; background:#fff; font-size:13px; }
+    .pill { border-radius:5px; padding:6px 10px; background:#121b23; font-size:13px; }
     section { margin-top:48px; }
-    h2 { color:#18324a; font-size:22px; letter-spacing:-.015em; }
+    h2 { color:#e6edf1; font-size:22px; letter-spacing:-.015em; }
     .grid { gap:14px; }
-    a.card { min-height:118px; border-radius:8px; box-shadow:0 1px 2px rgba(15,23,42,.04); transition:border-color .16s ease,box-shadow .16s ease,background .16s ease; }
-    a.card:hover { transform:none; box-shadow:0 5px 16px rgba(15,23,42,.07); }
+    a.card { min-height:118px; border-radius:8px; box-shadow:0 1px 2px rgba(0,0,0,.18); transition:border-color .16s ease,box-shadow .16s ease,background .16s ease; }
+    a.card:hover { transform:none; box-shadow:0 7px 20px rgba(0,0,0,.22); }
+    .theme-toggle { position:fixed; top:16px; right:18px; z-index:10; border:1px solid var(--border); border-radius:5px; background:var(--panel); color:var(--text); padding:8px 12px; font:600 12px/1.2 system-ui,sans-serif; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,.18); }
+    .theme-toggle:hover { border-color:var(--border-hover); background:var(--panel-hover); }
+    html[data-theme="light"] { --bg:#f5f7fa; --panel:#fff; --panel-hover:#f8fafc; --border:#dfe4ea; --border-hover:#8ca0b3; --text:#172431; --muted:#64717d; --soft:#354553; --accent:#0b6b73; }
+    html[data-theme="light"] body { background:#f5f7fa; }
+    html[data-theme="light"] h1, html[data-theme="light"] h2 { color:#18324a; }
+    html[data-theme="light"] a.card { box-shadow:0 1px 2px rgba(15,23,42,.04); }
+    html[data-theme="light"] a.card:hover { box-shadow:0 5px 16px rgba(15,23,42,.07); }
     @media (max-width:640px) { main { padding:40px 20px 56px; } section { margin-top:38px; } }
   </style>
+  <script>
+    (function(){
+      var saved=null;
+      try{saved=localStorage.getItem('kodenix-docs-theme');}catch(e){}
+      var theme=saved||(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
+      document.documentElement.setAttribute('data-theme',theme);
+    })();
+  </script>
 </head>
 <body>
+  <button class="theme-toggle" type="button" aria-live="polite"></button>
   <main>
     <div class="eyebrow">Kodenix Verify</div>
     <h1>OTP SDK Specification</h1>
@@ -113,5 +129,22 @@
     </section>
     <div class="footer"><p>Kodenix Verify OTP Specification.</p></div>
   </main>
+  <script>
+    (function(){
+      var button=document.querySelector('.theme-toggle');
+      function update(){
+        var dark=document.documentElement.getAttribute('data-theme')==='dark';
+        button.textContent=dark?'Modo claro':'Modo noche';
+        button.setAttribute('aria-label',dark?'Activar modo claro':'Activar modo noche');
+      }
+      button.addEventListener('click',function(){
+        var next=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+        document.documentElement.setAttribute('data-theme',next);
+        try{localStorage.setItem('kodenix-docs-theme',next);}catch(e){}
+        update();
+      });
+      update();
+    })();
+  </script>
 </body>
 </html>
