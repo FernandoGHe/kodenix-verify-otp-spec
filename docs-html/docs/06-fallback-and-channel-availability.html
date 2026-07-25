@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>06 - Fallback y Disponibilidad de Canales · Kodenix Verify</title>
+<link rel="stylesheet" href="../../docs-html/assets/docs.css" />
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar"><a class="brand" href="../../index.html"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Specification</span></span></a><div class="nav-list">
+<div class="nav-section">Main</div>
+<a class="nav-link" href="../../docs-html/MANIFEST.html">Manifest - Kodenix Verify OTP</a>
+<a class="nav-link" href="../../docs-html/README.html">Kodenix Verify OTP Specification</a>
+<div class="nav-section">docs</div>
+<a class="nav-link" href="../../docs-html/docs/00-documentation-governance.html">00 - Gobierno de Documentación</a>
+<a class="nav-link" href="../../docs-html/docs/01-functional-scope.html">01 - Alcance Funcional</a>
+<a class="nav-link" href="../../docs-html/docs/02-requirements.html">02 - Requerimientos</a>
+<a class="nav-link" href="../../docs-html/docs/03-licensing-and-usage-control.html">03 - Licenciamiento y Control de Uso</a>
+<a class="nav-link" href="../../docs-html/docs/04-transaction-counting-and-billing.html">04 - Conteo de Transacciones y Facturación</a>
+<a class="nav-link" href="../../docs-html/docs/05-security-specification.html">05 - Especificación de Seguridad</a>
+<a class="nav-link" href="../../docs-html/docs/06-fallback-and-channel-availability.html">06 - Fallback y Disponibilidad de Canales</a>
+<a class="nav-link" href="../../docs-html/docs/07-api-contract-overview.html">07 - API Contract Overview</a>
+<a class="nav-link" href="../../docs-html/docs/08-state-machine.html">08 - Máquina de Estados</a>
+<a class="nav-link" href="../../docs-html/docs/09-data-model.html">09 - Modelo de Datos</a>
+<a class="nav-link" href="../../docs-html/docs/10-infrastructure-sizing.html">10 - Servidores e Infraestructura Estimada</a>
+<a class="nav-link" href="../../docs-html/docs/11-observability-audit.html">11 - Observabilidad y Auditoría</a>
+<a class="nav-link" href="../../docs-html/docs/12-error-catalog.html">12 - Catálogo de Errores</a>
+<a class="nav-link" href="../../docs-html/docs/13-webhooks.html">13 - Webhooks</a>
+<a class="nav-link" href="../../docs-html/docs/14-sla-and-availability.html">14 - SLA y Disponibilidad</a>
+<a class="nav-link" href="../../docs-html/docs/15-release-versioning.html">15 - Versionado y Releases</a>
+<a class="nav-link" href="../../docs-html/docs/16-published-documentation-surface.html">Published Documentation Surface</a>
+<div class="nav-section">openapi</div>
+<a class="nav-link" href="../../docs-html/openapi/README.html">OpenAPI Catalog</a>
+<div class="nav-section">diagrams</div>
+<a class="nav-link" href="../../docs-html/diagrams/README.html">Diagramas Mermaid</a>
+<div class="nav-section">backend</div>
+<a class="nav-link" href="../../docs-html/backend/backend-handoff.html">Backend Handoff</a>
+<a class="nav-link" href="../../docs-html/backend/database-model.html">Database Model</a>
+<a class="nav-link" href="../../docs-html/backend/domain-model.html">Domain Model</a>
+<a class="nav-link" href="../../docs-html/backend/provider-contract.html">Provider Contract</a>
+<a class="nav-link" href="../../docs-html/backend/rules-engine.html">Rules Engine</a>
+<div class="nav-section">sdk</div>
+<a class="nav-link" href="../../docs-html/sdk/localization-spec.html">Localization Spec</a>
+<a class="nav-link" href="../../docs-html/sdk/sdk-android-contract.html">SDK Android Contract</a>
+<a class="nav-link" href="../../docs-html/sdk/sdk-contract-common.html">SDK Contract Common</a>
+<a class="nav-link" href="../../docs-html/sdk/sdk-ios-contract.html">SDK iOS Contract</a>
+<a class="nav-link" href="../../docs-html/sdk/sdk-web-contract.html">SDK Web Contract</a>
+<a class="nav-link" href="../../docs-html/sdk/ui-ux-spec.html">UI/UX Spec</a>
+<div class="nav-section">admin</div>
+<a class="nav-link" href="../../docs-html/admin/admin-portal-spec.html">Admin Portal Spec</a>
+<a class="nav-link" href="../../docs-html/admin/tenant-license-configuration.html">Tenant License Configuration</a>
+<div class="nav-section">operations</div>
+<a class="nav-link" href="../../docs-html/operations/capacity-planning.html">Capacity Planning</a>
+<a class="nav-link" href="../../docs-html/operations/incident-response.html">Incident Response</a>
+<a class="nav-link" href="../../docs-html/operations/monitoring-alerts.html">Monitoring Alerts</a>
+<a class="nav-link" href="../../docs-html/operations/runbook.html">Runbook Operativo</a>
+<div class="nav-section">qa</div>
+<a class="nav-link" href="../../docs-html/qa/acceptance-criteria.html">Acceptance Criteria</a>
+<a class="nav-link" href="../../docs-html/qa/qa-matrix.html">QA Matrix</a>
+<a class="nav-link" href="../../docs-html/qa/test-cases.html">Test Cases</a>
+<div class="nav-section">swagger-ui</div>
+<a class="nav-link" href="../../swagger-ui/index.html">Swagger UI</a>
+</div></aside>
+<main class="content"><article class="doc">
+<div class="top-actions"><a class="btn" href="../../index.html">Landing</a><a class="btn" href="../../swagger-ui/index.html">Swagger UI</a><a class="btn" href="../../docs-html/diagrams/README.html">Diagrams</a></div>
+<div class="crumb">docs/06-fallback-and-channel-availability.md</div>
+<h1>06 - Fallback y Disponibilidad de Canales</h1>
+<h2>Prioridad base</h2>
+<p>La prioridad recomendada es:</p>
+<pre><code class="language-text">1. WhatsApp
+2. SMS
+3. Email
+</code></pre>
+<p>Puede configurarse por licencia/aplicación.</p>
+<h2>Conceptos</h2>
+<h3>Channel unavailable</h3>
+<p>El canal no puede usarse por configuración, licencia, target faltante o proveedor caído.</p>
+<h3>Provider down</h3>
+<p>El proveedor del canal está caído, con timeout o autenticación fallida.</p>
+<h3>Delivery failed</h3>
+<p>El proveedor aceptó el mensaje, pero luego reportó no entrega.</p>
+<h3>Target missing</h3>
+<p>No existe teléfono/email requerido para el canal.</p>
+<h2>Target requerido por canal</h2>
+<table>
+<thead>
+<tr>
+  <th>Canal</th>
+  <th>Target requerido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>WhatsApp</td>
+  <td>phone</td>
+</tr>
+<tr>
+  <td>SMS</td>
+  <td>phone</td>
+</tr>
+<tr>
+  <td>Email</td>
+  <td>email</td>
+</tr>
+</tbody>
+</table>
+<h2>Inicialización SDK con target opcional</h2>
+<table>
+<thead>
+<tr>
+  <th>Target recibido</th>
+  <th>Canales posibles</th>
+  <th>Comentario</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>phone + email</td>
+  <td>WhatsApp, SMS, Email</td>
+  <td>Fallback completo</td>
+</tr>
+<tr>
+  <td>phone only</td>
+  <td>WhatsApp, SMS</td>
+  <td>Email no disponible salvo captura permitida</td>
+</tr>
+<tr>
+  <td>email only</td>
+  <td>Email</td>
+  <td>WhatsApp/SMS no disponible salvo captura permitida</td>
+</tr>
+<tr>
+  <td>none</td>
+  <td>Depende de pantalla inicial</td>
+  <td>Si no hay captura, error</td>
+</tr>
+</tbody>
+</table>
+<h2>Reglas de fallback</h2>
+<pre><code class="language-text">WhatsApp falla → intentar SMS si:
+  - SMS habilitado por reglas
+  - SMS permitido por licencia
+  - Existe phone
+  - Cuota SMS disponible
+  - Provider SMS healthy
+
+SMS falla → intentar Email si:
+  - Email habilitado por reglas
+  - Email permitido por licencia
+  - Existe email
+  - Cuota Email disponible
+  - Provider Email healthy
+</code></pre>
+<h2>Cuando falta target para fallback</h2>
+<p>Responder:</p>
+<pre><code class="language-json">{
+  &quot;success&quot;: false,
+  &quot;status&quot;: &quot;FAILED_DELIVERY&quot;,
+  &quot;error&quot;: {
+    &quot;code&quot;: &quot;OTP_FALLBACK_TARGET_MISSING&quot;,
+    &quot;message&quot;: &quot;No existe un destino disponible para el canal alterno.&quot;,
+    &quot;recoverable&quot;: true,
+    &quot;action&quot;: &quot;REQUEST_TARGET_FOR_ALTERNATE_CHANNEL&quot;
+  },
+  &quot;fallback&quot;: {
+    &quot;attempted&quot;: false,
+    &quot;reason&quot;: &quot;EMAIL_TARGET_MISSING&quot;,
+    &quot;nextAvailableChannels&quot;: []
+  }
+}
+</code></pre>
+<p>El SDK puede mostrar pantalla para capturar email/teléfono si:</p>
+<pre><code class="language-json">{
+  &quot;allowUserInput&quot;: true,
+  &quot;allowTargetUpdate&quot;: true
+}
+</code></pre>
+<p>Si no está permitido, debe terminar con error recuperable para app integradora.</p>
+<h2>Estados en proceso para SDK</h2>
+<p>El SDK debe soportar:</p>
+<table>
+<thead>
+<tr>
+  <th>Estado</th>
+  <th>Mensaje usuario sugerido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>CREATING_OPERATION</td>
+  <td>Preparando verificación...</td>
+</tr>
+<tr>
+  <td>LOADING_CONFIG</td>
+  <td>Cargando configuración...</td>
+</tr>
+<tr>
+  <td>VALIDATING_LICENSE</td>
+  <td>Validando acceso...</td>
+</tr>
+<tr>
+  <td>SENDING_OTP</td>
+  <td>Enviando código...</td>
+</tr>
+<tr>
+  <td>WAITING_PROVIDER</td>
+  <td>Esperando confirmación del proveedor...</td>
+</tr>
+<tr>
+  <td>FALLBACK_IN_PROGRESS</td>
+  <td>Intentando canal alterno...</td>
+</tr>
+<tr>
+  <td>VERIFYING_OTP</td>
+  <td>Validando código...</td>
+</tr>
+<tr>
+  <td>RESENDING_OTP</td>
+  <td>Reenviando código...</td>
+</tr>
+</tbody>
+</table>
+<h2>Proveedor caído</h2>
+<p>Si WhatsApp provider está caído antes del envío:</p>
+<ul>
+<li>No contar WhatsApp si no se aceptó envío.</li>
+<li>Registrar <code>OTP_PROVIDER_UNAVAILABLE</code>.</li>
+<li>Intentar SMS si reglas y target lo permiten.</li>
+</ul>
+<p>Si WhatsApp provider acepta envío y luego falla:</p>
+<ul>
+<li>Cuenta WhatsApp.</li>
+<li>Registrar fallo.</li>
+<li>Intentar SMS si reglas y target lo permiten.</li>
+<li>Si SMS se envía, cuenta SMS.</li>
+</ul>
+<h2>Respuesta con fallback exitoso</h2>
+<pre><code class="language-json">{
+  &quot;success&quot;: true,
+  &quot;operationId&quot;: &quot;otp_op_123&quot;,
+  &quot;challengeId&quot;: &quot;otp_ch_sms_456&quot;,
+  &quot;status&quot;: &quot;SENT&quot;,
+  &quot;channel&quot;: &quot;sms&quot;,
+  &quot;maskedTarget&quot;: &quot;+52******5678&quot;,
+  &quot;fallback&quot;: {
+    &quot;used&quot;: true,
+    &quot;from&quot;: &quot;whatsapp&quot;,
+    &quot;to&quot;: &quot;sms&quot;,
+    &quot;reason&quot;: &quot;WHATSAPP_PROVIDER_UNAVAILABLE&quot;
+  },
+  &quot;billing&quot;: {
+    &quot;billable&quot;: true,
+    &quot;events&quot;: [
+      {
+        &quot;channel&quot;: &quot;sms&quot;,
+        &quot;billable&quot;: true
+      }
+    ]
+  }
+}
+</code></pre>
+<h2>Fallback automático vs manual</h2>
+<ul>
+<li>Automático: backend intenta siguiente canal sin pedir al usuario.</li>
+<li>Manual: SDK muestra “No pudimos enviar por WhatsApp. ¿Enviar por SMS?”</li>
+</ul>
+<p>Configuración:</p>
+<pre><code class="language-json">{
+  &quot;fallbackMode&quot;: &quot;automatic&quot;,
+  &quot;fallbackOrder&quot;: [&quot;whatsapp&quot;, &quot;sms&quot;, &quot;email&quot;]
+}
+</code></pre>
+
+</article></main>
+</div>
+<script src="../../docs-html/assets/docs.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>if(window.mermaid){mermaid.initialize({startOnLoad:true,theme:'default',securityLevel:'loose'});}</script>
+</body>
+</html>

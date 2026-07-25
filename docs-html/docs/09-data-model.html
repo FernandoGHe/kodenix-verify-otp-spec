@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>09 - Modelo de Datos · Kodenix Verify</title>
+<link rel="stylesheet" href="../../docs-html/assets/docs.css" />
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar"><a class="brand" href="../../index.html"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Specification</span></span></a><div class="nav-list">
+<div class="nav-section">Main</div>
+<a class="nav-link" href="../../docs-html/MANIFEST.html">Manifest - Kodenix Verify OTP</a>
+<a class="nav-link" href="../../docs-html/README.html">Kodenix Verify OTP Specification</a>
+<div class="nav-section">docs</div>
+<a class="nav-link" href="../../docs-html/docs/00-documentation-governance.html">00 - Gobierno de Documentación</a>
+<a class="nav-link" href="../../docs-html/docs/01-functional-scope.html">01 - Alcance Funcional</a>
+<a class="nav-link" href="../../docs-html/docs/02-requirements.html">02 - Requerimientos</a>
+<a class="nav-link" href="../../docs-html/docs/03-licensing-and-usage-control.html">03 - Licenciamiento y Control de Uso</a>
+<a class="nav-link" href="../../docs-html/docs/04-transaction-counting-and-billing.html">04 - Conteo de Transacciones y Facturación</a>
+<a class="nav-link" href="../../docs-html/docs/05-security-specification.html">05 - Especificación de Seguridad</a>
+<a class="nav-link" href="../../docs-html/docs/06-fallback-and-channel-availability.html">06 - Fallback y Disponibilidad de Canales</a>
+<a class="nav-link" href="../../docs-html/docs/07-api-contract-overview.html">07 - API Contract Overview</a>
+<a class="nav-link" href="../../docs-html/docs/08-state-machine.html">08 - Máquina de Estados</a>
+<a class="nav-link" href="../../docs-html/docs/09-data-model.html">09 - Modelo de Datos</a>
+<a class="nav-link" href="../../docs-html/docs/10-infrastructure-sizing.html">10 - Servidores e Infraestructura Estimada</a>
+<a class="nav-link" href="../../docs-html/docs/11-observability-audit.html">11 - Observabilidad y Auditoría</a>
+<a class="nav-link" href="../../docs-html/docs/12-error-catalog.html">12 - Catálogo de Errores</a>
+<a class="nav-link" href="../../docs-html/docs/13-webhooks.html">13 - Webhooks</a>
+<a class="nav-link" href="../../docs-html/docs/14-sla-and-availability.html">14 - SLA y Disponibilidad</a>
+<a class="nav-link" href="../../docs-html/docs/15-release-versioning.html">15 - Versionado y Releases</a>
+<a class="nav-link" href="../../docs-html/docs/16-published-documentation-surface.html">Published Documentation Surface</a>
+<div class="nav-section">openapi</div>
+<a class="nav-link" href="../../docs-html/openapi/README.html">OpenAPI Catalog</a>
+<div class="nav-section">diagrams</div>
+<a class="nav-link" href="../../docs-html/diagrams/README.html">Diagramas Mermaid</a>
+<div class="nav-section">backend</div>
+<a class="nav-link" href="../../docs-html/backend/backend-handoff.html">Backend Handoff</a>
+<a class="nav-link" href="../../docs-html/backend/database-model.html">Database Model</a>
+<a class="nav-link" href="../../docs-html/backend/domain-model.html">Domain Model</a>
+<a class="nav-link" href="../../docs-html/backend/provider-contract.html">Provider Contract</a>
+<a class="nav-link" href="../../docs-html/backend/rules-engine.html">Rules Engine</a>
+<div class="nav-section">sdk</div>
+<a class="nav-link" href="../../docs-html/sdk/localization-spec.html">Localization Spec</a>
+<a class="nav-link" href="../../docs-html/sdk/sdk-android-contract.html">SDK Android Contract</a>
+<a class="nav-link" href="../../docs-html/sdk/sdk-contract-common.html">SDK Contract Common</a>
+<a class="nav-link" href="../../docs-html/sdk/sdk-ios-contract.html">SDK iOS Contract</a>
+<a class="nav-link" href="../../docs-html/sdk/sdk-web-contract.html">SDK Web Contract</a>
+<a class="nav-link" href="../../docs-html/sdk/ui-ux-spec.html">UI/UX Spec</a>
+<div class="nav-section">admin</div>
+<a class="nav-link" href="../../docs-html/admin/admin-portal-spec.html">Admin Portal Spec</a>
+<a class="nav-link" href="../../docs-html/admin/tenant-license-configuration.html">Tenant License Configuration</a>
+<div class="nav-section">operations</div>
+<a class="nav-link" href="../../docs-html/operations/capacity-planning.html">Capacity Planning</a>
+<a class="nav-link" href="../../docs-html/operations/incident-response.html">Incident Response</a>
+<a class="nav-link" href="../../docs-html/operations/monitoring-alerts.html">Monitoring Alerts</a>
+<a class="nav-link" href="../../docs-html/operations/runbook.html">Runbook Operativo</a>
+<div class="nav-section">qa</div>
+<a class="nav-link" href="../../docs-html/qa/acceptance-criteria.html">Acceptance Criteria</a>
+<a class="nav-link" href="../../docs-html/qa/qa-matrix.html">QA Matrix</a>
+<a class="nav-link" href="../../docs-html/qa/test-cases.html">Test Cases</a>
+<div class="nav-section">swagger-ui</div>
+<a class="nav-link" href="../../swagger-ui/index.html">Swagger UI</a>
+</div></aside>
+<main class="content"><article class="doc">
+<div class="top-actions"><a class="btn" href="../../index.html">Landing</a><a class="btn" href="../../swagger-ui/index.html">Swagger UI</a><a class="btn" href="../../docs-html/diagrams/README.html">Diagrams</a></div>
+<div class="crumb">docs/09-data-model.md</div>
+<h1>09 - Modelo de Datos</h1>
+<h2>Entidades principales</h2>
+<ul>
+<li>Client</li>
+<li>Application</li>
+<li>Environment</li>
+<li>License</li>
+<li>LicenseEntitlement</li>
+<li>QuotaPolicy</li>
+<li>UsageEvent</li>
+<li>OtpOperation</li>
+<li>OtpChallenge</li>
+<li>OtpAttempt</li>
+<li>OtpEvent</li>
+<li>ProviderConfig</li>
+<li>WebhookConfig</li>
+</ul>
+<h2>Nuevas entidades de licencia</h2>
+<h3>License</h3>
+<table>
+<thead>
+<tr>
+  <th>Campo</th>
+  <th>Tipo</th>
+  <th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>id</td>
+  <td>string</td>
+  <td>ID licencia</td>
+</tr>
+<tr>
+  <td>clientId</td>
+  <td>string</td>
+  <td>Cliente</td>
+</tr>
+<tr>
+  <td>applicationId</td>
+  <td>string</td>
+  <td>Aplicación</td>
+</tr>
+<tr>
+  <td>environment</td>
+  <td>string</td>
+  <td>Ambiente</td>
+</tr>
+<tr>
+  <td>status</td>
+  <td>enum</td>
+  <td>ACTIVE/TRIAL/etc</td>
+</tr>
+<tr>
+  <td>validFrom</td>
+  <td>datetime</td>
+  <td>Inicio vigencia</td>
+</tr>
+<tr>
+  <td>validUntil</td>
+  <td>datetime</td>
+  <td>Fin vigencia</td>
+</tr>
+<tr>
+  <td>billingModel</td>
+  <td>enum</td>
+  <td>OTP_SENT</td>
+</tr>
+</tbody>
+</table>
+<h3>LicenseEntitlement</h3>
+<table>
+<thead>
+<tr>
+  <th>Campo</th>
+  <th>Tipo</th>
+  <th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>id</td>
+  <td>string</td>
+  <td>ID entitlement</td>
+</tr>
+<tr>
+  <td>licenseId</td>
+  <td>string</td>
+  <td>Licencia</td>
+</tr>
+<tr>
+  <td>platform</td>
+  <td>enum</td>
+  <td>web/android/ios</td>
+</tr>
+<tr>
+  <td>allowedOrigins</td>
+  <td>string[]</td>
+  <td>URLs autorizadas</td>
+</tr>
+<tr>
+  <td>allowedPackageNames</td>
+  <td>string[]</td>
+  <td>Android</td>
+</tr>
+<tr>
+  <td>allowedBundleIds</td>
+  <td>string[]</td>
+  <td>iOS</td>
+</tr>
+<tr>
+  <td>allowedChannels</td>
+  <td>string[]</td>
+  <td>Canales permitidos</td>
+</tr>
+</tbody>
+</table>
+<h3>UsageEvent</h3>
+<table>
+<thead>
+<tr>
+  <th>Campo</th>
+  <th>Tipo</th>
+  <th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>id</td>
+  <td>string</td>
+  <td>ID evento</td>
+</tr>
+<tr>
+  <td>licenseId</td>
+  <td>string</td>
+  <td>Licencia</td>
+</tr>
+<tr>
+  <td>operationId</td>
+  <td>string</td>
+  <td>Operación</td>
+</tr>
+<tr>
+  <td>challengeId</td>
+  <td>string</td>
+  <td>Challenge</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>string</td>
+  <td>otp_sent_billable</td>
+</tr>
+<tr>
+  <td>channel</td>
+  <td>string</td>
+  <td>whatsapp/sms/email</td>
+</tr>
+<tr>
+  <td>billable</td>
+  <td>boolean</td>
+  <td>Facturable</td>
+</tr>
+<tr>
+  <td>reason</td>
+  <td>string</td>
+  <td>SEND_ACCEPTED</td>
+</tr>
+<tr>
+  <td>createdAt</td>
+  <td>datetime</td>
+  <td>Fecha</td>
+</tr>
+</tbody>
+</table>
+<p><a class="btn" href="../diagrams/erd-licensing.html">Ver diagrama renderizado</a></p>
+
+</article></main>
+</div>
+<script src="../../docs-html/assets/docs.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>if(window.mermaid){mermaid.initialize({startOnLoad:true,theme:'default',securityLevel:'loose'});}</script>
+</body>
+</html>

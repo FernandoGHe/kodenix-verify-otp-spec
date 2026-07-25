@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>03 - Licenciamiento y Control de Uso · Kodenix Verify</title>
+<link rel="stylesheet" href="../../docs-html/assets/docs.css" />
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar"><a class="brand" href="../../index.html"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Specification</span></span></a><div class="nav-list">
+<div class="nav-section">Main</div>
+<a class="nav-link" href="../../docs-html/MANIFEST.html">Manifest - Kodenix Verify OTP</a>
+<a class="nav-link" href="../../docs-html/README.html">Kodenix Verify OTP Specification</a>
+<div class="nav-section">docs</div>
+<a class="nav-link" href="../../docs-html/docs/00-documentation-governance.html">00 - Gobierno de Documentación</a>
+<a class="nav-link" href="../../docs-html/docs/01-functional-scope.html">01 - Alcance Funcional</a>
+<a class="nav-link" href="../../docs-html/docs/02-requirements.html">02 - Requerimientos</a>
+<a class="nav-link" href="../../docs-html/docs/03-licensing-and-usage-control.html">03 - Licenciamiento y Control de Uso</a>
+<a class="nav-link" href="../../docs-html/docs/04-transaction-counting-and-billing.html">04 - Conteo de Transacciones y Facturación</a>
+<a class="nav-link" href="../../docs-html/docs/05-security-specification.html">05 - Especificación de Seguridad</a>
+<a class="nav-link" href="../../docs-html/docs/06-fallback-and-channel-availability.html">06 - Fallback y Disponibilidad de Canales</a>
+<a class="nav-link" href="../../docs-html/docs/07-api-contract-overview.html">07 - API Contract Overview</a>
+<a class="nav-link" href="../../docs-html/docs/08-state-machine.html">08 - Máquina de Estados</a>
+<a class="nav-link" href="../../docs-html/docs/09-data-model.html">09 - Modelo de Datos</a>
+<a class="nav-link" href="../../docs-html/docs/10-infrastructure-sizing.html">10 - Servidores e Infraestructura Estimada</a>
+<a class="nav-link" href="../../docs-html/docs/11-observability-audit.html">11 - Observabilidad y Auditoría</a>
+<a class="nav-link" href="../../docs-html/docs/12-error-catalog.html">12 - Catálogo de Errores</a>
+<a class="nav-link" href="../../docs-html/docs/13-webhooks.html">13 - Webhooks</a>
+<a class="nav-link" href="../../docs-html/docs/14-sla-and-availability.html">14 - SLA y Disponibilidad</a>
+<a class="nav-link" href="../../docs-html/docs/15-release-versioning.html">15 - Versionado y Releases</a>
+<a class="nav-link" href="../../docs-html/docs/16-published-documentation-surface.html">Published Documentation Surface</a>
+<div class="nav-section">openapi</div>
+<a class="nav-link" href="../../docs-html/openapi/README.html">OpenAPI Catalog</a>
+<div class="nav-section">diagrams</div>
+<a class="nav-link" href="../../docs-html/diagrams/README.html">Diagramas Mermaid</a>
+<div class="nav-section">backend</div>
+<a class="nav-link" href="../../docs-html/backend/backend-handoff.html">Backend Handoff</a>
+<a class="nav-link" href="../../docs-html/backend/database-model.html">Database Model</a>
+<a class="nav-link" href="../../docs-html/backend/domain-model.html">Domain Model</a>
+<a class="nav-link" href="../../docs-html/backend/provider-contract.html">Provider Contract</a>
+<a class="nav-link" href="../../docs-html/backend/rules-engine.html">Rules Engine</a>
+<div class="nav-section">sdk</div>
+<a class="nav-link" href="../../docs-html/sdk/localization-spec.html">Localization Spec</a>
+<a class="nav-link" href="../../docs-html/sdk/sdk-android-contract.html">SDK Android Contract</a>
+<a class="nav-link" href="../../docs-html/sdk/sdk-contract-common.html">SDK Contract Common</a>
+<a class="nav-link" href="../../docs-html/sdk/sdk-ios-contract.html">SDK iOS Contract</a>
+<a class="nav-link" href="../../docs-html/sdk/sdk-web-contract.html">SDK Web Contract</a>
+<a class="nav-link" href="../../docs-html/sdk/ui-ux-spec.html">UI/UX Spec</a>
+<div class="nav-section">admin</div>
+<a class="nav-link" href="../../docs-html/admin/admin-portal-spec.html">Admin Portal Spec</a>
+<a class="nav-link" href="../../docs-html/admin/tenant-license-configuration.html">Tenant License Configuration</a>
+<div class="nav-section">operations</div>
+<a class="nav-link" href="../../docs-html/operations/capacity-planning.html">Capacity Planning</a>
+<a class="nav-link" href="../../docs-html/operations/incident-response.html">Incident Response</a>
+<a class="nav-link" href="../../docs-html/operations/monitoring-alerts.html">Monitoring Alerts</a>
+<a class="nav-link" href="../../docs-html/operations/runbook.html">Runbook Operativo</a>
+<div class="nav-section">qa</div>
+<a class="nav-link" href="../../docs-html/qa/acceptance-criteria.html">Acceptance Criteria</a>
+<a class="nav-link" href="../../docs-html/qa/qa-matrix.html">QA Matrix</a>
+<a class="nav-link" href="../../docs-html/qa/test-cases.html">Test Cases</a>
+<div class="nav-section">swagger-ui</div>
+<a class="nav-link" href="../../swagger-ui/index.html">Swagger UI</a>
+</div></aside>
+<main class="content"><article class="doc">
+<div class="top-actions"><a class="btn" href="../../index.html">Landing</a><a class="btn" href="../../swagger-ui/index.html">Swagger UI</a><a class="btn" href="../../docs-html/diagrams/README.html">Diagrams</a></div>
+<div class="crumb">docs/03-licensing-and-usage-control.md</div>
+<h1>03 - Licenciamiento y Control de Uso</h1>
+<h2>Objetivo</h2>
+<p>Evitar que un cliente use una API key o token en cualquier cantidad de sitios, apps o ambientes. Cada uso debe estar asociado a una licencia autorizada.</p>
+<h2>Modelo jerárquico</h2>
+<pre><code class="language-text">Client
+  └── Application
+        └── Environment
+              └── License
+                    ├── Platform entitlement
+                    ├── Allowed origins / packages / bundles
+                    ├── Allowed channels
+                    ├── Quotas
+                    ├── Billing policy
+                    └── Status
+</code></pre>
+<h2>Entidades</h2>
+<h3>Client</h3>
+<p>Empresa contratante.</p>
+<h3>Application</h3>
+<p>Producto o sistema del cliente. Ejemplo: <code>Banco Demo Onboarding</code>.</p>
+<h3>Environment</h3>
+<p><code>sandbox</code>, <code>qa</code>, <code>staging</code>, <code>production</code>.</p>
+<h3>License</h3>
+<p>Contrato técnico que habilita uso del SDK/API para una app, ambiente, plataforma y orígenes específicos.</p>
+<h2>Una URL, una licencia o entitlement explícito</h2>
+<p>Regla de negocio:</p>
+<blockquote>
+<p>Tener API key de cliente no permite usar el SDK en todos los sitios del cliente. Cada URL debe estar registrada y autorizada por licencia.</p>
+</blockquote>
+<p>Ejemplo:</p>
+<pre><code class="language-json">{
+  &quot;licenseId&quot;: &quot;lic_prod_web_001&quot;,
+  &quot;platform&quot;: &quot;web&quot;,
+  &quot;allowedOrigins&quot;: [
+    &quot;https://onboarding.bancodemo.com&quot;
+  ]
+}
+</code></pre>
+<p>Si el cliente quiere usar:</p>
+<pre><code class="language-text">https://creditos.bancodemo.com
+</code></pre>
+<p>debe crear otra licencia o agregar explícitamente otro entitlement, según política comercial.</p>
+<h2>Validación por plataforma</h2>
+<h3>Web</h3>
+<p>Validar:</p>
+<ul>
+<li><code>Origin</code> header.</li>
+<li><code>Referer</code> como apoyo, no como fuente única de confianza.</li>
+<li>Dominio exacto o wildcard autorizado.</li>
+<li>Ambiente.</li>
+<li>sdkToken asociado a licenseId.</li>
+</ul>
+<p>No permitir comodines amplios tipo:</p>
+<pre><code class="language-text">*.com
+*.cliente.com  // solo permitir si comercial y seguridad lo aprueban
+</code></pre>
+<p>Preferido:</p>
+<pre><code class="language-text">https://onboarding.cliente.com
+https://app.cliente.com
+</code></pre>
+<h3>Android</h3>
+<p>Validar:</p>
+<ul>
+<li><code>packageName</code>.</li>
+<li>Signing certificate fingerprint SHA-256.</li>
+<li>Environment.</li>
+<li>SDK version mínima.</li>
+</ul>
+<h3>iOS</h3>
+<p>Validar:</p>
+<ul>
+<li><code>bundleId</code>.</li>
+<li>Apple Team ID, si aplica.</li>
+<li>Environment.</li>
+<li>SDK version mínima.</li>
+</ul>
+<h2>Estados de licencia</h2>
+<table>
+<thead>
+<tr>
+  <th>Estado</th>
+  <th>Descripción</th>
+  <th style="text-align:right">Permite crear operación</th>
+  <th style="text-align:right">Permite enviar OTP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>TRIAL</td>
+  <td>Licencia de prueba</td>
+  <td style="text-align:right">Sí</td>
+  <td style="text-align:right">Sí, con límite</td>
+</tr>
+<tr>
+  <td>ACTIVE</td>
+  <td>Licencia vigente</td>
+  <td style="text-align:right">Sí</td>
+  <td style="text-align:right">Sí</td>
+</tr>
+<tr>
+  <td>SUSPENDED</td>
+  <td>Suspendida manualmente</td>
+  <td style="text-align:right">No</td>
+  <td style="text-align:right">No</td>
+</tr>
+<tr>
+  <td>EXPIRED</td>
+  <td>Vigencia terminada</td>
+  <td style="text-align:right">No</td>
+  <td style="text-align:right">No</td>
+</tr>
+<tr>
+  <td>REVOKED</td>
+  <td>Revocada por seguridad</td>
+  <td style="text-align:right">No</td>
+  <td style="text-align:right">No</td>
+</tr>
+<tr>
+  <td>OVER_QUOTA</td>
+  <td>Cuota agotada</td>
+  <td style="text-align:right">Sí opcional</td>
+  <td style="text-align:right">No</td>
+</tr>
+<tr>
+  <td>READ_ONLY</td>
+  <td>Solo consulta de estado/analytics</td>
+  <td style="text-align:right">No</td>
+  <td style="text-align:right">No</td>
+</tr>
+</tbody>
+</table>
+<h2>Políticas de cuota</h2>
+<ul>
+<li>Mensual por licencia.</li>
+<li>Mensual por cliente.</li>
+<li>Diaria para protección de abuso.</li>
+<li>Por canal.</li>
+<li>Por ambiente.</li>
+</ul>
+<p>Ejemplo:</p>
+<pre><code class="language-json">{
+  &quot;quotaPolicy&quot;: {
+    &quot;monthlyOtpSentLimit&quot;: 100000,
+    &quot;dailyOtpSentLimit&quot;: 10000,
+    &quot;whatsappMonthlyLimit&quot;: 70000,
+    &quot;smsMonthlyLimit&quot;: 25000,
+    &quot;emailMonthlyLimit&quot;: 5000,
+    &quot;hardLimit&quot;: true
+  }
+}
+</code></pre>
+<h2>Cuándo validar licencia</h2>
+<ol>
+<li>Al crear operación.</li>
+<li>Al solicitar configuración del SDK.</li>
+<li>Antes de enviar OTP.</li>
+<li>Antes de reenviar OTP.</li>
+<li>Antes de cambiar canal.</li>
+<li>Al recibir webhooks internos de proveedor para asociar consumo.</li>
+</ol>
+<h2>Flujo recomendado</h2>
+<ol>
+<li>Backend cliente llama <code>POST /v1/otp/operations</code> con API key privada.</li>
+<li>Kodenix valida client/application/license/origin-package-bundle.</li>
+<li>Kodenix emite <code>sdkToken</code> temporal ligado a <code>operationId</code> y <code>licenseId</code>.</li>
+<li>SDK llama APIs con Bearer token.</li>
+<li>Cada envío valida licencia y cuota antes de invocar proveedor.</li>
+</ol>
+<h2>Errores de licencia</h2>
+<table>
+<thead>
+<tr>
+  <th>Código</th>
+  <th style="text-align:right">HTTP</th>
+  <th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>LICENSE_NOT_FOUND</td>
+  <td style="text-align:right">403</td>
+  <td>No existe licencia aplicable</td>
+</tr>
+<tr>
+  <td>LICENSE_EXPIRED</td>
+  <td style="text-align:right">403</td>
+  <td>Licencia vencida</td>
+</tr>
+<tr>
+  <td>LICENSE_SUSPENDED</td>
+  <td style="text-align:right">403</td>
+  <td>Licencia suspendida</td>
+</tr>
+<tr>
+  <td>LICENSE_REVOKED</td>
+  <td style="text-align:right">403</td>
+  <td>Licencia revocada</td>
+</tr>
+<tr>
+  <td>LICENSE_OVER_QUOTA</td>
+  <td style="text-align:right">402/429</td>
+  <td>Cuota agotada</td>
+</tr>
+<tr>
+  <td>LICENSE_ORIGIN_NOT_ALLOWED</td>
+  <td style="text-align:right">403</td>
+  <td>URL no autorizada</td>
+</tr>
+<tr>
+  <td>LICENSE_PACKAGE_NOT_ALLOWED</td>
+  <td style="text-align:right">403</td>
+  <td>Package Android no autorizado</td>
+</tr>
+<tr>
+  <td>LICENSE_BUNDLE_NOT_ALLOWED</td>
+  <td style="text-align:right">403</td>
+  <td>Bundle iOS no autorizado</td>
+</tr>
+<tr>
+  <td>LICENSE_CHANNEL_NOT_ALLOWED</td>
+  <td style="text-align:right">403</td>
+  <td>Canal no incluido en licencia</td>
+</tr>
+<tr>
+  <td>LICENSE_ENVIRONMENT_NOT_ALLOWED</td>
+  <td style="text-align:right">403</td>
+  <td>Ambiente no permitido</td>
+</tr>
+</tbody>
+</table>
+
+</article></main>
+</div>
+<script src="../../docs-html/assets/docs.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>if(window.mermaid){mermaid.initialize({startOnLoad:true,theme:'default',securityLevel:'loose'});}</script>
+</body>
+</html>

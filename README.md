@@ -20,28 +20,28 @@ Documentación técnica del producto **Kodenix Verify OTP SDK/API**.
 
 ## Navegación principal
 
-1. [Gobierno de documentación](docs/00-documentation-governance.md)
-2. [Alcance funcional](docs/01-functional-scope.md)
-3. [Requerimientos](docs/02-requirements.md)
-4. [Licenciamiento y control de uso](docs/03-licensing-and-usage-control.md)
-5. [Conteo transaccional y facturación](docs/04-transaction-counting-and-billing.md)
-6. [Seguridad](docs/05-security-specification.md)
-7. [Fallback y disponibilidad de canales](docs/06-fallback-and-channel-availability.md)
-8. [Contrato API](docs/07-api-contract-overview.md)
-9. [Máquina de estados](docs/08-state-machine.md)
-10. [Modelo de datos](docs/09-data-model.md)
-11. [Infraestructura](docs/10-infrastructure-sizing.md)
-12. [Observabilidad y auditoría](docs/11-observability-audit.md)
-13. [Catálogo de errores](docs/12-error-catalog.md)
-14. [Webhooks](docs/13-webhooks.md)
-15. [SLA y disponibilidad](docs/14-sla-and-availability.md)
-16. [Versionado](docs/15-release-versioning.md)
-17. [Superficie de publicación](docs/16-published-documentation-surface.md)
+1. [Gobierno de documentación](docs-html/docs/00-documentation-governance.html)
+2. [Alcance funcional](docs-html/docs/01-functional-scope.html)
+3. [Requerimientos](docs-html/docs/02-requirements.html)
+4. [Licenciamiento y control de uso](docs-html/docs/03-licensing-and-usage-control.html)
+5. [Conteo transaccional y facturación](docs-html/docs/04-transaction-counting-and-billing.html)
+6. [Seguridad](docs-html/docs/05-security-specification.html)
+7. [Fallback y disponibilidad de canales](docs-html/docs/06-fallback-and-channel-availability.html)
+8. [Contrato API](docs-html/docs/07-api-contract-overview.html)
+9. [Máquina de estados](docs-html/docs/08-state-machine.html)
+10. [Modelo de datos](docs-html/docs/09-data-model.html)
+11. [Infraestructura](docs-html/docs/10-infrastructure-sizing.html)
+12. [Observabilidad y auditoría](docs-html/docs/11-observability-audit.html)
+13. [Catálogo de errores](docs-html/docs/12-error-catalog.html)
+14. [Webhooks](docs-html/docs/13-webhooks.html)
+15. [SLA y disponibilidad](docs-html/docs/14-sla-and-availability.html)
+16. [Versionado](docs-html/docs/15-release-versioning.html)
+17. [Superficie de publicación](docs-html/docs/16-published-documentation-surface.html)
 
 ## APIs
 
 - [Swagger UI](swagger-ui/index.html)
-- [OpenAPI Index](openapi/README.md)
+- [OpenAPI Index](docs-html/openapi/README.html)
 - [Admin API](openapi/admin-api.yaml)
 - [Analytics API](openapi/analytics-api.yaml)
 - [Licensing API](openapi/licensing-api.yaml)
@@ -51,51 +51,56 @@ Documentación técnica del producto **Kodenix Verify OTP SDK/API**.
 
 ## Diagramas
 
-- [Diagramas renderizados](diagrams/README.md)
+- [Vista HTML de diagramas](docs-html/diagrams/README.html)
+- [Índice visual de diagramas](docs-html/diagrams/README.html)
+
+## Diagramas fuente
+
+- [Diagramas renderizados](docs-html/diagrams/README.html)
 - [Component Diagram](diagrams/component.mmd)
 - [Deployment Diagram](diagrams/deployment.mmd)
-- [ERD Licensing](diagrams/erd-licensing.mmd)
-- [Outage Flow](diagrams/outage-flow.mmd)
-- [Security Token Flow](diagrams/security-token-flow.mmd)
+- [ERD Licensing](docs-html/diagrams/erd-licensing.html)
+- [Outage Flow](docs-html/diagrams/outage-flow.html)
+- [Security Token Flow](docs-html/diagrams/security-token-flow.html)
 - [Enterprise License Sequence](diagrams/sequence-enterprise-license.mmd)
 - [Provider Fallback Sequence](diagrams/sequence-provider-fallback.mmd)
 - [SDK Init Target Optional Sequence](diagrams/sequence-sdk-init-target-optional.mmd)
-- [State Machine](diagrams/state-machine.mmd)
+- [State Machine](docs-html/diagrams/state-machine.html)
 
 ## Backend handoff
 
-- [Backend Handoff](backend/backend-handoff.md)
-- [Database Model](backend/database-model.md)
-- [Domain Model](backend/domain-model.md)
-- [Provider Contract](backend/provider-contract.md)
-- [Rules Engine](backend/rules-engine.md)
+- [Backend Handoff](docs-html/backend/backend-handoff.html)
+- [Database Model](docs-html/backend/database-model.html)
+- [Domain Model](docs-html/backend/domain-model.html)
+- [Provider Contract](docs-html/backend/provider-contract.html)
+- [Rules Engine](docs-html/backend/rules-engine.html)
 
 ## SDK contracts
 
-- [Common SDK Contract](sdk/sdk-contract-common.md)
-- [Web SDK Contract](sdk/sdk-web-contract.md)
-- [Android SDK Contract](sdk/sdk-android-contract.md)
-- [iOS SDK Contract](sdk/sdk-ios-contract.md)
-- [UI/UX Spec](sdk/ui-ux-spec.md)
-- [Localization Spec](sdk/localization-spec.md)
+- [Common SDK Contract](docs-html/sdk/sdk-contract-common.html)
+- [Web SDK Contract](docs-html/sdk/sdk-web-contract.html)
+- [Android SDK Contract](docs-html/sdk/sdk-android-contract.html)
+- [iOS SDK Contract](docs-html/sdk/sdk-ios-contract.html)
+- [UI/UX Spec](docs-html/sdk/ui-ux-spec.html)
+- [Localization Spec](docs-html/sdk/localization-spec.html)
 
 ## Administración
 
-- [Admin Portal Spec](admin/admin-portal-spec.md)
-- [Tenant License Configuration](admin/tenant-license-configuration.md)
+- [Admin Portal Spec](docs-html/admin/admin-portal-spec.html)
+- [Tenant License Configuration](docs-html/admin/tenant-license-configuration.html)
 
 ## Operaciones
 
-- [Capacity Planning](operations/capacity-planning.md)
-- [Incident Response](operations/incident-response.md)
-- [Monitoring Alerts](operations/monitoring-alerts.md)
-- [Runbook](operations/runbook.md)
+- [Capacity Planning](docs-html/operations/capacity-planning.html)
+- [Incident Response](docs-html/operations/incident-response.html)
+- [Monitoring Alerts](docs-html/operations/monitoring-alerts.html)
+- [Runbook](docs-html/operations/runbook.html)
 
 ## QA
 
-- [Acceptance Criteria](qa/acceptance-criteria.md)
-- [QA Matrix](qa/qa-matrix.md)
-- [Test Cases](qa/test-cases.md)
+- [Acceptance Criteria](docs-html/qa/acceptance-criteria.html)
+- [QA Matrix](docs-html/qa/qa-matrix.html)
+- [Test Cases](docs-html/qa/test-cases.html)
 
 ## Postman
 

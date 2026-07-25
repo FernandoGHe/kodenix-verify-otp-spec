@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>10 - Servidores e Infraestructura Estimada · Kodenix Verify</title>
+<link rel="stylesheet" href="../../docs-html/assets/docs.css" />
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar"><a class="brand" href="../../index.html"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Specification</span></span></a><div class="nav-list">
+<div class="nav-section">Main</div>
+<a class="nav-link" href="../../docs-html/MANIFEST.html">Manifest - Kodenix Verify OTP</a>
+<a class="nav-link" href="../../docs-html/README.html">Kodenix Verify OTP Specification</a>
+<div class="nav-section">docs</div>
+<a class="nav-link" href="../../docs-html/docs/00-documentation-governance.html">00 - Gobierno de Documentación</a>
+<a class="nav-link" href="../../docs-html/docs/01-functional-scope.html">01 - Alcance Funcional</a>
+<a class="nav-link" href="../../docs-html/docs/02-requirements.html">02 - Requerimientos</a>
+<a class="nav-link" href="../../docs-html/docs/03-licensing-and-usage-control.html">03 - Licenciamiento y Control de Uso</a>
+<a class="nav-link" href="../../docs-html/docs/04-transaction-counting-and-billing.html">04 - Conteo de Transacciones y Facturación</a>
+<a class="nav-link" href="../../docs-html/docs/05-security-specification.html">05 - Especificación de Seguridad</a>
+<a class="nav-link" href="../../docs-html/docs/06-fallback-and-channel-availability.html">06 - Fallback y Disponibilidad de Canales</a>
+<a class="nav-link" href="../../docs-html/docs/07-api-contract-overview.html">07 - API Contract Overview</a>
+<a class="nav-link" href="../../docs-html/docs/08-state-machine.html">08 - Máquina de Estados</a>
+<a class="nav-link" href="../../docs-html/docs/09-data-model.html">09 - Modelo de Datos</a>
+<a class="nav-link" href="../../docs-html/docs/10-infrastructure-sizing.html">10 - Servidores e Infraestructura Estimada</a>
+<a class="nav-link" href="../../docs-html/docs/11-observability-audit.html">11 - Observabilidad y Auditoría</a>
+<a class="nav-link" href="../../docs-html/docs/12-error-catalog.html">12 - Catálogo de Errores</a>
+<a class="nav-link" href="../../docs-html/docs/13-webhooks.html">13 - Webhooks</a>
+<a class="nav-link" href="../../docs-html/docs/14-sla-and-availability.html">14 - SLA y Disponibilidad</a>
+<a class="nav-link" href="../../docs-html/docs/15-release-versioning.html">15 - Versionado y Releases</a>
+<a class="nav-link" href="../../docs-html/docs/16-published-documentation-surface.html">Published Documentation Surface</a>
+<div class="nav-section">openapi</div>
+<a class="nav-link" href="../../docs-html/openapi/README.html">OpenAPI Catalog</a>
+<div class="nav-section">diagrams</div>
+<a class="nav-link" href="../../docs-html/diagrams/README.html">Diagramas Mermaid</a>
+<div class="nav-section">backend</div>
+<a class="nav-link" href="../../docs-html/backend/backend-handoff.html">Backend Handoff</a>
+<a class="nav-link" href="../../docs-html/backend/database-model.html">Database Model</a>
+<a class="nav-link" href="../../docs-html/backend/domain-model.html">Domain Model</a>
+<a class="nav-link" href="../../docs-html/backend/provider-contract.html">Provider Contract</a>
+<a class="nav-link" href="../../docs-html/backend/rules-engine.html">Rules Engine</a>
+<div class="nav-section">sdk</div>
+<a class="nav-link" href="../../docs-html/sdk/localization-spec.html">Localization Spec</a>
+<a class="nav-link" href="../../docs-html/sdk/sdk-android-contract.html">SDK Android Contract</a>
+<a class="nav-link" href="../../docs-html/sdk/sdk-contract-common.html">SDK Contract Common</a>
+<a class="nav-link" href="../../docs-html/sdk/sdk-ios-contract.html">SDK iOS Contract</a>
+<a class="nav-link" href="../../docs-html/sdk/sdk-web-contract.html">SDK Web Contract</a>
+<a class="nav-link" href="../../docs-html/sdk/ui-ux-spec.html">UI/UX Spec</a>
+<div class="nav-section">admin</div>
+<a class="nav-link" href="../../docs-html/admin/admin-portal-spec.html">Admin Portal Spec</a>
+<a class="nav-link" href="../../docs-html/admin/tenant-license-configuration.html">Tenant License Configuration</a>
+<div class="nav-section">operations</div>
+<a class="nav-link" href="../../docs-html/operations/capacity-planning.html">Capacity Planning</a>
+<a class="nav-link" href="../../docs-html/operations/incident-response.html">Incident Response</a>
+<a class="nav-link" href="../../docs-html/operations/monitoring-alerts.html">Monitoring Alerts</a>
+<a class="nav-link" href="../../docs-html/operations/runbook.html">Runbook Operativo</a>
+<div class="nav-section">qa</div>
+<a class="nav-link" href="../../docs-html/qa/acceptance-criteria.html">Acceptance Criteria</a>
+<a class="nav-link" href="../../docs-html/qa/qa-matrix.html">QA Matrix</a>
+<a class="nav-link" href="../../docs-html/qa/test-cases.html">Test Cases</a>
+<div class="nav-section">swagger-ui</div>
+<a class="nav-link" href="../../swagger-ui/index.html">Swagger UI</a>
+</div></aside>
+<main class="content"><article class="doc">
+<div class="top-actions"><a class="btn" href="../../index.html">Landing</a><a class="btn" href="../../swagger-ui/index.html">Swagger UI</a><a class="btn" href="../../docs-html/diagrams/README.html">Diagrams</a></div>
+<div class="crumb">docs/10-infrastructure-sizing.md</div>
+<h1>10 - Servidores e Infraestructura Estimada</h1>
+<h2>Componentes necesarios</h2>
+<table>
+<thead>
+<tr>
+  <th>Componente</th>
+  <th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>API Gateway / Load Balancer</td>
+  <td>Entrada HTTPS, WAF, rate limits básicos</td>
+</tr>
+<tr>
+  <td>OTP API</td>
+  <td>Operaciones, envío, validación, estado</td>
+</tr>
+<tr>
+  <td>Admin API</td>
+  <td>Clientes, licencias, reglas, reportes</td>
+</tr>
+<tr>
+  <td>Worker/Queue Processor</td>
+  <td>Envíos asíncronos y reintentos</td>
+</tr>
+<tr>
+  <td>PostgreSQL</td>
+  <td>Operaciones, licencias, auditoría, configuración</td>
+</tr>
+<tr>
+  <td>Redis</td>
+  <td>OTP temporal, rate limit, locks, TTL</td>
+</tr>
+<tr>
+  <td>Object Storage opcional</td>
+  <td>Exportes/reportes</td>
+</tr>
+<tr>
+  <td>Observability</td>
+  <td>Logs, métricas, alertas</td>
+</tr>
+</tbody>
+</table>
+<h2>MVP bajo volumen</h2>
+<p>Supuesto: hasta 100k OTP enviados/mes, picos bajos.</p>
+<table>
+<thead>
+<tr>
+  <th>Recurso</th>
+  <th>Estimado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>API</td>
+  <td>2 instancias 1 vCPU / 1-2 GB RAM</td>
+</tr>
+<tr>
+  <td>Worker</td>
+  <td>1-2 instancias 1 vCPU / 1 GB RAM</td>
+</tr>
+<tr>
+  <td>PostgreSQL</td>
+  <td>2 vCPU / 4 GB RAM / 50-100 GB SSD</td>
+</tr>
+<tr>
+  <td>Redis</td>
+  <td>1 vCPU / 1-2 GB RAM</td>
+</tr>
+<tr>
+  <td>Logs</td>
+  <td>7-30 días hot</td>
+</tr>
+</tbody>
+</table>
+<h2>Medio volumen</h2>
+<p>Supuesto: 1M OTP/mes.</p>
+<table>
+<thead>
+<tr>
+  <th>Recurso</th>
+  <th>Estimado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>API</td>
+  <td>3-4 instancias 2 vCPU / 4 GB RAM</td>
+</tr>
+<tr>
+  <td>Worker</td>
+  <td>3-6 instancias 2 vCPU / 4 GB RAM</td>
+</tr>
+<tr>
+  <td>PostgreSQL</td>
+  <td>4-8 vCPU / 16-32 GB RAM / 300 GB SSD</td>
+</tr>
+<tr>
+  <td>Redis</td>
+  <td>2-4 vCPU / 8 GB RAM con réplica</td>
+</tr>
+<tr>
+  <td>Queue</td>
+  <td>SQS/RabbitMQ/PubSub recomendado</td>
+</tr>
+</tbody>
+</table>
+<h2>Alto volumen</h2>
+<p>Supuesto: 10M OTP/mes.</p>
+<table>
+<thead>
+<tr>
+  <th>Recurso</th>
+  <th>Estimado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>API</td>
+  <td>Autoscaling 6-20 instancias</td>
+</tr>
+<tr>
+  <td>Worker</td>
+  <td>Autoscaling por cola</td>
+</tr>
+<tr>
+  <td>PostgreSQL</td>
+  <td>HA, read replicas, particionado por fecha</td>
+</tr>
+<tr>
+  <td>Redis</td>
+  <td>Cluster/managed HA</td>
+</tr>
+<tr>
+  <td>Queue</td>
+  <td>Obligatoria</td>
+</tr>
+<tr>
+  <td>Analytics</td>
+  <td>Data warehouse o tabla particionada</td>
+</tr>
+</tbody>
+</table>
+<h2>Recomendación MVP</h2>
+<p>Para iniciar serio pero sin castillo inflable:</p>
+<pre><code class="language-text">Cloud Run / ECS / Kubernetes ligero
+PostgreSQL managed
+Redis managed
+Queue managed
+WAF + rate limit
+Centralized logging
+</code></pre>
+<h2>Capacidad por transacción</h2>
+<p>Cada OTP enviado genera aproximadamente:</p>
+<ul>
+<li>1 operación o challenge.</li>
+<li>1 evento de auditoría mínimo.</li>
+<li>1 evento de uso facturable.</li>
+<li>1 llamada proveedor.</li>
+<li>1-3 métricas.</li>
+</ul>
+<p>Con fallback puede duplicar o triplicar eventos por operación.</p>
+
+</article></main>
+</div>
+<script src="../../docs-html/assets/docs.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>if(window.mermaid){mermaid.initialize({startOnLoad:true,theme:'default',securityLevel:'loose'});}</script>
+</body>
+</html>

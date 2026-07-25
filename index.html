@@ -39,6 +39,22 @@
     .card span { color: var(--muted); font-size: 14px; }
     .footer { margin-top: 52px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--muted); font-size: 14px; }
     code { color: var(--accent); }
+
+    /* Restrained, professional documentation theme */
+    :root { --bg:#f5f7fa; --panel:#fff; --panel-hover:#f8fafc; --border:#dfe4ea; --border-hover:#8ca0b3; --text:#172431; --muted:#64717d; --soft:#354553; --accent:#0b6b73; }
+    body { background:var(--bg); }
+    main { max-width:1180px; padding:64px 32px 80px; }
+    .eyebrow { font-size:12px; letter-spacing:.11em; margin-bottom:14px; }
+    h1 { color:#18324a; font-size:clamp(38px,5vw,56px); font-weight:720; letter-spacing:-.035em; line-height:1.08; }
+    .lead { font-size:18px; }
+    .meta { gap:8px; margin-top:28px; padding-top:22px; border-top:1px solid var(--border); }
+    .pill { border-radius:5px; padding:6px 10px; background:#fff; font-size:13px; }
+    section { margin-top:48px; }
+    h2 { color:#18324a; font-size:22px; letter-spacing:-.015em; }
+    .grid { gap:14px; }
+    a.card { min-height:118px; border-radius:8px; box-shadow:0 1px 2px rgba(15,23,42,.04); transition:border-color .16s ease,box-shadow .16s ease,background .16s ease; }
+    a.card:hover { transform:none; box-shadow:0 5px 16px rgba(15,23,42,.07); }
+    @media (max-width:640px) { main { padding:40px 20px 56px; } section { margin-top:38px; } }
   </style>
 </head>
 <body>
@@ -55,43 +71,43 @@
     <section>
       <h2>Entrada principal</h2>
       <div class="grid">
-        <a class="card" href="./README.md"><strong>README</strong><span>Inicio general, estructura y navegación del paquete.</span></a>
-        <a class="card" href="./MANIFEST.md"><strong>Manifest</strong><span>Inventario completo de documentos, APIs, diagramas y anexos.</span></a>
-        <a class="card" href="./docs/00-documentation-governance.md"><strong>Documentation Governance</strong><span>Fuente oficial de cada tema.</span></a>
+        <a class="card" href="./docs-html/README.html"><strong>README</strong><span>Inicio general, estructura y navegación del paquete.</span></a>
+        <a class="card" href="./docs-html/MANIFEST.html"><strong>Manifest</strong><span>Inventario completo de documentos, APIs, diagramas y anexos.</span></a>
+        <a class="card" href="./docs-html/docs/00-documentation-governance.html"><strong>Documentation Governance</strong><span>Fuente oficial de cada tema.</span></a>
       </div>
     </section>
     <section>
       <h2>Documentación funcional y técnica</h2>
       <div class="grid">
-        <a class="card" href="./docs/01-functional-scope.md"><strong>Functional Scope</strong><span>Alcance, capacidades, límites y responsabilidades.</span></a>
-        <a class="card" href="./docs/02-requirements.md"><strong>Requirements</strong><span>Requerimientos funcionales, no funcionales y de seguridad.</span></a>
-        <a class="card" href="./docs/03-licensing-and-usage-control.md"><strong>Licensing & Usage Control</strong><span>Licencias, entitlements, URL/app binding, cuotas y restricciones.</span></a>
-        <a class="card" href="./docs/04-transaction-counting-and-billing.md"><strong>Transaction Counting & Billing</strong><span>Conteo por OTP enviado, reglas de cobro, cuotas y métricas.</span></a>
-        <a class="card" href="./docs/05-security-specification.md"><strong>Security Specification</strong><span>API keys, sdkToken, allowed origins, package binding y hardening.</span></a>
-        <a class="card" href="./docs/06-fallback-and-channel-availability.md"><strong>Fallback & Channel Availability</strong><span>WhatsApp primario, SMS/Email alternos, canal caído y target faltante.</span></a>
-        <a class="card" href="./docs/12-error-catalog.md"><strong>Error Catalog</strong><span>Errores normalizados para SDK, API, proveedores y operación.</span></a>
-        <a class="card" href="./docs/13-webhooks.md"><strong>Webhooks</strong><span>Eventos hacia el backend del cliente.</span></a>
+        <a class="card" href="./docs-html/docs/01-functional-scope.html"><strong>Functional Scope</strong><span>Alcance, capacidades, límites y responsabilidades.</span></a>
+        <a class="card" href="./docs-html/docs/02-requirements.html"><strong>Requirements</strong><span>Requerimientos funcionales, no funcionales y de seguridad.</span></a>
+        <a class="card" href="./docs-html/docs/03-licensing-and-usage-control.html"><strong>Licensing & Usage Control</strong><span>Licencias, entitlements, URL/app binding, cuotas y restricciones.</span></a>
+        <a class="card" href="./docs-html/docs/04-transaction-counting-and-billing.html"><strong>Transaction Counting & Billing</strong><span>Conteo por OTP enviado, reglas de cobro, cuotas y métricas.</span></a>
+        <a class="card" href="./docs-html/docs/05-security-specification.html"><strong>Security Specification</strong><span>API keys, sdkToken, allowed origins, package binding y hardening.</span></a>
+        <a class="card" href="./docs-html/docs/06-fallback-and-channel-availability.html"><strong>Fallback & Channel Availability</strong><span>WhatsApp primario, SMS/Email alternos, canal caído y target faltante.</span></a>
+        <a class="card" href="./docs-html/docs/12-error-catalog.html"><strong>Error Catalog</strong><span>Errores normalizados para SDK, API, proveedores y operación.</span></a>
+        <a class="card" href="./docs-html/docs/13-webhooks.html"><strong>Webhooks</strong><span>Eventos hacia el backend del cliente.</span></a>
       </div>
     </section>
     <section>
       <h2>APIs y Swagger</h2>
       <div class="grid">
         <a class="card" href="./swagger-ui/index.html"><strong>Swagger UI</strong><span>Visualizador interactivo de contratos OpenAPI.</span></a>
-        <a class="card" href="./openapi/README.md"><strong>OpenAPI Index</strong><span>Catálogo de archivos YAML.</span></a>
-        <a class="card" href="./openapi/otp-public-api.yaml"><strong>OTP Public API</strong><span>Contrato principal de operación OTP para SDK e integradores.</span></a>
-        <a class="card" href="./openapi/admin-api.yaml"><strong>Admin API</strong><span>Administración de clientes, apps, reglas, branding y proveedores.</span></a>
-        <a class="card" href="./openapi/licensing-api.yaml"><strong>Licensing API</strong><span>Licencias, entitlements, cuotas, uso y validaciones.</span></a>
-        <a class="card" href="./openapi/webhooks-api.yaml"><strong>Webhooks API</strong><span>Eventos enviados al backend del cliente.</span></a>
+        <a class="card" href="./docs-html/openapi/README.html"><strong>OpenAPI Index</strong><span>Catálogo de archivos YAML.</span></a>
+        <a class="card" href="./swagger-ui/index.html?spec=otp-public-api.yaml"><strong>OTP Public API</strong><span>Contrato principal de operación OTP para SDK e integradores.</span></a>
+        <a class="card" href="./swagger-ui/index.html?spec=admin-api.yaml"><strong>Admin API</strong><span>Administración de clientes, apps, reglas, branding y proveedores.</span></a>
+        <a class="card" href="./swagger-ui/index.html?spec=licensing-api.yaml"><strong>Licensing API</strong><span>Licencias, entitlements, cuotas, uso y validaciones.</span></a>
+        <a class="card" href="./swagger-ui/index.html?spec=webhooks-api.yaml"><strong>Webhooks API</strong><span>Eventos enviados al backend del cliente.</span></a>
       </div>
     </section>
     <section>
       <h2>Diagramas y operación</h2>
       <div class="grid">
-        <a class="card" href="./diagrams/README.md"><strong>Diagrams</strong><span>Diagramas Mermaid embebidos para visualización en repositorio.</span></a>
-        <a class="card" href="./operations/runbook.md"><strong>Operations Runbook</strong><span>Runbooks, incident response, outage, monitoreo y soporte.</span></a>
-        <a class="card" href="./backend/backend-handoff.md"><strong>Backend Handoff</strong><span>Implementación backend, servicios, configuraciones y reglas.</span></a>
-        <a class="card" href="./sdk/sdk-contract-common.md"><strong>SDK Contracts</strong><span>Inicialización y callbacks para Web, Android e iOS.</span></a>
-        <a class="card" href="./qa/test-cases.md"><strong>QA Test Cases</strong><span>Casos funcionales, seguridad y criterios de aceptación.</span></a>
+        <a class="card" href="./docs-html/diagrams/README.html"><strong>Diagrams</strong><span>Diagramas Mermaid renderizados en HTML para GitHub Pages.</span></a>
+        <a class="card" href="./docs-html/operations/runbook.html"><strong>Operations Runbook</strong><span>Runbooks, incident response, outage, monitoreo y soporte.</span></a>
+        <a class="card" href="./docs-html/backend/backend-handoff.html"><strong>Backend Handoff</strong><span>Implementación backend, servicios, configuraciones y reglas.</span></a>
+        <a class="card" href="./docs-html/sdk/sdk-contract-common.html"><strong>SDK Contracts</strong><span>Inicialización y callbacks para Web, Android e iOS.</span></a>
+        <a class="card" href="./docs-html/qa/test-cases.html"><strong>QA Test Cases</strong><span>Casos funcionales, seguridad y criterios de aceptación.</span></a>
         <a class="card" href="./postman/kodenix-verify-otp-v2.postman_collection.json"><strong>Postman</strong><span>Colección de pruebas manuales y automatizadas.</span></a>
       </div>
     </section>
