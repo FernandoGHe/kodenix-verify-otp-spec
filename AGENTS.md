@@ -8,8 +8,7 @@ Estas instrucciones aplican al repositorio de documentación
 ## Arquitectura de repositorios
 
 - La documentación y los contratos viven en `kodenix-verify-otp-spec`.
-- Android vive en
-  [kodenix-verify-otp-android](https://github.com/FernandoGHe/kodenix-verify-otp-android).
+- Android vive en un repositorio privado independiente.
 - iOS y Web tendrán repositorios independientes.
 - No se utilizan monorepos ni submódulos.
 - Cada SDK tiene su propio ciclo de versiones y releases.

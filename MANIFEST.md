@@ -32,7 +32,7 @@ Inventario del paquete de especificación.
 - [openapi/provider-internal-api.yaml](openapi/provider-internal-api.yaml)
 - [openapi/webhooks-api.yaml](openapi/webhooks-api.yaml)
 - [openapi/README.md](openapi/README.md)
-- [swagger-ui/index.html](swagger-ui/index.html)
+- [Swagger UI](swagger-ui/)
 
 ## Diagramas
 
@@ -63,12 +63,10 @@ Inventario del paquete de especificación.
 - [sdk/sdk-ios-contract.md](sdk/sdk-ios-contract.md)
 - [sdk/sdk-web-contract.md](sdk/sdk-web-contract.md)
 - [sdk/ui-ux-spec.md](sdk/ui-ux-spec.md)
-- [Repositorio oficial del SDK Android](https://github.com/FernandoGHe/kodenix-verify-otp-android)
-
 ## Implementaciones externas
 
-- [kodenix-verify-otp-android](https://github.com/FernandoGHe/kodenix-verify-otp-android):
-  SDK headless, UI Compose y aplicación demostrativa Android.
+- Android: SDK headless, UI Compose y aplicación demostrativa en un repositorio
+  independiente; este repositorio mantiene únicamente su contrato y documentación.
 - iOS y Web se publicarán en repositorios independientes.
 
 No se utilizan submódulos ni se copia código de SDK dentro de este repositorio.

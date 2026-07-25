@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>05 - Especificación de Seguridad · Kodenix Verify</title><link rel="stylesheet" href="../../assets/docs.css" /></head>
+<body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
+<div class="nav-section">admin</div><a class="nav-link" href="../../admin/admin-portal-spec/">Admin Portal Spec</a>
+<a class="nav-link" href="../../admin/tenant-license-configuration/">Tenant License Configuration</a>
+<div class="nav-section">backend</div><a class="nav-link" href="../../backend/backend-handoff/">Backend Handoff</a>
+<a class="nav-link" href="../../backend/database-model/">Database Model</a>
+<a class="nav-link" href="../../backend/domain-model/">Domain Model</a>
+<a class="nav-link" href="../../backend/provider-contract/">Provider Contract</a>
+<a class="nav-link" href="../../backend/rules-engine/">Rules Engine</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../../diagrams/README/">Diagramas Mermaid</a>
+<div class="nav-section">docs</div><a class="nav-link" href="../00-documentation-governance/">00 - Gobierno de Documentación</a>
+<a class="nav-link" href="../01-functional-scope/">01 - Alcance Funcional</a>
+<a class="nav-link" href="../02-requirements/">02 - Requerimientos</a>
+<a class="nav-link" href="../03-licensing-and-usage-control/">03 - Licenciamiento y Control de Uso</a>
+<a class="nav-link" href="../04-transaction-counting-and-billing/">04 - Conteo de Transacciones y Facturación</a>
+<a class="nav-link active" href="./">05 - Especificación de Seguridad</a>
+<a class="nav-link" href="../06-fallback-and-channel-availability/">06 - Fallback y Disponibilidad de Canales</a>
+<a class="nav-link" href="../07-api-contract-overview/">07 - API Contract Overview</a>
+<a class="nav-link" href="../08-state-machine/">08 - Máquina de Estados</a>
+<a class="nav-link" href="../09-data-model/">09 - Modelo de Datos</a>
+<a class="nav-link" href="../10-infrastructure-sizing/">10 - Servidores e Infraestructura Estimada</a>
+<a class="nav-link" href="../11-observability-audit/">11 - Observabilidad y Auditoría</a>
+<a class="nav-link" href="../12-error-catalog/">12 - Catálogo de Errores</a>
+<a class="nav-link" href="../13-webhooks/">13 - Webhooks</a>
+<a class="nav-link" href="../14-sla-and-availability/">14 - SLA y Disponibilidad</a>
+<a class="nav-link" href="../15-release-versioning/">15 - Versionado y Releases</a>
+<a class="nav-link" href="../16-published-documentation-surface/">Published Documentation Surface</a>
+<a class="nav-link" href="../android/getting-started/">Android: guia de integracion</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../../MANIFEST/">Manifest - Kodenix Verify OTP</a>
+<div class="nav-section">openapi</div><a class="nav-link" href="../../openapi/README/">OpenAPI Catalog</a>
+<div class="nav-section">operations</div><a class="nav-link" href="../../operations/capacity-planning/">Capacity Planning</a>
+<a class="nav-link" href="../../operations/incident-response/">Incident Response</a>
+<a class="nav-link" href="../../operations/monitoring-alerts/">Monitoring Alerts</a>
+<a class="nav-link" href="../../operations/runbook/">Runbook Operativo</a>
+<div class="nav-section">qa</div><a class="nav-link" href="../../qa/acceptance-criteria/">Acceptance Criteria</a>
+<a class="nav-link" href="../../qa/qa-matrix/">QA Matrix</a>
+<a class="nav-link" href="../../qa/test-cases/">Test Cases</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../../README/">Kodenix Verify OTP</a>
+<div class="nav-section">sdk</div><a class="nav-link" href="../../sdk/localization-spec/">Localization Spec</a>
+<a class="nav-link" href="../../sdk/sdk-android-contract/">SDK Android Contract</a>
+<a class="nav-link" href="../../sdk/sdk-contract-common/">SDK Contract Common</a>
+<a class="nav-link" href="../../sdk/sdk-ios-contract/">SDK iOS Contract</a>
+<a class="nav-link" href="../../sdk/sdk-web-contract/">SDK Web Contract</a>
+<a class="nav-link" href="../../sdk/ui-ux-spec/">UI/UX Spec</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../../swagger-ui/README/">Swagger UI</a>
+</div></aside><main class="content"><article class="doc"><div class="top-actions"><a class="btn" href="../../../">Landing</a><a class="btn" href="../../../swagger-ui/">Swagger UI</a></div><div class="crumb">docs/05-security-specification.md</div>
+<h1>05 - Especificación de Seguridad</h1>
+<h2>Modelo de confianza</h2>
+<p>El SDK no es confiable por sí mismo. Web, Android e iOS pueden ser inspeccionados, modificados o automatizados. Por eso:</p>
+<ul>
+<li>Las API keys privadas viven solo en backend cliente y backend Kodenix.</li>
+<li>El SDK usa <code>sdkToken</code> temporal.</li>
+<li>El backend Kodenix valida licencia, origen, app, cuota y reglas en cada acción sensible.</li>
+</ul>
+<h2>Autenticación</h2>
+<h3>Server-to-server</h3>
+<p>Header:</p>
+<pre><code class="language-http">X-Kodenix-Api-Key: kx_live_xxx
+</code></pre>
+<p>Usado por backend cliente para:</p>
+<ul>
+<li>Crear operación.</li>
+<li>Consultar estado final.</li>
+<li>Consultar auditoría.</li>
+<li>Descargar reportes de uso.</li>
+</ul>
+<h3>SDK token</h3>
+<p>Bearer JWT temporal:</p>
+<pre><code class="language-http">Authorization: Bearer eyJhbGciOi...
+</code></pre>
+<p>Claims mínimos:</p>
+<pre><code class="language-json">{
+  &quot;sub&quot;: &quot;otp_op_123&quot;,
+  &quot;clientId&quot;: &quot;client_001&quot;,
+  &quot;applicationId&quot;: &quot;app_001&quot;,
+  &quot;licenseId&quot;: &quot;lic_001&quot;,
+  &quot;platform&quot;: &quot;web&quot;,
+  &quot;environment&quot;: &quot;production&quot;,
+  &quot;allowedChannels&quot;: [&quot;whatsapp&quot;, &quot;sms&quot;, &quot;email&quot;],
+  &quot;iat&quot;: 1783123000,
+  &quot;exp&quot;: 1783123600
+}
+</code></pre>
+<h2>Validación anti-reuso por sitio/app</h2>
+<h3>Web</h3>
+<p>Validar <code>Origin</code> contra licencia.</p>
+<p>Si <code>Origin=https://landing.cliente.com</code> y licencia solo permite <code>https://onboarding.cliente.com</code>, responder:</p>
+<pre><code class="language-json">{
+  &quot;success&quot;: false,
+  &quot;error&quot;: {
+    &quot;code&quot;: &quot;LICENSE_ORIGIN_NOT_ALLOWED&quot;,
+    &quot;message&quot;: &quot;El origen web no está autorizado para esta licencia.&quot;,
+    &quot;recoverable&quot;: false,
+    &quot;action&quot;: &quot;CREATE_OR_UPDATE_LICENSE_FOR_ORIGIN&quot;
+  }
+}
+</code></pre>
+<h3>Android</h3>
+<p>Validar package y certificate fingerprint.</p>
+<h3>iOS</h3>
+<p>Validar bundle ID y Team ID si está configurado.</p>
+<h2>OTP seguro</h2>
+<ul>
+<li>Generar con CSPRNG.</li>
+<li>Longitud configurable: 4, 6 u 8, recomendado 6.</li>
+<li>TTL recomendado: 5 minutos.</li>
+<li>Almacenar hash + salt.</li>
+<li>Nunca loggear código.</li>
+<li>Comparación constante para evitar timing leaks.</li>
+</ul>
+<h2>Rate limiting</h2>
+<p>Dimensiones:</p>
+<ul>
+<li>clientId</li>
+<li>licenseId</li>
+<li>applicationId</li>
+<li>IP</li>
+<li>target phone/email hash</li>
+<li>operationId</li>
+<li>device/session id opcional</li>
+</ul>
+<h2>Datos sensibles</h2>
+<p>Logs solo con destino enmascarado:</p>
+<pre><code class="language-text">+52******5678
+f***@dominio.com
+</code></pre>
+<p>Para correlación usar hash irreversible del target.</p>
+<h2>Protección contra replay</h2>
+<ul>
+<li>sdkToken atado a operationId.</li>
+<li>sdkToken con TTL corto.</li>
+<li>challengeId activo único por operación/canal.</li>
+<li>Nonce opcional para endpoints críticos.</li>
+</ul>
+<h2>Webhooks seguros</h2>
+<p>Headers:</p>
+<pre><code class="language-http">X-Kodenix-Event-Id
+X-Kodenix-Timestamp
+X-Kodenix-Signature: sha256=...
+</code></pre>
+<p>Firma sobre:</p>
+<pre><code class="language-text">timestamp + &quot;.&quot; + rawBody
+</code></pre>
+<h2>Retención recomendada</h2>
+<table>
+<thead>
+<tr>
+<th>Dato</th>
+<th align="right">Retención</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>OTP hash</td>
+<td align="right">TTL + 24h máximo</td>
+</tr>
+<tr>
+<td>Operación</td>
+<td align="right">90-180 días</td>
+</tr>
+<tr>
+<td>Auditoría</td>
+<td align="right">1-5 años según contrato</td>
+</tr>
+<tr>
+<td>PII completa</td>
+<td align="right">Evitar o cifrar, retención mínima</td>
+</tr>
+<tr>
+<td>Métricas agregadas</td>
+<td align="right">2-5 años</td>
+</tr>
+</tbody></table>
+
+</article></main></div><script src="../../assets/docs.js"></script></body></html>

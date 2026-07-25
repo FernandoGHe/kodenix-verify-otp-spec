@@ -2,8 +2,10 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 
-const root = path.resolve(import.meta.dirname, "..");
+const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
+const root = path.resolve(scriptDirectory, "..");
 const read = relative => fs.readFileSync(path.join(root, relative), "utf8");
 const failures = [];
 const requireText = (file, pattern, label) => {
@@ -26,8 +28,10 @@ for (const symbol of ["loadConfiguration", "updateTarget", "send", "resend", "ve
   requireText("docs/android/getting-started.md", new RegExp(`\\b${symbol}\\b`), `simbolo publico ${symbol}`);
 }
 
-for (const repositoryFile of ["README.md", "MANIFEST.md", "AGENTS.md", "docs/android/getting-started.md", "sdk/sdk-android-contract.md"]) {
-  requireText(repositoryFile, /https:\/\/github\.com\/FernandoGHe\/kodenix-verify-otp-android/, "enlace al repositorio Android");
+for (const repositoryFile of ["README.md", "MANIFEST.md", "docs/android/getting-started.md", "sdk/sdk-android-contract.md"]) {
+  if (/https:\/\/github\.com\/[^\s)"']*android/i.test(read(repositoryFile))) {
+    failures.push(`${repositoryFile}: no debe enlazar directamente al repositorio Android`);
+  }
 }
 
 const androidRoot = process.env.KODENIX_ANDROID_SDK_PATH;
@@ -59,6 +63,13 @@ for (const file of walk(path.join(root, "docs-html"))) {
   before.delete(file);
 }
 for (const file of before.keys()) failures.push(`docs-html faltante tras generar: ${path.relative(root, file)}`);
+
+for (const file of [path.join(root, "README.md"), path.join(root, "index.html"), ...walk(path.join(root, "docs-html")).filter(item => item.endsWith(".html"))]) {
+  const contents = fs.readFileSync(file, "utf8");
+  if (/href=["'][^"']*\.html(?:[?#][^"']*)?["']/i.test(contents)) {
+    failures.push(`${path.relative(root, file)}: contiene una ruta publica no limpia`);
+  }
+}
 
 if (failures.length) {
   console.error(failures.join("\n"));

@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Diagramas Mermaid · Kodenix Verify</title><link rel="stylesheet" href="../../assets/docs.css" /></head>
+<body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
+<div class="nav-section">admin</div><a class="nav-link" href="../../admin/admin-portal-spec/">Admin Portal Spec</a>
+<a class="nav-link" href="../../admin/tenant-license-configuration/">Tenant License Configuration</a>
+<div class="nav-section">backend</div><a class="nav-link" href="../../backend/backend-handoff/">Backend Handoff</a>
+<a class="nav-link" href="../../backend/database-model/">Database Model</a>
+<a class="nav-link" href="../../backend/domain-model/">Domain Model</a>
+<a class="nav-link" href="../../backend/provider-contract/">Provider Contract</a>
+<a class="nav-link" href="../../backend/rules-engine/">Rules Engine</a>
+<div class="nav-section">Principal</div><a class="nav-link active" href="./">Diagramas Mermaid</a>
+<div class="nav-section">docs</div><a class="nav-link" href="../../docs/00-documentation-governance/">00 - Gobierno de Documentación</a>
+<a class="nav-link" href="../../docs/01-functional-scope/">01 - Alcance Funcional</a>
+<a class="nav-link" href="../../docs/02-requirements/">02 - Requerimientos</a>
+<a class="nav-link" href="../../docs/03-licensing-and-usage-control/">03 - Licenciamiento y Control de Uso</a>
+<a class="nav-link" href="../../docs/04-transaction-counting-and-billing/">04 - Conteo de Transacciones y Facturación</a>
+<a class="nav-link" href="../../docs/05-security-specification/">05 - Especificación de Seguridad</a>
+<a class="nav-link" href="../../docs/06-fallback-and-channel-availability/">06 - Fallback y Disponibilidad de Canales</a>
+<a class="nav-link" href="../../docs/07-api-contract-overview/">07 - API Contract Overview</a>
+<a class="nav-link" href="../../docs/08-state-machine/">08 - Máquina de Estados</a>
+<a class="nav-link" href="../../docs/09-data-model/">09 - Modelo de Datos</a>
+<a class="nav-link" href="../../docs/10-infrastructure-sizing/">10 - Servidores e Infraestructura Estimada</a>
+<a class="nav-link" href="../../docs/11-observability-audit/">11 - Observabilidad y Auditoría</a>
+<a class="nav-link" href="../../docs/12-error-catalog/">12 - Catálogo de Errores</a>
+<a class="nav-link" href="../../docs/13-webhooks/">13 - Webhooks</a>
+<a class="nav-link" href="../../docs/14-sla-and-availability/">14 - SLA y Disponibilidad</a>
+<a class="nav-link" href="../../docs/15-release-versioning/">15 - Versionado y Releases</a>
+<a class="nav-link" href="../../docs/16-published-documentation-surface/">Published Documentation Surface</a>
+<a class="nav-link" href="../../docs/android/getting-started/">Android: guia de integracion</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../../MANIFEST/">Manifest - Kodenix Verify OTP</a>
+<div class="nav-section">openapi</div><a class="nav-link" href="../../openapi/README/">OpenAPI Catalog</a>
+<div class="nav-section">operations</div><a class="nav-link" href="../../operations/capacity-planning/">Capacity Planning</a>
+<a class="nav-link" href="../../operations/incident-response/">Incident Response</a>
+<a class="nav-link" href="../../operations/monitoring-alerts/">Monitoring Alerts</a>
+<a class="nav-link" href="../../operations/runbook/">Runbook Operativo</a>
+<div class="nav-section">qa</div><a class="nav-link" href="../../qa/acceptance-criteria/">Acceptance Criteria</a>
+<a class="nav-link" href="../../qa/qa-matrix/">QA Matrix</a>
+<a class="nav-link" href="../../qa/test-cases/">Test Cases</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../../README/">Kodenix Verify OTP</a>
+<div class="nav-section">sdk</div><a class="nav-link" href="../../sdk/localization-spec/">Localization Spec</a>
+<a class="nav-link" href="../../sdk/sdk-android-contract/">SDK Android Contract</a>
+<a class="nav-link" href="../../sdk/sdk-contract-common/">SDK Contract Common</a>
+<a class="nav-link" href="../../sdk/sdk-ios-contract/">SDK iOS Contract</a>
+<a class="nav-link" href="../../sdk/sdk-web-contract/">SDK Web Contract</a>
+<a class="nav-link" href="../../sdk/ui-ux-spec/">UI/UX Spec</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../../swagger-ui/README/">Swagger UI</a>
+</div></aside><main class="content"><article class="doc"><div class="top-actions"><a class="btn" href="../../../">Landing</a><a class="btn" href="../../../swagger-ui/">Swagger UI</a></div><div class="crumb">diagrams/README.md</div>
+<h1>Diagramas Mermaid</h1>
+<p>Vista consolidada de diagramas técnicos de Kodenix Verify OTP.</p>
+<p>Los archivos <code>.mmd</code> se conservan como fuente editable y este documento mantiene los diagramas embebidos para navegación visual dentro del repositorio.</p>
+<h2>Component</h2>
+<p>Fuente: <a href="component.mmd"><code>component.mmd</code></a></p>
+<pre><code class="language-mermaid">flowchart LR
+  App[App Cliente Web Android iOS] --&gt; SDK[Kodenix OTP SDK]
+  BackendCliente[Backend Cliente] --&gt; OTPAPI[Kodenix OTP API]
+  SDK --&gt; OTPAPI
+  OTPAPI --&gt; Auth[Auth + License Middleware]
+  Auth --&gt; License[License Service]
+  OTPAPI --&gt; Rules[Rules Engine]
+  OTPAPI --&gt; Otp[OTP Service]
+  Otp --&gt; Redis[(Redis OTP/Rate Limit)]
+  Otp --&gt; DB[(PostgreSQL)]
+  Otp --&gt; Usage[Usage/Billing Service]
+  Otp --&gt; ProviderRouter[Provider Router]
+  ProviderRouter --&gt; WA[WhatsApp Provider]
+  ProviderRouter --&gt; SMS[SMS Provider]
+  ProviderRouter --&gt; Email[Email Provider]
+  Usage --&gt; DB
+  OTPAPI --&gt; Audit[Audit Service]
+  Audit --&gt; DB
+</code></pre>
+<h2>Deployment</h2>
+<p>Fuente: <a href="deployment.mmd"><code>deployment.mmd</code></a></p>
+<pre><code class="language-mermaid">flowchart TB
+  subgraph Client
+    Web[Web App]
+    Android[Android App]
+    IOS[iOS App]
+    SDK[OTP SDK]
+  end
+  subgraph Customer
+    CBE[Backend Cliente]
+  end
+  subgraph KodenixCloud
+    WAF[WAF / API Gateway]
+    API[OTP API]
+    ADMIN[Admin API]
+    WORKER[Queue Workers]
+    REDIS[(Redis HA)]
+    PG[(PostgreSQL HA)]
+    QUEUE[(Queue)]
+    OBS[Logs Metrics Traces]
+  end
+  subgraph Providers
+    Meta[Meta WhatsApp]
+    Twilio[Twilio/Vonage SMS]
+    SES[SES/SendGrid/Resend]
+  end
+  Web --&gt; SDK
+  Android --&gt; SDK
+  IOS --&gt; SDK
+  SDK --&gt; WAF
+  CBE --&gt; WAF
+  WAF --&gt; API
+  WAF --&gt; ADMIN
+  API --&gt; REDIS
+  API --&gt; PG
+  API --&gt; QUEUE
+  QUEUE --&gt; WORKER
+  WORKER --&gt; Meta
+  WORKER --&gt; Twilio
+  WORKER --&gt; SES
+  API --&gt; OBS
+  WORKER --&gt; OBS
+</code></pre>
+<h2>Erd Licensing</h2>
+<p>Fuente: <a href="erd-licensing.mmd"><code>erd-licensing.mmd</code></a></p>
+<pre><code class="language-mermaid">erDiagram
+  CLIENT ||--o{ APPLICATION : owns
+  APPLICATION ||--o{ LICENSE : has
+  LICENSE ||--o{ LICENSE_ENTITLEMENT : grants
+  LICENSE ||--|| QUOTA_POLICY : uses
+  LICENSE ||--o{ USAGE_EVENT : records
+  APPLICATION ||--o{ OTP_OPERATION : creates
+  OTP_OPERATION ||--o{ OTP_CHALLENGE : has
+  OTP_OPERATION ||--o{ OTP_ATTEMPT : has
+  OTP_OPERATION ||--o{ OTP_EVENT : logs
+  OTP_CHALLENGE ||--o{ USAGE_EVENT : bills
+
+  CLIENT {
+    string id
+    string name
+    string status
+  }
+  APPLICATION {
+    string id
+    string client_id
+    string name
+    string environment
+  }
+  LICENSE {
+    string id
+    string client_id
+    string application_id
+    string environment
+    string status
+    string billing_model
+    datetime valid_from
+    datetime valid_until
+  }
+  LICENSE_ENTITLEMENT {
+    string id
+    string license_id
+    string platform
+    string allowed_origins
+    string allowed_packages
+    string allowed_bundles
+    string allowed_channels
+  }
+  QUOTA_POLICY {
+    string id
+    string license_id
+    int monthly_otp_sent_limit
+    int daily_otp_sent_limit
+    boolean hard_limit
+  }
+  USAGE_EVENT {
+    string id
+    string license_id
+    string operation_id
+    string challenge_id
+    string type
+    string channel
+    boolean billable
+    string reason
+    datetime created_at
+  }
+  OTP_OPERATION {
+    string id
+    string license_id
+    string status
+    string target_phone_masked
+    string target_email_masked
+    datetime created_at
+  }
+  OTP_CHALLENGE {
+    string id
+    string operation_id
+    string channel
+    string otp_hash
+    string status
+    datetime expires_at
+  }
+  OTP_ATTEMPT {
+    string id
+    string operation_id
+    boolean success
+    string failure_reason
+  }
+  OTP_EVENT {
+    string id
+    string operation_id
+    string event_type
+    string payload
+  }
+</code></pre>
+<h2>Outage Flow</h2>
+<p>Fuente: <a href="outage-flow.mmd"><code>outage-flow.mmd</code></a></p>
+<pre><code class="language-mermaid">flowchart TD
+  A[Solicitud send OTP] --&gt; B{Licencia válida?}
+  B -- No --&gt; X[Rechazar sin conteo]
+  B -- Sí --&gt; C{Canal primario healthy?}
+  C -- Sí --&gt; D[Enviar canal primario]
+  D --&gt; E[Crear usage billable]
+  D --&gt; F{Proveedor aceptó?}
+  F -- Sí --&gt; G[SENT]
+  F -- No --&gt; H[Evaluar fallback]
+  C -- No --&gt; H
+  H --&gt; I{Canal alterno permitido?}
+  I -- No --&gt; Y[OTP_NO_FALLBACK_AVAILABLE]
+  I -- Sí --&gt; J{Existe target alterno?}
+  J -- No --&gt; Z[OTP_FALLBACK_TARGET_MISSING]
+  J -- Sí --&gt; K[Enviar fallback]
+  K --&gt; L[Crear usage billable fallback]
+  K --&gt; M[SENT fallback]
+</code></pre>
+<h2>Security Token Flow</h2>
+<p>Fuente: <a href="security-token-flow.mmd"><code>security-token-flow.mmd</code></a></p>
+<pre><code class="language-mermaid">sequenceDiagram
+  participant BE as Backend Cliente
+  participant API as Kodenix API
+  participant LIC as License Service
+  participant SDK as SDK
+
+  BE-&gt;&gt;API: POST /otp/operations with private API key
+  API-&gt;&gt;LIC: Validate license + origin/app entitlement
+  LIC--&gt;&gt;API: Valid + allowed channels + quota
+  API-&gt;&gt;API: Issue short-lived sdkToken bound to operationId/licenseId
+  API--&gt;&gt;BE: sdkToken
+  BE--&gt;&gt;SDK: sdkToken
+  SDK-&gt;&gt;API: Bearer sdkToken
+  API-&gt;&gt;API: Validate token claims + request origin/app
+  API--&gt;&gt;SDK: Runtime response
+</code></pre>
+<h2>Sequence Enterprise License</h2>
+<p>Fuente: <a href="sequence-enterprise-license.mmd"><code>sequence-enterprise-license.mmd</code></a></p>
+<pre><code class="language-mermaid">sequenceDiagram
+  participant App as App Cliente
+  participant BE as Backend Cliente
+  participant API as Kodenix OTP API
+  participant LIC as License Service
+  participant SDK as SDK
+  participant PROV as Proveedor
+
+  App-&gt;&gt;BE: Solicita iniciar OTP
+  BE-&gt;&gt;API: POST /v1/otp/operations API Key + licenseId + origin/app
+  API-&gt;&gt;LIC: Validar licencia, origen/app, cuota, canal
+  LIC--&gt;&gt;API: OK
+  API--&gt;&gt;BE: operationId + sdkToken
+  BE--&gt;&gt;App: operationId + sdkToken
+  App-&gt;&gt;SDK: start(operationId, sdkToken, target opcional)
+  SDK-&gt;&gt;API: GET /v1/otp/config
+  API--&gt;&gt;SDK: Config + targetState + canales disponibles
+  SDK-&gt;&gt;API: POST /v1/otp/send channel=auto
+  API-&gt;&gt;LIC: Validar licencia/cuota antes de envío
+  LIC--&gt;&gt;API: OK
+  API-&gt;&gt;API: Crear OTP_SEND_ACCEPTED + usage billable
+  API-&gt;&gt;PROV: Enviar WhatsApp
+  PROV--&gt;&gt;API: Accepted/Sent
+  API--&gt;&gt;SDK: SENT + billingEventId
+  SDK-&gt;&gt;API: POST /v1/otp/verify
+  API--&gt;&gt;SDK: VERIFIED
+  SDK--&gt;&gt;App: onSuccess
+  App-&gt;&gt;BE: Confirmar resultado
+  BE-&gt;&gt;API: GET /v1/otp/status/{operationId}
+  API--&gt;&gt;BE: VERIFIED
+</code></pre>
+<h2>Sequence Provider Fallback</h2>
+<p>Fuente: <a href="sequence-provider-fallback.mmd"><code>sequence-provider-fallback.mmd</code></a></p>
+<pre><code class="language-mermaid">sequenceDiagram
+  participant SDK
+  participant API as OTP API
+  participant LIC as License Service
+  participant WA as WhatsApp Provider
+  participant SMS as SMS Provider
+  participant EMAIL as Email Provider
+
+  SDK-&gt;&gt;API: POST /v1/otp/send channel=auto
+  API-&gt;&gt;LIC: Validar WhatsApp licencia/cuota/target phone
+  LIC--&gt;&gt;API: OK
+  API-&gt;&gt;API: usage whatsapp billable on SEND_ACCEPTED
+  API-&gt;&gt;WA: send OTP
+  WA--&gt;&gt;API: Failed/Unavailable
+  API-&gt;&gt;API: Evaluar fallback
+  alt phone existe y SMS permitido
+    API-&gt;&gt;LIC: Validar SMS licencia/cuota
+    LIC--&gt;&gt;API: OK
+    API-&gt;&gt;API: usage sms billable on SEND_ACCEPTED
+    API-&gt;&gt;SMS: send OTP
+    SMS--&gt;&gt;API: Sent
+    API--&gt;&gt;SDK: SENT by SMS fallback.used=true
+  else falta phone o SMS no permitido
+    alt email existe y Email permitido
+      API-&gt;&gt;LIC: Validar Email
+      API-&gt;&gt;EMAIL: send OTP
+      EMAIL--&gt;&gt;API: Sent
+      API--&gt;&gt;SDK: SENT by Email fallback.used=true
+    else no existe target alterno
+      API--&gt;&gt;SDK: OTP_FALLBACK_TARGET_MISSING
+    end
+  end
+</code></pre>
+<h2>Sequence Sdk Init Target Optional</h2>
+<p>Fuente: <a href="sequence-sdk-init-target-optional.mmd"><code>sequence-sdk-init-target-optional.mmd</code></a></p>
+<pre><code class="language-mermaid">sequenceDiagram
+  participant App as App
+  participant SDK as SDK
+  participant API as OTP API
+
+  App-&gt;&gt;SDK: start({operationId, sdkToken, target?})
+  SDK-&gt;&gt;API: GET /v1/otp/config
+  API--&gt;&gt;SDK: targetState(hasPhone, hasEmail, allowUserInput)
+  alt No target and allowUserInput=true
+    SDK--&gt;&gt;App: Mostrar pantalla captura teléfono/email
+    App-&gt;&gt;SDK: Usuario captura target
+    SDK-&gt;&gt;API: PATCH /v1/otp/target
+    API--&gt;&gt;SDK: target actualizado
+  else No target and allowUserInput=false
+    SDK--&gt;&gt;App: onError OTP_TARGET_REQUIRED
+  else Target suficiente
+    SDK-&gt;&gt;API: POST /v1/otp/send
+  end
+</code></pre>
+<h2>State Machine</h2>
+<p>Fuente: <a href="state-machine.mmd"><code>state-machine.mmd</code></a></p>
+<pre><code class="language-mermaid">stateDiagram-v2
+  [*] --&gt; CREATED
+  CREATED --&gt; LICENSE_VALIDATING
+  LICENSE_VALIDATING --&gt; LICENSE_REJECTED: invalid origin/app/quota
+  LICENSE_VALIDATING --&gt; CONFIG_LOADED: valid
+  CONFIG_LOADED --&gt; PENDING_TARGET: missing target and input allowed
+  PENDING_TARGET --&gt; CONFIG_LOADED: target updated
+  CONFIG_LOADED --&gt; PENDING_DELIVERY: send requested
+  PENDING_DELIVERY --&gt; SEND_ACCEPTED: accepted for provider/queue
+  SEND_ACCEPTED --&gt; SENT: provider sent
+  SEND_ACCEPTED --&gt; FAILED_DELIVERY: provider failed
+  SENT --&gt; DELIVERED: provider callback optional
+  FAILED_DELIVERY --&gt; FALLBACK_EVALUATING
+  FALLBACK_EVALUATING --&gt; FALLBACK_IN_PROGRESS: alternate target/channel available
+  FALLBACK_EVALUATING --&gt; FAILED_DELIVERY: no fallback target/channel
+  FALLBACK_IN_PROGRESS --&gt; SEND_ACCEPTED: fallback send accepted
+  SENT --&gt; PENDING_VERIFICATION: user enters code
+  DELIVERED --&gt; PENDING_VERIFICATION
+  PENDING_VERIFICATION --&gt; VERIFIED: valid code
+  PENDING_VERIFICATION --&gt; INVALID_ATTEMPT: invalid code
+  INVALID_ATTEMPT --&gt; PENDING_VERIFICATION: attempts remain
+  INVALID_ATTEMPT --&gt; BLOCKED: max attempts
+  SENT --&gt; EXPIRED: ttl reached
+  DELIVERED --&gt; EXPIRED: ttl reached
+  CREATED --&gt; CANCELLED
+  SENT --&gt; CANCELLED
+  VERIFIED --&gt; [*]
+  BLOCKED --&gt; [*]
+  EXPIRED --&gt; [*]
+  CANCELLED --&gt; [*]
+  LICENSE_REJECTED --&gt; [*]
+</code></pre>
+
+</article></main></div><script src="../../assets/docs.js"></script></body></html>

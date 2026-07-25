@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kodenix Verify OTP · Kodenix Verify</title><link rel="stylesheet" href="../assets/docs.css" /></head>
+<body><div class="layout"><aside class="sidebar"><a class="brand" href="../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
+<div class="nav-section">admin</div><a class="nav-link" href="../admin/admin-portal-spec/">Admin Portal Spec</a>
+<a class="nav-link" href="../admin/tenant-license-configuration/">Tenant License Configuration</a>
+<div class="nav-section">backend</div><a class="nav-link" href="../backend/backend-handoff/">Backend Handoff</a>
+<a class="nav-link" href="../backend/database-model/">Database Model</a>
+<a class="nav-link" href="../backend/domain-model/">Domain Model</a>
+<a class="nav-link" href="../backend/provider-contract/">Provider Contract</a>
+<a class="nav-link" href="../backend/rules-engine/">Rules Engine</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../diagrams/README/">Diagramas Mermaid</a>
+<div class="nav-section">docs</div><a class="nav-link" href="../docs/00-documentation-governance/">00 - Gobierno de Documentación</a>
+<a class="nav-link" href="../docs/01-functional-scope/">01 - Alcance Funcional</a>
+<a class="nav-link" href="../docs/02-requirements/">02 - Requerimientos</a>
+<a class="nav-link" href="../docs/03-licensing-and-usage-control/">03 - Licenciamiento y Control de Uso</a>
+<a class="nav-link" href="../docs/04-transaction-counting-and-billing/">04 - Conteo de Transacciones y Facturación</a>
+<a class="nav-link" href="../docs/05-security-specification/">05 - Especificación de Seguridad</a>
+<a class="nav-link" href="../docs/06-fallback-and-channel-availability/">06 - Fallback y Disponibilidad de Canales</a>
+<a class="nav-link" href="../docs/07-api-contract-overview/">07 - API Contract Overview</a>
+<a class="nav-link" href="../docs/08-state-machine/">08 - Máquina de Estados</a>
+<a class="nav-link" href="../docs/09-data-model/">09 - Modelo de Datos</a>
+<a class="nav-link" href="../docs/10-infrastructure-sizing/">10 - Servidores e Infraestructura Estimada</a>
+<a class="nav-link" href="../docs/11-observability-audit/">11 - Observabilidad y Auditoría</a>
+<a class="nav-link" href="../docs/12-error-catalog/">12 - Catálogo de Errores</a>
+<a class="nav-link" href="../docs/13-webhooks/">13 - Webhooks</a>
+<a class="nav-link" href="../docs/14-sla-and-availability/">14 - SLA y Disponibilidad</a>
+<a class="nav-link" href="../docs/15-release-versioning/">15 - Versionado y Releases</a>
+<a class="nav-link" href="../docs/16-published-documentation-surface/">Published Documentation Surface</a>
+<a class="nav-link" href="../docs/android/getting-started/">Android: guia de integracion</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../MANIFEST/">Manifest - Kodenix Verify OTP</a>
+<div class="nav-section">openapi</div><a class="nav-link" href="../openapi/README/">OpenAPI Catalog</a>
+<div class="nav-section">operations</div><a class="nav-link" href="../operations/capacity-planning/">Capacity Planning</a>
+<a class="nav-link" href="../operations/incident-response/">Incident Response</a>
+<a class="nav-link" href="../operations/monitoring-alerts/">Monitoring Alerts</a>
+<a class="nav-link" href="../operations/runbook/">Runbook Operativo</a>
+<div class="nav-section">qa</div><a class="nav-link" href="../qa/acceptance-criteria/">Acceptance Criteria</a>
+<a class="nav-link" href="../qa/qa-matrix/">QA Matrix</a>
+<a class="nav-link" href="../qa/test-cases/">Test Cases</a>
+<div class="nav-section">Principal</div><a class="nav-link active" href="./">Kodenix Verify OTP</a>
+<div class="nav-section">sdk</div><a class="nav-link" href="../sdk/localization-spec/">Localization Spec</a>
+<a class="nav-link" href="../sdk/sdk-android-contract/">SDK Android Contract</a>
+<a class="nav-link" href="../sdk/sdk-contract-common/">SDK Contract Common</a>
+<a class="nav-link" href="../sdk/sdk-ios-contract/">SDK iOS Contract</a>
+<a class="nav-link" href="../sdk/sdk-web-contract/">SDK Web Contract</a>
+<a class="nav-link" href="../sdk/ui-ux-spec/">UI/UX Spec</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../swagger-ui/README/">Swagger UI</a>
+</div></aside><main class="content"><article class="doc"><div class="top-actions"><a class="btn" href="../../">Landing</a><a class="btn" href="../../swagger-ui/">Swagger UI</a></div><div class="crumb">README.md</div>
+<h1>Kodenix Verify OTP</h1>
+<p>Repositorio oficial de especificaciones, contratos y documentación de integración
+de <strong>Kodenix Verify OTP</strong>.</p>
+<h2>Arquitectura de repositorios</h2>
+<ul>
+<li>Documentación: <code>kodenix-verify-otp-spec</code> (este repositorio).</li>
+<li>Android SDK: repositorio independiente con <code>otp-core</code>, <code>otp-ui</code> y aplicación
+demo; su integración pública se documenta aquí.</li>
+<li>iOS y Web tendrán repositorios independientes.</li>
+<li><code>sdk/</code>: contratos comunes y por plataforma.</li>
+<li><code>openapi/</code>: contratos de las APIs.</li>
+<li><code>docs/</code>: documentación central, seguridad, operación y guías de integración.</li>
+<li><code>docs-html/</code>: sitio generado; no se edita manualmente.</li>
+<li><code>backend/</code>, <code>admin/</code>, <code>operations/</code> y <code>qa/</code>: handoff y especificaciones por área.</li>
+</ul>
+<p>No se usan submódulos. Cada SDK mantiene su propio versionado y ciclo de releases;
+después de cambiar un SDK debe ejecutarse una tarea separada de actualización de
+este repositorio documental.</p>
+<h2>Alcance del paquete</h2>
+<ul>
+<li>SDK Web, Android e iOS.</li>
+<li>API pública OTP.</li>
+<li>API Admin.</li>
+<li>API de licenciamiento.</li>
+<li>API interna de proveedores.</li>
+<li>API de analytics/usage.</li>
+<li>Webhooks.</li>
+<li>Licenciamiento por cliente, aplicación, ambiente, plataforma y URL/app nativa.</li>
+<li>Cobro por OTP enviado.</li>
+<li>Control para impedir reutilizar una licencia/API key en sitios no autorizados.</li>
+<li>Fallback WhatsApp → SMS → Email.</li>
+<li>Target opcional en inicialización del SDK: teléfono/email puede venir desde el integrador o capturarse en la UI del SDK.</li>
+<li>Seguridad, auditoría, infraestructura, runbooks, QA y conteo transaccional.</li>
+</ul>
+<h2>Navegación principal</h2>
+<ol>
+<li><a href="docs-html/docs/00-documentation-governance/">Gobierno de documentación</a></li>
+<li><a href="docs-html/docs/01-functional-scope/">Alcance funcional</a></li>
+<li><a href="docs-html/docs/02-requirements/">Requerimientos</a></li>
+<li><a href="docs-html/docs/03-licensing-and-usage-control/">Licenciamiento y control de uso</a></li>
+<li><a href="docs-html/docs/04-transaction-counting-and-billing/">Conteo transaccional y facturación</a></li>
+<li><a href="docs-html/docs/05-security-specification/">Seguridad</a></li>
+<li><a href="docs-html/docs/06-fallback-and-channel-availability/">Fallback y disponibilidad de canales</a></li>
+<li><a href="docs-html/docs/07-api-contract-overview/">Contrato API</a></li>
+<li><a href="docs-html/docs/08-state-machine/">Máquina de estados</a></li>
+<li><a href="docs-html/docs/09-data-model/">Modelo de datos</a></li>
+<li><a href="docs-html/docs/10-infrastructure-sizing/">Infraestructura</a></li>
+<li><a href="docs-html/docs/11-observability-audit/">Observabilidad y auditoría</a></li>
+<li><a href="docs-html/docs/12-error-catalog/">Catálogo de errores</a></li>
+<li><a href="docs-html/docs/13-webhooks/">Webhooks</a></li>
+<li><a href="docs-html/docs/14-sla-and-availability/">SLA y disponibilidad</a></li>
+<li><a href="docs-html/docs/15-release-versioning/">Versionado</a></li>
+<li><a href="docs-html/docs/16-published-documentation-surface/">Superficie de publicación</a></li>
+<li><a href="docs-html/docs/android/getting-started/">Guía de integración Android</a></li>
+</ol>
+<h2>APIs</h2>
+<ul>
+<li><a href="swagger-ui/">Swagger UI</a></li>
+<li><a href="docs-html/openapi/README/">OpenAPI Index</a></li>
+<li><a href="openapi/admin-api.yaml">Admin API</a></li>
+<li><a href="openapi/analytics-api.yaml">Analytics API</a></li>
+<li><a href="openapi/licensing-api.yaml">Licensing API</a></li>
+<li><a href="openapi/otp-public-api.yaml">OTP Public API</a></li>
+<li><a href="openapi/provider-internal-api.yaml">Provider Internal API</a></li>
+<li><a href="openapi/webhooks-api.yaml">Webhooks API</a></li>
+</ul>
+<h2>Diagramas</h2>
+<ul>
+<li><a href="docs-html/diagrams/README/">Vista HTML de diagramas</a></li>
+<li><a href="docs-html/diagrams/README/">Índice visual de diagramas</a></li>
+</ul>
+<h2>Diagramas fuente</h2>
+<ul>
+<li><a href="docs-html/diagrams/README/">Diagramas renderizados</a></li>
+<li><a href="diagrams/component.mmd">Component Diagram</a></li>
+<li><a href="diagrams/deployment.mmd">Deployment Diagram</a></li>
+<li><a href="docs-html/diagrams/erd-licensing/">ERD Licensing</a></li>
+<li><a href="docs-html/diagrams/outage-flow/">Outage Flow</a></li>
+<li><a href="docs-html/diagrams/security-token-flow/">Security Token Flow</a></li>
+<li><a href="diagrams/sequence-enterprise-license.mmd">Enterprise License Sequence</a></li>
+<li><a href="diagrams/sequence-provider-fallback.mmd">Provider Fallback Sequence</a></li>
+<li><a href="diagrams/sequence-sdk-init-target-optional.mmd">SDK Init Target Optional Sequence</a></li>
+<li><a href="docs-html/diagrams/state-machine/">State Machine</a></li>
+</ul>
+<h2>Backend handoff</h2>
+<ul>
+<li><a href="docs-html/backend/backend-handoff/">Backend Handoff</a></li>
+<li><a href="docs-html/backend/database-model/">Database Model</a></li>
+<li><a href="docs-html/backend/domain-model/">Domain Model</a></li>
+<li><a href="docs-html/backend/provider-contract/">Provider Contract</a></li>
+<li><a href="docs-html/backend/rules-engine/">Rules Engine</a></li>
+</ul>
+<h2>SDK contracts</h2>
+<ul>
+<li><a href="docs-html/sdk/sdk-contract-common/">Common SDK Contract</a></li>
+<li><a href="docs-html/sdk/sdk-web-contract/">Web SDK Contract</a></li>
+<li><a href="docs-html/sdk/sdk-android-contract/">Android SDK Contract</a></li>
+<li><a href="docs-html/sdk/sdk-ios-contract/">iOS SDK Contract</a></li>
+<li><a href="docs-html/sdk/ui-ux-spec/">UI/UX Spec</a></li>
+<li><a href="docs-html/sdk/localization-spec/">Localization Spec</a></li>
+<li><a href="docs-html/docs/android/getting-started/">Android: guía completa de integración</a></li>
+</ul>
+<h2>Desarrollo de documentación</h2>
+<pre><code class="language-shell">npm install
+npm run docs:build
+npm run docs:check
+</code></pre>
+<p>Los Markdown son la fuente de verdad. <code>npm run docs:build</code> regenera <code>docs-html</code> y
+<code>npm run docs:check</code> comprueba la guía Android contra el README rápido, las
+coordenadas Maven, enlaces y símbolos esenciales documentados. Para compararla
+además con un checkout local del SDK, defina <code>KODENIX_ANDROID_SDK_PATH</code> antes de
+ejecutar la validación.</p>
+<h2>Administración</h2>
+<ul>
+<li><a href="docs-html/admin/admin-portal-spec/">Admin Portal Spec</a></li>
+<li><a href="docs-html/admin/tenant-license-configuration/">Tenant License Configuration</a></li>
+</ul>
+<h2>Operaciones</h2>
+<ul>
+<li><a href="docs-html/operations/capacity-planning/">Capacity Planning</a></li>
+<li><a href="docs-html/operations/incident-response/">Incident Response</a></li>
+<li><a href="docs-html/operations/monitoring-alerts/">Monitoring Alerts</a></li>
+<li><a href="docs-html/operations/runbook/">Runbook</a></li>
+</ul>
+<h2>QA</h2>
+<ul>
+<li><a href="docs-html/qa/acceptance-criteria/">Acceptance Criteria</a></li>
+<li><a href="docs-html/qa/qa-matrix/">QA Matrix</a></li>
+<li><a href="docs-html/qa/test-cases/">Test Cases</a></li>
+</ul>
+<h2>Postman</h2>
+<ul>
+<li><a href="postman/kodenix-verify-otp-v2.postman_collection.json">Postman Collection</a></li>
+</ul>
+<h2>Seguridad documental</h2>
+<p>Los valores incluidos en este repositorio son ejemplos de especificación. No forman parte del material autorizado: secretos reales, tokens productivos, credenciales de proveedores, llaves privadas o URLs internas sensibles.</p>
+
+</article></main></div><script src="../assets/docs.js"></script></body></html>

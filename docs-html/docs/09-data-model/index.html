@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>09 - Modelo de Datos · Kodenix Verify</title><link rel="stylesheet" href="../../assets/docs.css" /></head>
+<body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
+<div class="nav-section">admin</div><a class="nav-link" href="../../admin/admin-portal-spec/">Admin Portal Spec</a>
+<a class="nav-link" href="../../admin/tenant-license-configuration/">Tenant License Configuration</a>
+<div class="nav-section">backend</div><a class="nav-link" href="../../backend/backend-handoff/">Backend Handoff</a>
+<a class="nav-link" href="../../backend/database-model/">Database Model</a>
+<a class="nav-link" href="../../backend/domain-model/">Domain Model</a>
+<a class="nav-link" href="../../backend/provider-contract/">Provider Contract</a>
+<a class="nav-link" href="../../backend/rules-engine/">Rules Engine</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../../diagrams/README/">Diagramas Mermaid</a>
+<div class="nav-section">docs</div><a class="nav-link" href="../00-documentation-governance/">00 - Gobierno de Documentación</a>
+<a class="nav-link" href="../01-functional-scope/">01 - Alcance Funcional</a>
+<a class="nav-link" href="../02-requirements/">02 - Requerimientos</a>
+<a class="nav-link" href="../03-licensing-and-usage-control/">03 - Licenciamiento y Control de Uso</a>
+<a class="nav-link" href="../04-transaction-counting-and-billing/">04 - Conteo de Transacciones y Facturación</a>
+<a class="nav-link" href="../05-security-specification/">05 - Especificación de Seguridad</a>
+<a class="nav-link" href="../06-fallback-and-channel-availability/">06 - Fallback y Disponibilidad de Canales</a>
+<a class="nav-link" href="../07-api-contract-overview/">07 - API Contract Overview</a>
+<a class="nav-link" href="../08-state-machine/">08 - Máquina de Estados</a>
+<a class="nav-link active" href="./">09 - Modelo de Datos</a>
+<a class="nav-link" href="../10-infrastructure-sizing/">10 - Servidores e Infraestructura Estimada</a>
+<a class="nav-link" href="../11-observability-audit/">11 - Observabilidad y Auditoría</a>
+<a class="nav-link" href="../12-error-catalog/">12 - Catálogo de Errores</a>
+<a class="nav-link" href="../13-webhooks/">13 - Webhooks</a>
+<a class="nav-link" href="../14-sla-and-availability/">14 - SLA y Disponibilidad</a>
+<a class="nav-link" href="../15-release-versioning/">15 - Versionado y Releases</a>
+<a class="nav-link" href="../16-published-documentation-surface/">Published Documentation Surface</a>
+<a class="nav-link" href="../android/getting-started/">Android: guia de integracion</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../../MANIFEST/">Manifest - Kodenix Verify OTP</a>
+<div class="nav-section">openapi</div><a class="nav-link" href="../../openapi/README/">OpenAPI Catalog</a>
+<div class="nav-section">operations</div><a class="nav-link" href="../../operations/capacity-planning/">Capacity Planning</a>
+<a class="nav-link" href="../../operations/incident-response/">Incident Response</a>
+<a class="nav-link" href="../../operations/monitoring-alerts/">Monitoring Alerts</a>
+<a class="nav-link" href="../../operations/runbook/">Runbook Operativo</a>
+<div class="nav-section">qa</div><a class="nav-link" href="../../qa/acceptance-criteria/">Acceptance Criteria</a>
+<a class="nav-link" href="../../qa/qa-matrix/">QA Matrix</a>
+<a class="nav-link" href="../../qa/test-cases/">Test Cases</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../../README/">Kodenix Verify OTP</a>
+<div class="nav-section">sdk</div><a class="nav-link" href="../../sdk/localization-spec/">Localization Spec</a>
+<a class="nav-link" href="../../sdk/sdk-android-contract/">SDK Android Contract</a>
+<a class="nav-link" href="../../sdk/sdk-contract-common/">SDK Contract Common</a>
+<a class="nav-link" href="../../sdk/sdk-ios-contract/">SDK iOS Contract</a>
+<a class="nav-link" href="../../sdk/sdk-web-contract/">SDK Web Contract</a>
+<a class="nav-link" href="../../sdk/ui-ux-spec/">UI/UX Spec</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../../swagger-ui/README/">Swagger UI</a>
+</div></aside><main class="content"><article class="doc"><div class="top-actions"><a class="btn" href="../../../">Landing</a><a class="btn" href="../../../swagger-ui/">Swagger UI</a></div><div class="crumb">docs/09-data-model.md</div>
+<h1>09 - Modelo de Datos</h1>
+<h2>Entidades principales</h2>
+<ul>
+<li>Client</li>
+<li>Application</li>
+<li>Environment</li>
+<li>License</li>
+<li>LicenseEntitlement</li>
+<li>QuotaPolicy</li>
+<li>UsageEvent</li>
+<li>OtpOperation</li>
+<li>OtpChallenge</li>
+<li>OtpAttempt</li>
+<li>OtpEvent</li>
+<li>ProviderConfig</li>
+<li>WebhookConfig</li>
+</ul>
+<h2>Nuevas entidades de licencia</h2>
+<h3>License</h3>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>string</td>
+<td>ID licencia</td>
+</tr>
+<tr>
+<td>clientId</td>
+<td>string</td>
+<td>Cliente</td>
+</tr>
+<tr>
+<td>applicationId</td>
+<td>string</td>
+<td>Aplicación</td>
+</tr>
+<tr>
+<td>environment</td>
+<td>string</td>
+<td>Ambiente</td>
+</tr>
+<tr>
+<td>status</td>
+<td>enum</td>
+<td>ACTIVE/TRIAL/etc</td>
+</tr>
+<tr>
+<td>validFrom</td>
+<td>datetime</td>
+<td>Inicio vigencia</td>
+</tr>
+<tr>
+<td>validUntil</td>
+<td>datetime</td>
+<td>Fin vigencia</td>
+</tr>
+<tr>
+<td>billingModel</td>
+<td>enum</td>
+<td>OTP_SENT</td>
+</tr>
+</tbody></table>
+<h3>LicenseEntitlement</h3>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>string</td>
+<td>ID entitlement</td>
+</tr>
+<tr>
+<td>licenseId</td>
+<td>string</td>
+<td>Licencia</td>
+</tr>
+<tr>
+<td>platform</td>
+<td>enum</td>
+<td>web/android/ios</td>
+</tr>
+<tr>
+<td>allowedOrigins</td>
+<td>string[]</td>
+<td>URLs autorizadas</td>
+</tr>
+<tr>
+<td>allowedPackageNames</td>
+<td>string[]</td>
+<td>Android</td>
+</tr>
+<tr>
+<td>allowedBundleIds</td>
+<td>string[]</td>
+<td>iOS</td>
+</tr>
+<tr>
+<td>allowedChannels</td>
+<td>string[]</td>
+<td>Canales permitidos</td>
+</tr>
+</tbody></table>
+<h3>UsageEvent</h3>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>string</td>
+<td>ID evento</td>
+</tr>
+<tr>
+<td>licenseId</td>
+<td>string</td>
+<td>Licencia</td>
+</tr>
+<tr>
+<td>operationId</td>
+<td>string</td>
+<td>Operación</td>
+</tr>
+<tr>
+<td>challengeId</td>
+<td>string</td>
+<td>Challenge</td>
+</tr>
+<tr>
+<td>type</td>
+<td>string</td>
+<td>otp_sent_billable</td>
+</tr>
+<tr>
+<td>channel</td>
+<td>string</td>
+<td>whatsapp/sms/email</td>
+</tr>
+<tr>
+<td>billable</td>
+<td>boolean</td>
+<td>Facturable</td>
+</tr>
+<tr>
+<td>reason</td>
+<td>string</td>
+<td>SEND_ACCEPTED</td>
+</tr>
+<tr>
+<td>createdAt</td>
+<td>datetime</td>
+<td>Fecha</td>
+</tr>
+</tbody></table>
+<p>Ver <code>diagrams/erd-licensing.mmd</code>.</p>
+
+</article></main></div><script src="../../assets/docs.js"></script></body></html>

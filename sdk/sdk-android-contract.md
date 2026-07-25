@@ -9,9 +9,8 @@ Validaciones asociadas a licencia:
 
 El SDK puede iniciar con target opcional y emitir `onTargetRequired` si falta teléfono/email.
 
-La implementación de referencia está en
-[kodenix-verify-otp-android](https://github.com/FernandoGHe/kodenix-verify-otp-android)
-y la guía de integración completa en
+La implementación de referencia vive en un repositorio Android independiente y la
+guía de integración completa está en
 [`docs/android/getting-started.md`](../docs/android/getting-started.md).
 
 La identidad de licencia combina package name, huella SHA-256 del certificado,

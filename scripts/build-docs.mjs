@@ -1,8 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { marked } from "marked";
 
-const root = path.resolve(import.meta.dirname, "..");
+const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
+const root = path.resolve(scriptDirectory, "..");
 const outputRoot = path.join(root, "docs-html");
 const sourceRoots = ["README.md", "MANIFEST.md", "docs", "sdk", "openapi", "backend", "admin", "operations", "qa", "swagger-ui/README.md", "diagrams/README.md"];
 
@@ -19,13 +21,18 @@ const sources = sourceRoots.flatMap(collect).sort((a, b) => a.localeCompare(b));
 const documents = sources.map(source => {
   const markdown = fs.readFileSync(path.join(root, source), "utf8");
   const heading = markdown.match(/^#\s+(.+)$/m)?.[1] ?? path.basename(source, ".md");
-  const target = source.replace(/\.md$/i, ".html");
+  const target = path.join(source.replace(/\.md$/i, ""), "index.html");
   return { source, markdown, heading, target };
 });
 
 function relativeUrl(fromTarget, toTarget) {
-  const value = path.relative(path.dirname(fromTarget), toTarget).replaceAll("\\", "/");
-  return value || path.basename(toTarget);
+  const value = path.relative(path.dirname(fromTarget), path.dirname(toTarget)).replaceAll("\\", "/");
+  return `${value || "."}/`;
+}
+
+function externalRelativeUrl(fromTarget, externalTarget) {
+  const from = path.join("docs-html", fromTarget);
+  return path.relative(path.dirname(from), externalTarget).replaceAll("\\", "/").replace(/index\.html$/, "");
 }
 
 function renderNavigation(current) {
@@ -44,23 +51,46 @@ function escapeHtml(value) {
 }
 
 for (const doc of documents) {
-  const depth = doc.target.split(/[\\/]/).length - 1;
-  const rootPrefix = "../".repeat(depth + 1);
-  const css = relativeUrl(doc.target, "assets/docs.css");
-  const js = relativeUrl(doc.target, "assets/docs.js");
-  const landing = `${rootPrefix}index.html`;
-  const swagger = `${rootPrefix}swagger-ui/index.html`;
+  const legacyTarget = path.join(outputRoot, doc.source.replace(/\.md$/i, ".html"));
+  if (fs.existsSync(legacyTarget)) fs.rmSync(legacyTarget);
+  const landing = externalRelativeUrl(doc.target, "index.html");
+  const swagger = externalRelativeUrl(doc.target, "swagger-ui/index.html");
   const html = `<!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>${escapeHtml(doc.heading)} · Kodenix Verify</title><link rel="stylesheet" href="${css}" /></head>
+<title>${escapeHtml(doc.heading)} · Kodenix Verify</title><link rel="stylesheet" href="${relativeUrl(doc.target, "assets/docs.css")}docs.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="${landing}"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 ${renderNavigation(doc.target)}
 </div></aside><main class="content"><article class="doc"><div class="top-actions"><a class="btn" href="${landing}">Landing</a><a class="btn" href="${swagger}">Swagger UI</a></div><div class="crumb">${escapeHtml(doc.source.replaceAll("\\", "/"))}</div>
 ${marked.parse(doc.markdown)}
-</article></main></div><script src="${js}"></script></body></html>\n`;
+</article></main></div><script src="${relativeUrl(doc.target, "assets/docs.js")}docs.js"></script></body></html>\n`;
   const target = path.join(outputRoot, doc.target);
   fs.mkdirSync(path.dirname(target), { recursive: true });
   fs.writeFileSync(target, html, "utf8");
 }
 
+for (const htmlFile of walkHtml(outputRoot)) {
+  if (path.basename(htmlFile).toLowerCase() !== "index.html") {
+    const alias = path.join(path.dirname(htmlFile), path.basename(htmlFile, ".html"), "index.html");
+    fs.mkdirSync(path.dirname(alias), { recursive: true });
+    fs.copyFileSync(htmlFile, alias);
+  }
+}
+
+for (const htmlFile of walkHtml(outputRoot)) {
+  const original = fs.readFileSync(htmlFile, "utf8");
+  const clean = original.replace(
+    /href=(['"])([^'"?#]*\/)?([^/'"?#]+)\.html([?#][^'"]*)?\1/gi,
+    (_match, quote, prefix = "", page, suffix = "") =>
+      `href=${quote}${prefix}${page.toLowerCase() === "index" ? "" : `${page}/`}${suffix}${quote}`,
+  );
+  if (clean !== original) fs.writeFileSync(htmlFile, clean, "utf8");
+}
+
 console.log(`Generated ${documents.length} HTML documents in docs-html/.`);
+
+function walkHtml(directory) {
+  return fs.readdirSync(directory, { withFileTypes: true }).flatMap(item => {
+    const file = path.join(directory, item.name);
+    return item.isDirectory() ? walkHtml(file) : file.endsWith(".html") ? [file] : [];
+  });
+}

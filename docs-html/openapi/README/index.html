@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OpenAPI Catalog · Kodenix Verify</title><link rel="stylesheet" href="../../assets/docs.css" /></head>
+<body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
+<div class="nav-section">admin</div><a class="nav-link" href="../../admin/admin-portal-spec/">Admin Portal Spec</a>
+<a class="nav-link" href="../../admin/tenant-license-configuration/">Tenant License Configuration</a>
+<div class="nav-section">backend</div><a class="nav-link" href="../../backend/backend-handoff/">Backend Handoff</a>
+<a class="nav-link" href="../../backend/database-model/">Database Model</a>
+<a class="nav-link" href="../../backend/domain-model/">Domain Model</a>
+<a class="nav-link" href="../../backend/provider-contract/">Provider Contract</a>
+<a class="nav-link" href="../../backend/rules-engine/">Rules Engine</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../../diagrams/README/">Diagramas Mermaid</a>
+<div class="nav-section">docs</div><a class="nav-link" href="../../docs/00-documentation-governance/">00 - Gobierno de Documentación</a>
+<a class="nav-link" href="../../docs/01-functional-scope/">01 - Alcance Funcional</a>
+<a class="nav-link" href="../../docs/02-requirements/">02 - Requerimientos</a>
+<a class="nav-link" href="../../docs/03-licensing-and-usage-control/">03 - Licenciamiento y Control de Uso</a>
+<a class="nav-link" href="../../docs/04-transaction-counting-and-billing/">04 - Conteo de Transacciones y Facturación</a>
+<a class="nav-link" href="../../docs/05-security-specification/">05 - Especificación de Seguridad</a>
+<a class="nav-link" href="../../docs/06-fallback-and-channel-availability/">06 - Fallback y Disponibilidad de Canales</a>
+<a class="nav-link" href="../../docs/07-api-contract-overview/">07 - API Contract Overview</a>
+<a class="nav-link" href="../../docs/08-state-machine/">08 - Máquina de Estados</a>
+<a class="nav-link" href="../../docs/09-data-model/">09 - Modelo de Datos</a>
+<a class="nav-link" href="../../docs/10-infrastructure-sizing/">10 - Servidores e Infraestructura Estimada</a>
+<a class="nav-link" href="../../docs/11-observability-audit/">11 - Observabilidad y Auditoría</a>
+<a class="nav-link" href="../../docs/12-error-catalog/">12 - Catálogo de Errores</a>
+<a class="nav-link" href="../../docs/13-webhooks/">13 - Webhooks</a>
+<a class="nav-link" href="../../docs/14-sla-and-availability/">14 - SLA y Disponibilidad</a>
+<a class="nav-link" href="../../docs/15-release-versioning/">15 - Versionado y Releases</a>
+<a class="nav-link" href="../../docs/16-published-documentation-surface/">Published Documentation Surface</a>
+<a class="nav-link" href="../../docs/android/getting-started/">Android: guia de integracion</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../../MANIFEST/">Manifest - Kodenix Verify OTP</a>
+<div class="nav-section">openapi</div><a class="nav-link active" href="./">OpenAPI Catalog</a>
+<div class="nav-section">operations</div><a class="nav-link" href="../../operations/capacity-planning/">Capacity Planning</a>
+<a class="nav-link" href="../../operations/incident-response/">Incident Response</a>
+<a class="nav-link" href="../../operations/monitoring-alerts/">Monitoring Alerts</a>
+<a class="nav-link" href="../../operations/runbook/">Runbook Operativo</a>
+<div class="nav-section">qa</div><a class="nav-link" href="../../qa/acceptance-criteria/">Acceptance Criteria</a>
+<a class="nav-link" href="../../qa/qa-matrix/">QA Matrix</a>
+<a class="nav-link" href="../../qa/test-cases/">Test Cases</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../../README/">Kodenix Verify OTP</a>
+<div class="nav-section">sdk</div><a class="nav-link" href="../../sdk/localization-spec/">Localization Spec</a>
+<a class="nav-link" href="../../sdk/sdk-android-contract/">SDK Android Contract</a>
+<a class="nav-link" href="../../sdk/sdk-contract-common/">SDK Contract Common</a>
+<a class="nav-link" href="../../sdk/sdk-ios-contract/">SDK iOS Contract</a>
+<a class="nav-link" href="../../sdk/sdk-web-contract/">SDK Web Contract</a>
+<a class="nav-link" href="../../sdk/ui-ux-spec/">UI/UX Spec</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../../swagger-ui/README/">Swagger UI</a>
+</div></aside><main class="content"><article class="doc"><div class="top-actions"><a class="btn" href="../../../">Landing</a><a class="btn" href="../../../swagger-ui/">Swagger UI</a></div><div class="crumb">openapi/README.md</div>
+<h1>OpenAPI Catalog</h1>
+<p>Contratos OpenAPI 3.x de Kodenix Verify OTP.</p>
+<h2>Vista Swagger</h2>
+<ul>
+<li><a href="../swagger-ui/">Swagger UI</a></li>
+</ul>
+<h2>Contratos disponibles</h2>
+<table>
+<thead>
+<tr>
+<th>Contrato</th>
+<th>Archivo</th>
+<th>Responsabilidad</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>OTP Public API</td>
+<td><a href="otp-public-api.yaml">otp-public-api.yaml</a></td>
+<td>Operación OTP usada por SDKs e integradores.</td>
+</tr>
+<tr>
+<td>Licensing API</td>
+<td><a href="licensing-api.yaml">licensing-api.yaml</a></td>
+<td>Licencias, entitlements, cuotas y control de uso.</td>
+</tr>
+<tr>
+<td>Admin API</td>
+<td><a href="admin-api.yaml">admin-api.yaml</a></td>
+<td>Administración de clientes, aplicaciones, reglas, branding y proveedores.</td>
+</tr>
+<tr>
+<td>Provider Internal API</td>
+<td><a href="provider-internal-api.yaml">provider-internal-api.yaml</a></td>
+<td>Contrato interno para orquestar WhatsApp, SMS y Email.</td>
+</tr>
+<tr>
+<td>Analytics API</td>
+<td><a href="analytics-api.yaml">analytics-api.yaml</a></td>
+<td>Métricas, uso, consumo y reportes transaccionales.</td>
+</tr>
+<tr>
+<td>Webhooks API</td>
+<td><a href="webhooks-api.yaml">webhooks-api.yaml</a></td>
+<td>Eventos enviados al backend del cliente.</td>
+</tr>
+</tbody></table>
+<h2>Criterios comunes</h2>
+<ul>
+<li>Formato: OpenAPI 3.x.</li>
+<li>Autenticación pública server-to-server: API Key.</li>
+<li>Autenticación SDK runtime: Bearer sdkToken temporal.</li>
+<li>Respuestas de error: formato normalizado definido en <a href="../docs/12-error-catalog.md">Catálogo de errores</a>.</li>
+<li>Conteo transaccional: definido en <a href="../docs/04-transaction-counting-and-billing.md">Transaction Counting &amp; Billing</a>.</li>
+<li>Licenciamiento: definido en <a href="../docs/03-licensing-and-usage-control.md">Licensing &amp; Usage Control</a>.</li>
+</ul>
+
+</article></main></div><script src="../../assets/docs.js"></script></body></html>

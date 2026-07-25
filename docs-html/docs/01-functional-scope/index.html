@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>01 - Alcance Funcional · Kodenix Verify</title><link rel="stylesheet" href="../../assets/docs.css" /></head>
+<body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
+<div class="nav-section">admin</div><a class="nav-link" href="../../admin/admin-portal-spec/">Admin Portal Spec</a>
+<a class="nav-link" href="../../admin/tenant-license-configuration/">Tenant License Configuration</a>
+<div class="nav-section">backend</div><a class="nav-link" href="../../backend/backend-handoff/">Backend Handoff</a>
+<a class="nav-link" href="../../backend/database-model/">Database Model</a>
+<a class="nav-link" href="../../backend/domain-model/">Domain Model</a>
+<a class="nav-link" href="../../backend/provider-contract/">Provider Contract</a>
+<a class="nav-link" href="../../backend/rules-engine/">Rules Engine</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../../diagrams/README/">Diagramas Mermaid</a>
+<div class="nav-section">docs</div><a class="nav-link" href="../00-documentation-governance/">00 - Gobierno de Documentación</a>
+<a class="nav-link active" href="./">01 - Alcance Funcional</a>
+<a class="nav-link" href="../02-requirements/">02 - Requerimientos</a>
+<a class="nav-link" href="../03-licensing-and-usage-control/">03 - Licenciamiento y Control de Uso</a>
+<a class="nav-link" href="../04-transaction-counting-and-billing/">04 - Conteo de Transacciones y Facturación</a>
+<a class="nav-link" href="../05-security-specification/">05 - Especificación de Seguridad</a>
+<a class="nav-link" href="../06-fallback-and-channel-availability/">06 - Fallback y Disponibilidad de Canales</a>
+<a class="nav-link" href="../07-api-contract-overview/">07 - API Contract Overview</a>
+<a class="nav-link" href="../08-state-machine/">08 - Máquina de Estados</a>
+<a class="nav-link" href="../09-data-model/">09 - Modelo de Datos</a>
+<a class="nav-link" href="../10-infrastructure-sizing/">10 - Servidores e Infraestructura Estimada</a>
+<a class="nav-link" href="../11-observability-audit/">11 - Observabilidad y Auditoría</a>
+<a class="nav-link" href="../12-error-catalog/">12 - Catálogo de Errores</a>
+<a class="nav-link" href="../13-webhooks/">13 - Webhooks</a>
+<a class="nav-link" href="../14-sla-and-availability/">14 - SLA y Disponibilidad</a>
+<a class="nav-link" href="../15-release-versioning/">15 - Versionado y Releases</a>
+<a class="nav-link" href="../16-published-documentation-surface/">Published Documentation Surface</a>
+<a class="nav-link" href="../android/getting-started/">Android: guia de integracion</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../../MANIFEST/">Manifest - Kodenix Verify OTP</a>
+<div class="nav-section">openapi</div><a class="nav-link" href="../../openapi/README/">OpenAPI Catalog</a>
+<div class="nav-section">operations</div><a class="nav-link" href="../../operations/capacity-planning/">Capacity Planning</a>
+<a class="nav-link" href="../../operations/incident-response/">Incident Response</a>
+<a class="nav-link" href="../../operations/monitoring-alerts/">Monitoring Alerts</a>
+<a class="nav-link" href="../../operations/runbook/">Runbook Operativo</a>
+<div class="nav-section">qa</div><a class="nav-link" href="../../qa/acceptance-criteria/">Acceptance Criteria</a>
+<a class="nav-link" href="../../qa/qa-matrix/">QA Matrix</a>
+<a class="nav-link" href="../../qa/test-cases/">Test Cases</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../../README/">Kodenix Verify OTP</a>
+<div class="nav-section">sdk</div><a class="nav-link" href="../../sdk/localization-spec/">Localization Spec</a>
+<a class="nav-link" href="../../sdk/sdk-android-contract/">SDK Android Contract</a>
+<a class="nav-link" href="../../sdk/sdk-contract-common/">SDK Contract Common</a>
+<a class="nav-link" href="../../sdk/sdk-ios-contract/">SDK iOS Contract</a>
+<a class="nav-link" href="../../sdk/sdk-web-contract/">SDK Web Contract</a>
+<a class="nav-link" href="../../sdk/ui-ux-spec/">UI/UX Spec</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../../swagger-ui/README/">Swagger UI</a>
+</div></aside><main class="content"><article class="doc"><div class="top-actions"><a class="btn" href="../../../">Landing</a><a class="btn" href="../../../swagger-ui/">Swagger UI</a></div><div class="crumb">docs/01-functional-scope.md</div>
+<h1>01 - Alcance Funcional</h1>
+<h2>Objetivo</h2>
+<p>Kodenix Verify OTP es una plataforma OTP embebible compuesta por SDKs Web, Android e iOS, más un backend de orquestación. Permite integrar flujos OTP por WhatsApp, SMS y Email con UI configurable, reglas por cliente, licenciamiento, auditoría, conteo de consumo y fallback de canales.</p>
+<p>Este documento define únicamente el alcance funcional. Las reglas detalladas de seguridad, licenciamiento, conteo transaccional, fallback, infraestructura y errores se documentan en sus secciones propietarias.</p>
+<h2>Alcance MVP</h2>
+<ul>
+<li>SDK Web con UI completa y modo headless.</li>
+<li>SDK Android con UI completa y modo headless.</li>
+<li>SDK iOS con UI completa y modo headless.</li>
+<li>Backend OTP multi-tenant.</li>
+<li>Canales: WhatsApp, SMS y Email.</li>
+<li>Configuración por cliente, aplicación, ambiente y licencia.</li>
+<li>Validación de origen Web, package Android y bundle iOS.</li>
+<li>Conteo transaccional por OTP enviado.</li>
+<li>Auditoría de eventos operativos, técnicos y comerciales.</li>
+<li>Webhooks para eventos relevantes.</li>
+<li>OpenAPI/Swagger para APIs públicas, administración, licencias, analytics, proveedores internos y webhooks.</li>
+<li>Portal administrativo para tenants, aplicaciones, licencias, reglas, branding, canales y consumo.</li>
+</ul>
+<h2>Fuera de alcance MVP</h2>
+<ul>
+<li>Biometría.</li>
+<li>Push approval.</li>
+<li>Magic links.</li>
+<li>Risk engine avanzado.</li>
+<li>Device fingerprint obligatorio.</li>
+<li>Facturación fiscal automatizada.</li>
+<li>Motor antifraude basado en scoring externo.</li>
+<li>Envío directo desde SDK hacia proveedores externos.</li>
+</ul>
+<h2>Plataformas soportadas</h2>
+<table>
+<thead>
+<tr>
+<th>Plataforma</th>
+<th>Modalidades</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Web</td>
+<td>UI completa, headless, configuración remota</td>
+</tr>
+<tr>
+<td>Android</td>
+<td>UI completa, headless, configuración remota</td>
+</tr>
+<tr>
+<td>iOS</td>
+<td>UI completa, headless, configuración remota</td>
+</tr>
+<tr>
+<td>Backend cliente</td>
+<td>Integración server-to-server para crear operación y consultar resultado</td>
+</tr>
+</tbody></table>
+<h2>Canales soportados</h2>
+<table>
+<thead>
+<tr>
+<th>Canal</th>
+<th>Uso esperado</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>WhatsApp</td>
+<td>Canal primario configurable</td>
+</tr>
+<tr>
+<td>SMS</td>
+<td>Canal secundario configurable</td>
+</tr>
+<tr>
+<td>Email</td>
+<td>Canal terciario/configurable</td>
+</tr>
+</tbody></table>
+<p>La prioridad y disponibilidad real dependen de reglas, licencia, cuotas, target disponible y salud de proveedores. Ver <code>docs/06-fallback-and-channel-availability.md</code>.</p>
+<h2>Modos de inicialización SDK</h2>
+<p>El SDK puede iniciar con ambos datos, solo teléfono, solo email o sin target. El comportamiento exacto depende de <code>allowUserInput</code>, <code>allowTargetUpdate</code>, licencia, reglas y canales permitidos.</p>
+<table>
+<thead>
+<tr>
+<th>Modo</th>
+<th>Target recibido</th>
+<th>Resultado general</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td>phone + email</td>
+<td>Permite canales que usen teléfono y email según licencia</td>
+</tr>
+<tr>
+<td>B</td>
+<td>phone only</td>
+<td>Permite WhatsApp/SMS; Email requiere captura autorizada</td>
+</tr>
+<tr>
+<td>C</td>
+<td>email only</td>
+<td>Permite Email; WhatsApp/SMS requieren captura autorizada</td>
+</tr>
+<tr>
+<td>D</td>
+<td>none</td>
+<td>Requiere captura autorizada o termina con error controlado</td>
+</tr>
+</tbody></table>
+<p>La especificación detallada está en <code>docs/06-fallback-and-channel-availability.md</code> y <code>sdk/sdk-contract-common.md</code>.</p>
+<h2>Modos de integración</h2>
+<h3>UI completa</h3>
+<p>El SDK presenta pantallas propias para captura de target, selección de canal, ingreso OTP, reenvío, éxito, error y cancelación, según configuración.</p>
+<h3>Headless</h3>
+<p>El cliente usa su propia UI y consume métodos del SDK para crear sesión, enviar OTP, validar OTP, reenviar y consultar estado.</p>
+<h3>Enterprise recomendado</h3>
+<p>El backend del cliente crea la operación contra Kodenix usando credenciales privadas. Kodenix valida licencia, app, ambiente y autorización de origen/app nativa. Después emite un <code>sdkToken</code> temporal para que el SDK continúe el flujo.</p>
+<h2>Principales capacidades</h2>
+<ul>
+<li>Crear operación OTP.</li>
+<li>Obtener configuración del SDK.</li>
+<li>Enviar OTP.</li>
+<li>Reenviar OTP.</li>
+<li>Validar OTP.</li>
+<li>Cambiar canal cuando esté permitido.</li>
+<li>Ejecutar fallback automático o manual.</li>
+<li>Cancelar flujo.</li>
+<li>Consultar estado.</li>
+<li>Emitir callbacks SDK.</li>
+<li>Emitir webhooks server-to-server.</li>
+<li>Registrar auditoría y consumo.</li>
+<li>Aplicar licencias, cuotas y entitlements.</li>
+</ul>
+<h2>Referencias por tema</h2>
+<table>
+<thead>
+<tr>
+<th>Tema</th>
+<th>Documento</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Requerimientos</td>
+<td><code>docs/02-requirements.md</code></td>
+</tr>
+<tr>
+<td>Licenciamiento y control por URL/app</td>
+<td><code>docs/03-licensing-and-usage-control.md</code></td>
+</tr>
+<tr>
+<td>Cobro por OTP enviado</td>
+<td><code>docs/04-transaction-counting-and-billing.md</code></td>
+</tr>
+<tr>
+<td>Seguridad</td>
+<td><code>docs/05-security-specification.md</code></td>
+</tr>
+<tr>
+<td>Fallback y target opcional</td>
+<td><code>docs/06-fallback-and-channel-availability.md</code></td>
+</tr>
+<tr>
+<td>API/Swagger</td>
+<td><code>docs/07-api-contract-overview.md</code> y <code>openapi/</code></td>
+</tr>
+<tr>
+<td>Estados</td>
+<td><code>docs/08-state-machine.md</code></td>
+</tr>
+<tr>
+<td>Infraestructura</td>
+<td><code>docs/10-infrastructure-sizing.md</code></td>
+</tr>
+<tr>
+<td>Errores</td>
+<td><code>docs/12-error-catalog.md</code></td>
+</tr>
+<tr>
+<td>SDK</td>
+<td><code>sdk/</code></td>
+</tr>
+<tr>
+<td>QA</td>
+<td><code>qa/</code></td>
+</tr>
+</tbody></table>
+
+</article></main></div><script src="../../assets/docs.js"></script></body></html>

@@ -1,7 +1,7 @@
 # Android: guia de integracion
 
 Esta es la guia completa para integrar **Kodenix Verify OTP** en Android. El
-[`README` del proyecto Android](https://github.com/FernandoGHe/kodenix-verify-otp-android#readme)
+README del proyecto Android
 se mantiene como referencia rapida para quienes trabajan directamente en ese
 subproyecto; este documento es la fuente de integracion para clientes.
 
@@ -163,7 +163,7 @@ coincidencia de package name sin la huella SHA-256 correcta no es suficiente.
 
 ## Estado de licencia del codigo Android
 
-El archivo [`LICENSE`](https://github.com/FernandoGHe/kodenix-verify-otp-android/blob/main/LICENSE) esta
+El archivo `LICENSE` del repositorio Android esta
 marcado **DRAFT - LEGAL REVIEW REQUIRED BEFORE DISTRIBUTION**. Es un borrador para
 revision legal y **no representa una licencia comercial aprobada ni autoriza la
 distribucion**. La publicacion externa de codigo o artefactos debe esperar la
@@ -175,8 +175,6 @@ aprobacion y el acuerdo comercial aplicables.
 - [Contrato Android](../../sdk/sdk-android-contract.md)
 - [OpenAPI publico OTP](../../openapi/otp-public-api.yaml)
 - [Catalogo de errores](../12-error-catalog.md)
-- [Repositorio oficial del SDK Android](https://github.com/FernandoGHe/kodenix-verify-otp-android)
-
 ## Actualizacion de esta guia
 
 El SDK y la documentacion tienen ciclos de release independientes. Cada cambio en

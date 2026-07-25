@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>12 - Catálogo de Errores · Kodenix Verify</title><link rel="stylesheet" href="../../assets/docs.css" /></head>
+<body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
+<div class="nav-section">admin</div><a class="nav-link" href="../../admin/admin-portal-spec/">Admin Portal Spec</a>
+<a class="nav-link" href="../../admin/tenant-license-configuration/">Tenant License Configuration</a>
+<div class="nav-section">backend</div><a class="nav-link" href="../../backend/backend-handoff/">Backend Handoff</a>
+<a class="nav-link" href="../../backend/database-model/">Database Model</a>
+<a class="nav-link" href="../../backend/domain-model/">Domain Model</a>
+<a class="nav-link" href="../../backend/provider-contract/">Provider Contract</a>
+<a class="nav-link" href="../../backend/rules-engine/">Rules Engine</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../../diagrams/README/">Diagramas Mermaid</a>
+<div class="nav-section">docs</div><a class="nav-link" href="../00-documentation-governance/">00 - Gobierno de Documentación</a>
+<a class="nav-link" href="../01-functional-scope/">01 - Alcance Funcional</a>
+<a class="nav-link" href="../02-requirements/">02 - Requerimientos</a>
+<a class="nav-link" href="../03-licensing-and-usage-control/">03 - Licenciamiento y Control de Uso</a>
+<a class="nav-link" href="../04-transaction-counting-and-billing/">04 - Conteo de Transacciones y Facturación</a>
+<a class="nav-link" href="../05-security-specification/">05 - Especificación de Seguridad</a>
+<a class="nav-link" href="../06-fallback-and-channel-availability/">06 - Fallback y Disponibilidad de Canales</a>
+<a class="nav-link" href="../07-api-contract-overview/">07 - API Contract Overview</a>
+<a class="nav-link" href="../08-state-machine/">08 - Máquina de Estados</a>
+<a class="nav-link" href="../09-data-model/">09 - Modelo de Datos</a>
+<a class="nav-link" href="../10-infrastructure-sizing/">10 - Servidores e Infraestructura Estimada</a>
+<a class="nav-link" href="../11-observability-audit/">11 - Observabilidad y Auditoría</a>
+<a class="nav-link active" href="./">12 - Catálogo de Errores</a>
+<a class="nav-link" href="../13-webhooks/">13 - Webhooks</a>
+<a class="nav-link" href="../14-sla-and-availability/">14 - SLA y Disponibilidad</a>
+<a class="nav-link" href="../15-release-versioning/">15 - Versionado y Releases</a>
+<a class="nav-link" href="../16-published-documentation-surface/">Published Documentation Surface</a>
+<a class="nav-link" href="../android/getting-started/">Android: guia de integracion</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../../MANIFEST/">Manifest - Kodenix Verify OTP</a>
+<div class="nav-section">openapi</div><a class="nav-link" href="../../openapi/README/">OpenAPI Catalog</a>
+<div class="nav-section">operations</div><a class="nav-link" href="../../operations/capacity-planning/">Capacity Planning</a>
+<a class="nav-link" href="../../operations/incident-response/">Incident Response</a>
+<a class="nav-link" href="../../operations/monitoring-alerts/">Monitoring Alerts</a>
+<a class="nav-link" href="../../operations/runbook/">Runbook Operativo</a>
+<div class="nav-section">qa</div><a class="nav-link" href="../../qa/acceptance-criteria/">Acceptance Criteria</a>
+<a class="nav-link" href="../../qa/qa-matrix/">QA Matrix</a>
+<a class="nav-link" href="../../qa/test-cases/">Test Cases</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../../README/">Kodenix Verify OTP</a>
+<div class="nav-section">sdk</div><a class="nav-link" href="../../sdk/localization-spec/">Localization Spec</a>
+<a class="nav-link" href="../../sdk/sdk-android-contract/">SDK Android Contract</a>
+<a class="nav-link" href="../../sdk/sdk-contract-common/">SDK Contract Common</a>
+<a class="nav-link" href="../../sdk/sdk-ios-contract/">SDK iOS Contract</a>
+<a class="nav-link" href="../../sdk/sdk-web-contract/">SDK Web Contract</a>
+<a class="nav-link" href="../../sdk/ui-ux-spec/">UI/UX Spec</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../../swagger-ui/README/">Swagger UI</a>
+</div></aside><main class="content"><article class="doc"><div class="top-actions"><a class="btn" href="../../../">Landing</a><a class="btn" href="../../../swagger-ui/">Swagger UI</a></div><div class="crumb">docs/12-error-catalog.md</div>
+<h1>12 - Catálogo de Errores</h1>
+<h2>Licencia</h2>
+<table>
+<thead>
+<tr>
+<th>Código</th>
+<th align="right">HTTP</th>
+<th align="right">Recuperable</th>
+<th>Acción</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LICENSE_NOT_FOUND</td>
+<td align="right">403</td>
+<td align="right">No</td>
+<td>Crear licencia</td>
+</tr>
+<tr>
+<td>LICENSE_EXPIRED</td>
+<td align="right">403</td>
+<td align="right">No</td>
+<td>Renovar licencia</td>
+</tr>
+<tr>
+<td>LICENSE_SUSPENDED</td>
+<td align="right">403</td>
+<td align="right">No</td>
+<td>Reactivar licencia</td>
+</tr>
+<tr>
+<td>LICENSE_REVOKED</td>
+<td align="right">403</td>
+<td align="right">No</td>
+<td>Emitir nueva licencia</td>
+</tr>
+<tr>
+<td>LICENSE_OVER_QUOTA</td>
+<td align="right">402/429</td>
+<td align="right">No</td>
+<td>Comprar/ampliar cuota</td>
+</tr>
+<tr>
+<td>LICENSE_ORIGIN_NOT_ALLOWED</td>
+<td align="right">403</td>
+<td align="right">No</td>
+<td>Crear licencia para URL</td>
+</tr>
+<tr>
+<td>LICENSE_PACKAGE_NOT_ALLOWED</td>
+<td align="right">403</td>
+<td align="right">No</td>
+<td>Autorizar package/fingerprint</td>
+</tr>
+<tr>
+<td>LICENSE_BUNDLE_NOT_ALLOWED</td>
+<td align="right">403</td>
+<td align="right">No</td>
+<td>Autorizar bundle/team</td>
+</tr>
+<tr>
+<td>LICENSE_CHANNEL_NOT_ALLOWED</td>
+<td align="right">403</td>
+<td align="right">No</td>
+<td>Habilitar canal</td>
+</tr>
+</tbody></table>
+<h2>Target / canal</h2>
+<table>
+<thead>
+<tr>
+<th>Código</th>
+<th align="right">HTTP</th>
+<th align="right">Recuperable</th>
+<th>Acción</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>OTP_TARGET_REQUIRED</td>
+<td align="right">400</td>
+<td align="right">Sí</td>
+<td>Pedir teléfono/email</td>
+</tr>
+<tr>
+<td>OTP_INVALID_PHONE</td>
+<td align="right">400</td>
+<td align="right">Sí</td>
+<td>Corregir teléfono</td>
+</tr>
+<tr>
+<td>OTP_INVALID_EMAIL</td>
+<td align="right">400</td>
+<td align="right">Sí</td>
+<td>Corregir email</td>
+</tr>
+<tr>
+<td>OTP_CHANNEL_NOT_AVAILABLE</td>
+<td align="right">400</td>
+<td align="right">Sí</td>
+<td>Elegir otro canal</td>
+</tr>
+<tr>
+<td>OTP_FALLBACK_TARGET_MISSING</td>
+<td align="right">409</td>
+<td align="right">Sí</td>
+<td>Capturar target alterno</td>
+</tr>
+<tr>
+<td>OTP_NO_FALLBACK_AVAILABLE</td>
+<td align="right">409</td>
+<td align="right">No</td>
+<td>Terminar flujo o reintentar después</td>
+</tr>
+</tbody></table>
+<h2>Envío/proveedor</h2>
+<table>
+<thead>
+<tr>
+<th>Código</th>
+<th align="right">HTTP</th>
+<th align="right">Recuperable</th>
+<th>Acción</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>OTP_PROVIDER_UNAVAILABLE</td>
+<td align="right">503</td>
+<td align="right">Sí</td>
+<td>Fallback o reintento</td>
+</tr>
+<tr>
+<td>OTP_PROVIDER_TIMEOUT</td>
+<td align="right">504</td>
+<td align="right">Sí</td>
+<td>Fallback o reintento</td>
+</tr>
+<tr>
+<td>OTP_PROVIDER_AUTH_ERROR</td>
+<td align="right">502</td>
+<td align="right">No</td>
+<td>Revisar credenciales proveedor</td>
+</tr>
+<tr>
+<td>OTP_DELIVERY_FAILED</td>
+<td align="right">502</td>
+<td align="right">Sí</td>
+<td>Fallback</td>
+</tr>
+<tr>
+<td>OTP_SEND_RATE_LIMITED</td>
+<td align="right">429</td>
+<td align="right">Sí</td>
+<td>Esperar cooldown</td>
+</tr>
+</tbody></table>
+<h2>Validación</h2>
+<table>
+<thead>
+<tr>
+<th>Código</th>
+<th align="right">HTTP</th>
+<th align="right">Recuperable</th>
+<th>Acción</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>OTP_INVALID_CODE</td>
+<td align="right">200/400</td>
+<td align="right">Sí</td>
+<td>Reintentar</td>
+</tr>
+<tr>
+<td>OTP_EXPIRED</td>
+<td align="right">410</td>
+<td align="right">Sí</td>
+<td>Reenviar</td>
+</tr>
+<tr>
+<td>OTP_MAX_ATTEMPTS_REACHED</td>
+<td align="right">423</td>
+<td align="right">No</td>
+<td>Crear nueva operación</td>
+</tr>
+<tr>
+<td>OTP_ALREADY_VERIFIED</td>
+<td align="right">409</td>
+<td align="right">No</td>
+<td>Continuar flujo</td>
+</tr>
+<tr>
+<td>OTP_OPERATION_NOT_FOUND</td>
+<td align="right">404</td>
+<td align="right">No</td>
+<td>Crear operación</td>
+</tr>
+</tbody></table>
+
+</article></main></div><script src="../../assets/docs.js"></script></body></html>
