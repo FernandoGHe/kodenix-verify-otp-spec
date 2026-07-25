@@ -1,87 +1,56 @@
 <!doctype html>
-<html lang="es">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Diagramas Mermaid · Kodenix Verify</title>
-<link rel="stylesheet" href="../../docs-html/assets/docs.css" />
-</head>
-<body>
-<div class="layout">
-<aside class="sidebar"><a class="brand" href="../../index.html"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Specification</span></span></a><div class="nav-list">
-<div class="nav-section">Main</div>
-<a class="nav-link" href="../../docs-html/MANIFEST.html">Manifest - Kodenix Verify OTP</a>
-<a class="nav-link" href="../../docs-html/README.html">Kodenix Verify OTP Specification</a>
-<div class="nav-section">docs</div>
-<a class="nav-link" href="../../docs-html/docs/00-documentation-governance.html">00 - Gobierno de Documentación</a>
-<a class="nav-link" href="../../docs-html/docs/01-functional-scope.html">01 - Alcance Funcional</a>
-<a class="nav-link" href="../../docs-html/docs/02-requirements.html">02 - Requerimientos</a>
-<a class="nav-link" href="../../docs-html/docs/03-licensing-and-usage-control.html">03 - Licenciamiento y Control de Uso</a>
-<a class="nav-link" href="../../docs-html/docs/04-transaction-counting-and-billing.html">04 - Conteo de Transacciones y Facturación</a>
-<a class="nav-link" href="../../docs-html/docs/05-security-specification.html">05 - Especificación de Seguridad</a>
-<a class="nav-link" href="../../docs-html/docs/06-fallback-and-channel-availability.html">06 - Fallback y Disponibilidad de Canales</a>
-<a class="nav-link" href="../../docs-html/docs/07-api-contract-overview.html">07 - API Contract Overview</a>
-<a class="nav-link" href="../../docs-html/docs/08-state-machine.html">08 - Máquina de Estados</a>
-<a class="nav-link" href="../../docs-html/docs/09-data-model.html">09 - Modelo de Datos</a>
-<a class="nav-link" href="../../docs-html/docs/10-infrastructure-sizing.html">10 - Servidores e Infraestructura Estimada</a>
-<a class="nav-link" href="../../docs-html/docs/11-observability-audit.html">11 - Observabilidad y Auditoría</a>
-<a class="nav-link" href="../../docs-html/docs/12-error-catalog.html">12 - Catálogo de Errores</a>
-<a class="nav-link" href="../../docs-html/docs/13-webhooks.html">13 - Webhooks</a>
-<a class="nav-link" href="../../docs-html/docs/14-sla-and-availability.html">14 - SLA y Disponibilidad</a>
-<a class="nav-link" href="../../docs-html/docs/15-release-versioning.html">15 - Versionado y Releases</a>
-<a class="nav-link" href="../../docs-html/docs/16-published-documentation-surface.html">Published Documentation Surface</a>
-<div class="nav-section">openapi</div>
-<a class="nav-link" href="../../docs-html/openapi/README.html">OpenAPI Catalog</a>
-<div class="nav-section">diagrams</div>
-<a class="nav-link" href="../../docs-html/diagrams/README.html">Diagramas Mermaid</a>
-<div class="nav-section">backend</div>
-<a class="nav-link" href="../../docs-html/backend/backend-handoff.html">Backend Handoff</a>
-<a class="nav-link" href="../../docs-html/backend/database-model.html">Database Model</a>
-<a class="nav-link" href="../../docs-html/backend/domain-model.html">Domain Model</a>
-<a class="nav-link" href="../../docs-html/backend/provider-contract.html">Provider Contract</a>
-<a class="nav-link" href="../../docs-html/backend/rules-engine.html">Rules Engine</a>
-<div class="nav-section">sdk</div>
-<a class="nav-link" href="../../docs-html/sdk/localization-spec.html">Localization Spec</a>
-<a class="nav-link" href="../../docs-html/sdk/sdk-android-contract.html">SDK Android Contract</a>
-<a class="nav-link" href="../../docs-html/sdk/sdk-contract-common.html">SDK Contract Common</a>
-<a class="nav-link" href="../../docs-html/sdk/sdk-ios-contract.html">SDK iOS Contract</a>
-<a class="nav-link" href="../../docs-html/sdk/sdk-web-contract.html">SDK Web Contract</a>
-<a class="nav-link" href="../../docs-html/sdk/ui-ux-spec.html">UI/UX Spec</a>
-<div class="nav-section">admin</div>
-<a class="nav-link" href="../../docs-html/admin/admin-portal-spec.html">Admin Portal Spec</a>
-<a class="nav-link" href="../../docs-html/admin/tenant-license-configuration.html">Tenant License Configuration</a>
-<div class="nav-section">operations</div>
-<a class="nav-link" href="../../docs-html/operations/capacity-planning.html">Capacity Planning</a>
-<a class="nav-link" href="../../docs-html/operations/incident-response.html">Incident Response</a>
-<a class="nav-link" href="../../docs-html/operations/monitoring-alerts.html">Monitoring Alerts</a>
-<a class="nav-link" href="../../docs-html/operations/runbook.html">Runbook Operativo</a>
-<div class="nav-section">qa</div>
-<a class="nav-link" href="../../docs-html/qa/acceptance-criteria.html">Acceptance Criteria</a>
-<a class="nav-link" href="../../docs-html/qa/qa-matrix.html">QA Matrix</a>
-<a class="nav-link" href="../../docs-html/qa/test-cases.html">Test Cases</a>
-<div class="nav-section">swagger-ui</div>
-<a class="nav-link" href="../../swagger-ui/index.html">Swagger UI</a>
-</div></aside>
-<main class="content"><article class="doc">
-<div class="top-actions"><a class="btn" href="../../index.html">Landing</a><a class="btn" href="../../swagger-ui/index.html">Swagger UI</a><a class="btn" href="../../docs-html/diagrams/README.html">Diagrams</a></div>
-<div class="crumb">diagrams/README.md</div>
+<html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Diagramas Mermaid · Kodenix Verify</title><link rel="stylesheet" href="../assets/docs.css" /></head>
+<body><div class="layout"><aside class="sidebar"><a class="brand" href="../../index.html"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
+<div class="nav-section">admin</div><a class="nav-link" href="../admin/admin-portal-spec.html">Admin Portal Spec</a>
+<a class="nav-link" href="../admin/tenant-license-configuration.html">Tenant License Configuration</a>
+<div class="nav-section">backend</div><a class="nav-link" href="../backend/backend-handoff.html">Backend Handoff</a>
+<a class="nav-link" href="../backend/database-model.html">Database Model</a>
+<a class="nav-link" href="../backend/domain-model.html">Domain Model</a>
+<a class="nav-link" href="../backend/provider-contract.html">Provider Contract</a>
+<a class="nav-link" href="../backend/rules-engine.html">Rules Engine</a>
+<div class="nav-section">Principal</div><a class="nav-link active" href="README.html">Diagramas Mermaid</a>
+<div class="nav-section">docs</div><a class="nav-link" href="../docs/00-documentation-governance.html">00 - Gobierno de Documentación</a>
+<a class="nav-link" href="../docs/01-functional-scope.html">01 - Alcance Funcional</a>
+<a class="nav-link" href="../docs/02-requirements.html">02 - Requerimientos</a>
+<a class="nav-link" href="../docs/03-licensing-and-usage-control.html">03 - Licenciamiento y Control de Uso</a>
+<a class="nav-link" href="../docs/04-transaction-counting-and-billing.html">04 - Conteo de Transacciones y Facturación</a>
+<a class="nav-link" href="../docs/05-security-specification.html">05 - Especificación de Seguridad</a>
+<a class="nav-link" href="../docs/06-fallback-and-channel-availability.html">06 - Fallback y Disponibilidad de Canales</a>
+<a class="nav-link" href="../docs/07-api-contract-overview.html">07 - API Contract Overview</a>
+<a class="nav-link" href="../docs/08-state-machine.html">08 - Máquina de Estados</a>
+<a class="nav-link" href="../docs/09-data-model.html">09 - Modelo de Datos</a>
+<a class="nav-link" href="../docs/10-infrastructure-sizing.html">10 - Servidores e Infraestructura Estimada</a>
+<a class="nav-link" href="../docs/11-observability-audit.html">11 - Observabilidad y Auditoría</a>
+<a class="nav-link" href="../docs/12-error-catalog.html">12 - Catálogo de Errores</a>
+<a class="nav-link" href="../docs/13-webhooks.html">13 - Webhooks</a>
+<a class="nav-link" href="../docs/14-sla-and-availability.html">14 - SLA y Disponibilidad</a>
+<a class="nav-link" href="../docs/15-release-versioning.html">15 - Versionado y Releases</a>
+<a class="nav-link" href="../docs/16-published-documentation-surface.html">Published Documentation Surface</a>
+<a class="nav-link" href="../docs/android/getting-started.html">Android: guia de integracion</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../MANIFEST.html">Manifest - Kodenix Verify OTP</a>
+<div class="nav-section">openapi</div><a class="nav-link" href="../openapi/README.html">OpenAPI Catalog</a>
+<div class="nav-section">operations</div><a class="nav-link" href="../operations/capacity-planning.html">Capacity Planning</a>
+<a class="nav-link" href="../operations/incident-response.html">Incident Response</a>
+<a class="nav-link" href="../operations/monitoring-alerts.html">Monitoring Alerts</a>
+<a class="nav-link" href="../operations/runbook.html">Runbook Operativo</a>
+<div class="nav-section">qa</div><a class="nav-link" href="../qa/acceptance-criteria.html">Acceptance Criteria</a>
+<a class="nav-link" href="../qa/qa-matrix.html">QA Matrix</a>
+<a class="nav-link" href="../qa/test-cases.html">Test Cases</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../README.html">Kodenix Verify OTP</a>
+<div class="nav-section">sdk</div><a class="nav-link" href="../sdk/localization-spec.html">Localization Spec</a>
+<a class="nav-link" href="../sdk/sdk-android-contract.html">SDK Android Contract</a>
+<a class="nav-link" href="../sdk/sdk-contract-common.html">SDK Contract Common</a>
+<a class="nav-link" href="../sdk/sdk-ios-contract.html">SDK iOS Contract</a>
+<a class="nav-link" href="../sdk/sdk-web-contract.html">SDK Web Contract</a>
+<a class="nav-link" href="../sdk/ui-ux-spec.html">UI/UX Spec</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../swagger-ui/README.html">Swagger UI</a>
+</div></aside><main class="content"><article class="doc"><div class="top-actions"><a class="btn" href="../../index.html">Landing</a><a class="btn" href="../../swagger-ui/index.html">Swagger UI</a></div><div class="crumb">diagrams/README.md</div>
 <h1>Diagramas Mermaid</h1>
 <p>Vista consolidada de diagramas técnicos de Kodenix Verify OTP.</p>
-<p>Los archivos <code>.mmd</code> se conservan como fuente editable. La lectura publicada usa las vistas HTML renderizadas.</p>
-<div class="link-grid">
-<a class="doc-card" href="component.html"><strong>Component</strong><span>docs-html/diagrams/component.html</span></a>
-<a class="doc-card" href="deployment.html"><strong>Deployment</strong><span>docs-html/diagrams/deployment.html</span></a>
-<a class="doc-card" href="erd-licensing.html"><strong>ERD Licensing</strong><span>docs-html/diagrams/erd-licensing.html</span></a>
-<a class="doc-card" href="outage-flow.html"><strong>Outage Flow</strong><span>docs-html/diagrams/outage-flow.html</span></a>
-<a class="doc-card" href="security-token-flow.html"><strong>Security Token Flow</strong><span>docs-html/diagrams/security-token-flow.html</span></a>
-<a class="doc-card" href="sequence-enterprise-license.html"><strong>Sequence Enterprise License</strong><span>docs-html/diagrams/sequence-enterprise-license.html</span></a>
-<a class="doc-card" href="sequence-provider-fallback.html"><strong>Sequence Provider Fallback</strong><span>docs-html/diagrams/sequence-provider-fallback.html</span></a>
-<a class="doc-card" href="sequence-sdk-init-target-optional.html"><strong>Sequence SDK Init Target Optional</strong><span>docs-html/diagrams/sequence-sdk-init-target-optional.html</span></a>
-<a class="doc-card" href="state-machine.html"><strong>State Machine</strong><span>docs-html/diagrams/state-machine.html</span></a>
-</div>
-
+<p>Los archivos <code>.mmd</code> se conservan como fuente editable y este documento mantiene los diagramas embebidos para navegación visual dentro del repositorio.</p>
 <h2>Component</h2>
-<p><a class="btn" href="component.html">Abrir diagrama individual</a></p>
+<p>Fuente: <a href="component.mmd"><code>component.mmd</code></a></p>
 <pre><code class="language-mermaid">flowchart LR
   App[App Cliente Web Android iOS] --&gt; SDK[Kodenix OTP SDK]
   BackendCliente[Backend Cliente] --&gt; OTPAPI[Kodenix OTP API]
@@ -100,10 +69,9 @@
   Usage --&gt; DB
   OTPAPI --&gt; Audit[Audit Service]
   Audit --&gt; DB
-
 </code></pre>
 <h2>Deployment</h2>
-<p><a class="btn" href="deployment.html">Abrir diagrama individual</a></p>
+<p>Fuente: <a href="deployment.mmd"><code>deployment.mmd</code></a></p>
 <pre><code class="language-mermaid">flowchart TB
   subgraph Client
     Web[Web App]
@@ -145,10 +113,9 @@
   WORKER --&gt; SES
   API --&gt; OBS
   WORKER --&gt; OBS
-
 </code></pre>
 <h2>Erd Licensing</h2>
-<p><a class="btn" href="erd-licensing.html">Abrir diagrama individual</a></p>
+<p>Fuente: <a href="erd-licensing.mmd"><code>erd-licensing.mmd</code></a></p>
 <pre><code class="language-mermaid">erDiagram
   CLIENT ||--o{ APPLICATION : owns
   APPLICATION ||--o{ LICENSE : has
@@ -237,10 +204,9 @@
     string event_type
     string payload
   }
-
 </code></pre>
 <h2>Outage Flow</h2>
-<p><a class="btn" href="outage-flow.html">Abrir diagrama individual</a></p>
+<p>Fuente: <a href="outage-flow.mmd"><code>outage-flow.mmd</code></a></p>
 <pre><code class="language-mermaid">flowchart TD
   A[Solicitud send OTP] --&gt; B{Licencia válida?}
   B -- No --&gt; X[Rechazar sin conteo]
@@ -258,10 +224,9 @@
   J -- Sí --&gt; K[Enviar fallback]
   K --&gt; L[Crear usage billable fallback]
   K --&gt; M[SENT fallback]
-
 </code></pre>
 <h2>Security Token Flow</h2>
-<p><a class="btn" href="security-token-flow.html">Abrir diagrama individual</a></p>
+<p>Fuente: <a href="security-token-flow.mmd"><code>security-token-flow.mmd</code></a></p>
 <pre><code class="language-mermaid">sequenceDiagram
   participant BE as Backend Cliente
   participant API as Kodenix API
@@ -277,10 +242,9 @@
   SDK-&gt;&gt;API: Bearer sdkToken
   API-&gt;&gt;API: Validate token claims + request origin/app
   API--&gt;&gt;SDK: Runtime response
-
 </code></pre>
 <h2>Sequence Enterprise License</h2>
-<p><a class="btn" href="sequence-enterprise-license.html">Abrir diagrama individual</a></p>
+<p>Fuente: <a href="sequence-enterprise-license.mmd"><code>sequence-enterprise-license.mmd</code></a></p>
 <pre><code class="language-mermaid">sequenceDiagram
   participant App as App Cliente
   participant BE as Backend Cliente
@@ -311,10 +275,9 @@
   App-&gt;&gt;BE: Confirmar resultado
   BE-&gt;&gt;API: GET /v1/otp/status/{operationId}
   API--&gt;&gt;BE: VERIFIED
-
 </code></pre>
 <h2>Sequence Provider Fallback</h2>
-<p><a class="btn" href="sequence-provider-fallback.html">Abrir diagrama individual</a></p>
+<p>Fuente: <a href="sequence-provider-fallback.mmd"><code>sequence-provider-fallback.mmd</code></a></p>
 <pre><code class="language-mermaid">sequenceDiagram
   participant SDK
   participant API as OTP API
@@ -347,10 +310,9 @@
       API--&gt;&gt;SDK: OTP_FALLBACK_TARGET_MISSING
     end
   end
-
 </code></pre>
 <h2>Sequence Sdk Init Target Optional</h2>
-<p><a class="btn" href="sequence-sdk-init-target-optional.html">Abrir diagrama individual</a></p>
+<p>Fuente: <a href="sequence-sdk-init-target-optional.mmd"><code>sequence-sdk-init-target-optional.mmd</code></a></p>
 <pre><code class="language-mermaid">sequenceDiagram
   participant App as App
   participant SDK as SDK
@@ -369,10 +331,9 @@
   else Target suficiente
     SDK-&gt;&gt;API: POST /v1/otp/send
   end
-
 </code></pre>
 <h2>State Machine</h2>
-<p><a class="btn" href="state-machine.html">Abrir diagrama individual</a></p>
+<p>Fuente: <a href="state-machine.mmd"><code>state-machine.mmd</code></a></p>
 <pre><code class="language-mermaid">stateDiagram-v2
   [*] --&gt; CREATED
   CREATED --&gt; LICENSE_VALIDATING
@@ -404,13 +365,6 @@
   EXPIRED --&gt; [*]
   CANCELLED --&gt; [*]
   LICENSE_REJECTED --&gt; [*]
-
 </code></pre>
 
-</article></main>
-</div>
-<script src="../../docs-html/assets/docs.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-<script>if(window.mermaid){mermaid.initialize({startOnLoad:true,theme:'default',securityLevel:'loose'});}</script>
-</body>
-</html>
+</article></main></div><script src="../assets/docs.js"></script></body></html>

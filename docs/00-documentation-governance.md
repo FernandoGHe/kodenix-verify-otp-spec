@@ -26,6 +26,7 @@ Cada tema técnico o de negocio tiene un documento propietario. Otros documentos
 | SLA y disponibilidad | `docs/14-sla-and-availability.md` |
 | Versionado y releases | `docs/15-release-versioning.md` |
 | Superficie publicada | `docs/16-published-documentation-surface.md` |
+| Integración completa del SDK Android | `docs/android/getting-started.md` |
 
 ## Propiedad de cambios
 
@@ -36,3 +37,21 @@ Cada tema técnico o de negocio tiene un documento propietario. Otros documentos
 | Flujo de fallback | `docs/06-fallback-and-channel-availability.md` | `diagrams/sequence-provider-fallback.mmd`, QA |
 | Código de error | `docs/12-error-catalog.md` | OpenAPI que exponga el error |
 | Endpoint | OpenAPI correspondiente | `docs/07-api-contract-overview.md` |
+| API pública de un SDK | Implementación de plataformas afectadas | `sdk/`, OpenAPI, guía de integración, ejemplos, pruebas, changelog y versión |
+
+## Salida HTML
+
+Los Markdown son la fuente oficial. `docs-html/` es una salida generada y no debe
+editarse manualmente. Se regenera con `npm run docs:build` y se verifica con
+`npm run docs:check`.
+
+## Sincronización con SDK independientes
+
+Los SDK Android, iOS y Web mantienen repositorios, versiones y releases
+independientes; no se usan submódulos. Después de cambiar la API pública o publicar
+un SDK debe abrirse una tarea separada para actualizar contratos, OpenAPI, guía de
+integración, ejemplos, pruebas documentales, changelog y navegación.
+
+Para Android, `npm run docs:check` funciona sin checkout del SDK y valida la
+coherencia interna. Si se define `KODENIX_ANDROID_SDK_PATH`, también contrasta la
+documentación con los archivos Gradle y la API pública de ese checkout local.

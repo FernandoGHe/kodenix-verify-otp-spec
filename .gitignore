@@ -1,0 +1,39 @@
+# Local IDE and operating-system files
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+*.log
+
+# Local configuration and credentials
+local.properties
+**/local.properties
+.env
+.env.*
+!.env.example
+*.keystore
+*.jks
+
+# Build and dependency outputs
+.gradle/
+**/.gradle/
+.kotlin/
+**/.kotlin/
+build/
+**/build/
+node_modules/
+
+# Mobile binary outputs
+*.apk
+*.aab
+*.aar
+
+# Native/local tooling
+.externalNativeBuild/
+**/.externalNativeBuild/
+.cxx/
+**/.cxx/
+captures/
+**/captures/

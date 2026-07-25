@@ -1,70 +1,51 @@
 <!doctype html>
-<html lang="es">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>06 - Fallback y Disponibilidad de Canales · Kodenix Verify</title>
-<link rel="stylesheet" href="../../docs-html/assets/docs.css" />
-</head>
-<body>
-<div class="layout">
-<aside class="sidebar"><a class="brand" href="../../index.html"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Specification</span></span></a><div class="nav-list">
-<div class="nav-section">Main</div>
-<a class="nav-link" href="../../docs-html/MANIFEST.html">Manifest - Kodenix Verify OTP</a>
-<a class="nav-link" href="../../docs-html/README.html">Kodenix Verify OTP Specification</a>
-<div class="nav-section">docs</div>
-<a class="nav-link" href="../../docs-html/docs/00-documentation-governance.html">00 - Gobierno de Documentación</a>
-<a class="nav-link" href="../../docs-html/docs/01-functional-scope.html">01 - Alcance Funcional</a>
-<a class="nav-link" href="../../docs-html/docs/02-requirements.html">02 - Requerimientos</a>
-<a class="nav-link" href="../../docs-html/docs/03-licensing-and-usage-control.html">03 - Licenciamiento y Control de Uso</a>
-<a class="nav-link" href="../../docs-html/docs/04-transaction-counting-and-billing.html">04 - Conteo de Transacciones y Facturación</a>
-<a class="nav-link" href="../../docs-html/docs/05-security-specification.html">05 - Especificación de Seguridad</a>
-<a class="nav-link" href="../../docs-html/docs/06-fallback-and-channel-availability.html">06 - Fallback y Disponibilidad de Canales</a>
-<a class="nav-link" href="../../docs-html/docs/07-api-contract-overview.html">07 - API Contract Overview</a>
-<a class="nav-link" href="../../docs-html/docs/08-state-machine.html">08 - Máquina de Estados</a>
-<a class="nav-link" href="../../docs-html/docs/09-data-model.html">09 - Modelo de Datos</a>
-<a class="nav-link" href="../../docs-html/docs/10-infrastructure-sizing.html">10 - Servidores e Infraestructura Estimada</a>
-<a class="nav-link" href="../../docs-html/docs/11-observability-audit.html">11 - Observabilidad y Auditoría</a>
-<a class="nav-link" href="../../docs-html/docs/12-error-catalog.html">12 - Catálogo de Errores</a>
-<a class="nav-link" href="../../docs-html/docs/13-webhooks.html">13 - Webhooks</a>
-<a class="nav-link" href="../../docs-html/docs/14-sla-and-availability.html">14 - SLA y Disponibilidad</a>
-<a class="nav-link" href="../../docs-html/docs/15-release-versioning.html">15 - Versionado y Releases</a>
-<a class="nav-link" href="../../docs-html/docs/16-published-documentation-surface.html">Published Documentation Surface</a>
-<div class="nav-section">openapi</div>
-<a class="nav-link" href="../../docs-html/openapi/README.html">OpenAPI Catalog</a>
-<div class="nav-section">diagrams</div>
-<a class="nav-link" href="../../docs-html/diagrams/README.html">Diagramas Mermaid</a>
-<div class="nav-section">backend</div>
-<a class="nav-link" href="../../docs-html/backend/backend-handoff.html">Backend Handoff</a>
-<a class="nav-link" href="../../docs-html/backend/database-model.html">Database Model</a>
-<a class="nav-link" href="../../docs-html/backend/domain-model.html">Domain Model</a>
-<a class="nav-link" href="../../docs-html/backend/provider-contract.html">Provider Contract</a>
-<a class="nav-link" href="../../docs-html/backend/rules-engine.html">Rules Engine</a>
-<div class="nav-section">sdk</div>
-<a class="nav-link" href="../../docs-html/sdk/localization-spec.html">Localization Spec</a>
-<a class="nav-link" href="../../docs-html/sdk/sdk-android-contract.html">SDK Android Contract</a>
-<a class="nav-link" href="../../docs-html/sdk/sdk-contract-common.html">SDK Contract Common</a>
-<a class="nav-link" href="../../docs-html/sdk/sdk-ios-contract.html">SDK iOS Contract</a>
-<a class="nav-link" href="../../docs-html/sdk/sdk-web-contract.html">SDK Web Contract</a>
-<a class="nav-link" href="../../docs-html/sdk/ui-ux-spec.html">UI/UX Spec</a>
-<div class="nav-section">admin</div>
-<a class="nav-link" href="../../docs-html/admin/admin-portal-spec.html">Admin Portal Spec</a>
-<a class="nav-link" href="../../docs-html/admin/tenant-license-configuration.html">Tenant License Configuration</a>
-<div class="nav-section">operations</div>
-<a class="nav-link" href="../../docs-html/operations/capacity-planning.html">Capacity Planning</a>
-<a class="nav-link" href="../../docs-html/operations/incident-response.html">Incident Response</a>
-<a class="nav-link" href="../../docs-html/operations/monitoring-alerts.html">Monitoring Alerts</a>
-<a class="nav-link" href="../../docs-html/operations/runbook.html">Runbook Operativo</a>
-<div class="nav-section">qa</div>
-<a class="nav-link" href="../../docs-html/qa/acceptance-criteria.html">Acceptance Criteria</a>
-<a class="nav-link" href="../../docs-html/qa/qa-matrix.html">QA Matrix</a>
-<a class="nav-link" href="../../docs-html/qa/test-cases.html">Test Cases</a>
-<div class="nav-section">swagger-ui</div>
-<a class="nav-link" href="../../swagger-ui/index.html">Swagger UI</a>
-</div></aside>
-<main class="content"><article class="doc">
-<div class="top-actions"><a class="btn" href="../../index.html">Landing</a><a class="btn" href="../../swagger-ui/index.html">Swagger UI</a><a class="btn" href="../../docs-html/diagrams/README.html">Diagrams</a></div>
-<div class="crumb">docs/06-fallback-and-channel-availability.md</div>
+<html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>06 - Fallback y Disponibilidad de Canales · Kodenix Verify</title><link rel="stylesheet" href="../assets/docs.css" /></head>
+<body><div class="layout"><aside class="sidebar"><a class="brand" href="../../index.html"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
+<div class="nav-section">admin</div><a class="nav-link" href="../admin/admin-portal-spec.html">Admin Portal Spec</a>
+<a class="nav-link" href="../admin/tenant-license-configuration.html">Tenant License Configuration</a>
+<div class="nav-section">backend</div><a class="nav-link" href="../backend/backend-handoff.html">Backend Handoff</a>
+<a class="nav-link" href="../backend/database-model.html">Database Model</a>
+<a class="nav-link" href="../backend/domain-model.html">Domain Model</a>
+<a class="nav-link" href="../backend/provider-contract.html">Provider Contract</a>
+<a class="nav-link" href="../backend/rules-engine.html">Rules Engine</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../diagrams/README.html">Diagramas Mermaid</a>
+<div class="nav-section">docs</div><a class="nav-link" href="00-documentation-governance.html">00 - Gobierno de Documentación</a>
+<a class="nav-link" href="01-functional-scope.html">01 - Alcance Funcional</a>
+<a class="nav-link" href="02-requirements.html">02 - Requerimientos</a>
+<a class="nav-link" href="03-licensing-and-usage-control.html">03 - Licenciamiento y Control de Uso</a>
+<a class="nav-link" href="04-transaction-counting-and-billing.html">04 - Conteo de Transacciones y Facturación</a>
+<a class="nav-link" href="05-security-specification.html">05 - Especificación de Seguridad</a>
+<a class="nav-link active" href="06-fallback-and-channel-availability.html">06 - Fallback y Disponibilidad de Canales</a>
+<a class="nav-link" href="07-api-contract-overview.html">07 - API Contract Overview</a>
+<a class="nav-link" href="08-state-machine.html">08 - Máquina de Estados</a>
+<a class="nav-link" href="09-data-model.html">09 - Modelo de Datos</a>
+<a class="nav-link" href="10-infrastructure-sizing.html">10 - Servidores e Infraestructura Estimada</a>
+<a class="nav-link" href="11-observability-audit.html">11 - Observabilidad y Auditoría</a>
+<a class="nav-link" href="12-error-catalog.html">12 - Catálogo de Errores</a>
+<a class="nav-link" href="13-webhooks.html">13 - Webhooks</a>
+<a class="nav-link" href="14-sla-and-availability.html">14 - SLA y Disponibilidad</a>
+<a class="nav-link" href="15-release-versioning.html">15 - Versionado y Releases</a>
+<a class="nav-link" href="16-published-documentation-surface.html">Published Documentation Surface</a>
+<a class="nav-link" href="android/getting-started.html">Android: guia de integracion</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../MANIFEST.html">Manifest - Kodenix Verify OTP</a>
+<div class="nav-section">openapi</div><a class="nav-link" href="../openapi/README.html">OpenAPI Catalog</a>
+<div class="nav-section">operations</div><a class="nav-link" href="../operations/capacity-planning.html">Capacity Planning</a>
+<a class="nav-link" href="../operations/incident-response.html">Incident Response</a>
+<a class="nav-link" href="../operations/monitoring-alerts.html">Monitoring Alerts</a>
+<a class="nav-link" href="../operations/runbook.html">Runbook Operativo</a>
+<div class="nav-section">qa</div><a class="nav-link" href="../qa/acceptance-criteria.html">Acceptance Criteria</a>
+<a class="nav-link" href="../qa/qa-matrix.html">QA Matrix</a>
+<a class="nav-link" href="../qa/test-cases.html">Test Cases</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../README.html">Kodenix Verify OTP</a>
+<div class="nav-section">sdk</div><a class="nav-link" href="../sdk/localization-spec.html">Localization Spec</a>
+<a class="nav-link" href="../sdk/sdk-android-contract.html">SDK Android Contract</a>
+<a class="nav-link" href="../sdk/sdk-contract-common.html">SDK Contract Common</a>
+<a class="nav-link" href="../sdk/sdk-ios-contract.html">SDK iOS Contract</a>
+<a class="nav-link" href="../sdk/sdk-web-contract.html">SDK Web Contract</a>
+<a class="nav-link" href="../sdk/ui-ux-spec.html">UI/UX Spec</a>
+<div class="nav-section">Principal</div><a class="nav-link" href="../swagger-ui/README.html">Swagger UI</a>
+</div></aside><main class="content"><article class="doc"><div class="top-actions"><a class="btn" href="../../index.html">Landing</a><a class="btn" href="../../swagger-ui/index.html">Swagger UI</a></div><div class="crumb">docs/06-fallback-and-channel-availability.md</div>
 <h1>06 - Fallback y Disponibilidad de Canales</h1>
 <h2>Prioridad base</h2>
 <p>La prioridad recomendada es:</p>
@@ -86,57 +67,53 @@
 <table>
 <thead>
 <tr>
-  <th>Canal</th>
-  <th>Target requerido</th>
+<th>Canal</th>
+<th>Target requerido</th>
 </tr>
 </thead>
-<tbody>
-<tr>
-  <td>WhatsApp</td>
-  <td>phone</td>
+<tbody><tr>
+<td>WhatsApp</td>
+<td>phone</td>
 </tr>
 <tr>
-  <td>SMS</td>
-  <td>phone</td>
+<td>SMS</td>
+<td>phone</td>
 </tr>
 <tr>
-  <td>Email</td>
-  <td>email</td>
+<td>Email</td>
+<td>email</td>
 </tr>
-</tbody>
-</table>
+</tbody></table>
 <h2>Inicialización SDK con target opcional</h2>
 <table>
 <thead>
 <tr>
-  <th>Target recibido</th>
-  <th>Canales posibles</th>
-  <th>Comentario</th>
+<th>Target recibido</th>
+<th>Canales posibles</th>
+<th>Comentario</th>
 </tr>
 </thead>
-<tbody>
-<tr>
-  <td>phone + email</td>
-  <td>WhatsApp, SMS, Email</td>
-  <td>Fallback completo</td>
+<tbody><tr>
+<td>phone + email</td>
+<td>WhatsApp, SMS, Email</td>
+<td>Fallback completo</td>
 </tr>
 <tr>
-  <td>phone only</td>
-  <td>WhatsApp, SMS</td>
-  <td>Email no disponible salvo captura permitida</td>
+<td>phone only</td>
+<td>WhatsApp, SMS</td>
+<td>Email no disponible salvo captura permitida</td>
 </tr>
 <tr>
-  <td>email only</td>
-  <td>Email</td>
-  <td>WhatsApp/SMS no disponible salvo captura permitida</td>
+<td>email only</td>
+<td>Email</td>
+<td>WhatsApp/SMS no disponible salvo captura permitida</td>
 </tr>
 <tr>
-  <td>none</td>
-  <td>Depende de pantalla inicial</td>
-  <td>Si no hay captura, error</td>
+<td>none</td>
+<td>Depende de pantalla inicial</td>
+<td>Si no hay captura, error</td>
 </tr>
-</tbody>
-</table>
+</tbody></table>
 <h2>Reglas de fallback</h2>
 <pre><code class="language-text">WhatsApp falla → intentar SMS si:
   - SMS habilitado por reglas
@@ -182,45 +159,43 @@ SMS falla → intentar Email si:
 <table>
 <thead>
 <tr>
-  <th>Estado</th>
-  <th>Mensaje usuario sugerido</th>
+<th>Estado</th>
+<th>Mensaje usuario sugerido</th>
 </tr>
 </thead>
-<tbody>
-<tr>
-  <td>CREATING_OPERATION</td>
-  <td>Preparando verificación...</td>
+<tbody><tr>
+<td>CREATING_OPERATION</td>
+<td>Preparando verificación...</td>
 </tr>
 <tr>
-  <td>LOADING_CONFIG</td>
-  <td>Cargando configuración...</td>
+<td>LOADING_CONFIG</td>
+<td>Cargando configuración...</td>
 </tr>
 <tr>
-  <td>VALIDATING_LICENSE</td>
-  <td>Validando acceso...</td>
+<td>VALIDATING_LICENSE</td>
+<td>Validando acceso...</td>
 </tr>
 <tr>
-  <td>SENDING_OTP</td>
-  <td>Enviando código...</td>
+<td>SENDING_OTP</td>
+<td>Enviando código...</td>
 </tr>
 <tr>
-  <td>WAITING_PROVIDER</td>
-  <td>Esperando confirmación del proveedor...</td>
+<td>WAITING_PROVIDER</td>
+<td>Esperando confirmación del proveedor...</td>
 </tr>
 <tr>
-  <td>FALLBACK_IN_PROGRESS</td>
-  <td>Intentando canal alterno...</td>
+<td>FALLBACK_IN_PROGRESS</td>
+<td>Intentando canal alterno...</td>
 </tr>
 <tr>
-  <td>VERIFYING_OTP</td>
-  <td>Validando código...</td>
+<td>VERIFYING_OTP</td>
+<td>Validando código...</td>
 </tr>
 <tr>
-  <td>RESENDING_OTP</td>
-  <td>Reenviando código...</td>
+<td>RESENDING_OTP</td>
+<td>Reenviando código...</td>
 </tr>
-</tbody>
-</table>
+</tbody></table>
 <h2>Proveedor caído</h2>
 <p>Si WhatsApp provider está caído antes del envío:</p>
 <ul>
@@ -272,10 +247,4 @@ SMS falla → intentar Email si:
 }
 </code></pre>
 
-</article></main>
-</div>
-<script src="../../docs-html/assets/docs.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-<script>if(window.mermaid){mermaid.initialize({startOnLoad:true,theme:'default',securityLevel:'loose'});}</script>
-</body>
-</html>
+</article></main></div><script src="../assets/docs.js"></script></body></html>

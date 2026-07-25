@@ -1,6 +1,23 @@
-# Kodenix Verify OTP Specification
+# Kodenix Verify OTP
 
-Documentación técnica del producto **Kodenix Verify OTP SDK/API**.
+Repositorio oficial de especificaciones, contratos y documentación de integración
+de **Kodenix Verify OTP**.
+
+## Arquitectura de repositorios
+
+- Documentación: `kodenix-verify-otp-spec` (este repositorio).
+- [Android SDK](https://github.com/FernandoGHe/kodenix-verify-otp-android):
+  `otp-core`, `otp-ui` y aplicación demo.
+- iOS y Web tendrán repositorios independientes.
+- `sdk/`: contratos comunes y por plataforma.
+- `openapi/`: contratos de las APIs.
+- `docs/`: documentación central, seguridad, operación y guías de integración.
+- `docs-html/`: sitio generado; no se edita manualmente.
+- `backend/`, `admin/`, `operations/` y `qa/`: handoff y especificaciones por área.
+
+No se usan submódulos. Cada SDK mantiene su propio versionado y ciclo de releases;
+después de cambiar un SDK debe ejecutarse una tarea separada de actualización de
+este repositorio documental.
 
 ## Alcance del paquete
 
@@ -37,6 +54,7 @@ Documentación técnica del producto **Kodenix Verify OTP SDK/API**.
 15. [SLA y disponibilidad](docs-html/docs/14-sla-and-availability.html)
 16. [Versionado](docs-html/docs/15-release-versioning.html)
 17. [Superficie de publicación](docs-html/docs/16-published-documentation-surface.html)
+18. [Guía de integración Android](docs-html/docs/android/getting-started.html)
 
 ## APIs
 
@@ -83,6 +101,22 @@ Documentación técnica del producto **Kodenix Verify OTP SDK/API**.
 - [iOS SDK Contract](docs-html/sdk/sdk-ios-contract.html)
 - [UI/UX Spec](docs-html/sdk/ui-ux-spec.html)
 - [Localization Spec](docs-html/sdk/localization-spec.html)
+- [Android: guía completa de integración](docs-html/docs/android/getting-started.html)
+- [Repositorio oficial del SDK Android](https://github.com/FernandoGHe/kodenix-verify-otp-android)
+
+## Desarrollo de documentación
+
+```shell
+npm install
+npm run docs:build
+npm run docs:check
+```
+
+Los Markdown son la fuente de verdad. `npm run docs:build` regenera `docs-html` y
+`npm run docs:check` comprueba la guía Android contra el README rápido, las
+coordenadas Maven, enlaces y símbolos esenciales documentados. Para compararla
+además con un checkout local del SDK, defina `KODENIX_ANDROID_SDK_PATH` antes de
+ejecutar la validación.
 
 ## Administración
 

@@ -21,6 +21,7 @@ Inventario del paquete de especificación.
 - [docs/14-sla-and-availability.md](docs/14-sla-and-availability.md)
 - [docs/15-release-versioning.md](docs/15-release-versioning.md)
 - [docs/16-published-documentation-surface.md](docs/16-published-documentation-surface.md)
+- [docs/android/getting-started.md](docs/android/getting-started.md)
 
 ## OpenAPI / Swagger
 
@@ -62,6 +63,21 @@ Inventario del paquete de especificación.
 - [sdk/sdk-ios-contract.md](sdk/sdk-ios-contract.md)
 - [sdk/sdk-web-contract.md](sdk/sdk-web-contract.md)
 - [sdk/ui-ux-spec.md](sdk/ui-ux-spec.md)
+- [Repositorio oficial del SDK Android](https://github.com/FernandoGHe/kodenix-verify-otp-android)
+
+## Implementaciones externas
+
+- [kodenix-verify-otp-android](https://github.com/FernandoGHe/kodenix-verify-otp-android):
+  SDK headless, UI Compose y aplicación demostrativa Android.
+- iOS y Web se publicarán en repositorios independientes.
+
+No se utilizan submódulos ni se copia código de SDK dentro de este repositorio.
+
+## Tooling documental
+
+- [scripts/build-docs.mjs](scripts/build-docs.mjs)
+- [scripts/verify-docs.mjs](scripts/verify-docs.mjs)
+- [package.json](package.json)
 
 ## Admin
 
