@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>13 - Webhooks · Kodenix Verify</title><meta name="docs-version" content="10cfb29e6e17" /><link rel="stylesheet" href="../../assets/docs.10cfb29e6e17.css" /></head>
+<title>13 - Webhooks · Kodenix Verify</title><meta name="docs-version" content="57643e8cdc68" /><link rel="stylesheet" href="../../assets/docs.57643e8cdc68.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 <div class="nav-section">admin</div><a class="nav-link" href="../../admin/admin-portal-spec/">Admin Portal Spec</a>
 <a class="nav-link" href="../../admin/tenant-license-configuration/">Tenant License Configuration</a>
@@ -103,4 +103,4 @@ X-Kodenix-Signature: sha256=...
 <p>El receptor deduplica por <code>X-Kodenix-Event-Id</code>/<code>id</code>, verifica timestamp y firma sobre el body crudo antes de procesar, y responde 2xx solo cuando acepta el evento. Los reintentos pueden duplicar eventos. El consumidor debe tolerar llegada fuera de orden usando <code>occurredAt</code> y no retroceder un estado terminal por un evento más antiguo.</p>
 <p>La política exacta de backoff, ventana máxima de reintentos y garantía formal de orden aún requiere definición backend. Hasta fijarla, no se promete entrega exactamente una vez ni orden global. La aplicación móvil no consulta endpoints privados; el backend integrador recibe estos cambios.</p>
 
-</article></main></div><script src="../../assets/docs.10cfb29e6e17.js"></script></body></html>
+</article></main></div><script src="../../assets/docs.57643e8cdc68.js"></script></body></html>

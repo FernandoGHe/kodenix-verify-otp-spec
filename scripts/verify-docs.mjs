@@ -99,6 +99,9 @@ for (const header of ["X-Kodenix-Platform", "X-Kodenix-Package-Name", "X-Kodenix
 for (const forbidden of [/status:\s*\{\s*type:\s*string\s*,\s*example:\s*(?:SENT|VERIFIED)/, /^\s{8}(?:code|action):\s*\{\s*type:\s*string\s*\}/m])
   if (forbidden.test(otpOpenApi)) failures.push("OpenAPI OTP: status/code/action OTP sin enum explícito");
 requireText("swagger-ui/index.html", /\.model-title[\s\S]*\.prop-type[\s\S]*\.opblock-summary-path/, "contraste oscuro de modelos y rutas Swagger");
+for (const selector of [".opblock-section-header", ".parameters-container", ".responses-wrapper", ".highlight-code"]) {
+  requireText("swagger-ui/index.html", new RegExp(selector.replaceAll(".", "\\.")), `contraste oscuro Swagger: ${selector}`);
+}
 
 const before = new Map(walk(path.join(root, "docs-html")).map(file => [file, digest(file)]));
 const build = spawnSync(process.execPath, [path.join(root, "scripts/build-docs.mjs")], { cwd: root, encoding: "utf8" });

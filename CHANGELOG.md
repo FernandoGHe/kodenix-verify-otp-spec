@@ -15,7 +15,7 @@
 - Documentados transporte HTTP, identidad automática de la app instalada y cancelación de conexión.
 - Completados en OpenAPI los cinco headers Android y los enums wire de status/error/action.
 
-- Mejorado el contraste de Swagger UI en modo oscuro para modelos, parámetros, rutas y respuestas.
+- Mejorado el contraste de Swagger UI en modo oscuro para modelos, rutas y operaciones expandidas, incluidos parámetros, request body, código, selects y respuestas.
 - Documentada la semántica de entrega asíncrona y el webhook `otp.delivery_failed`.
 
 - Documentados targets opcionales, matriz canal/target y validaciones del mock.

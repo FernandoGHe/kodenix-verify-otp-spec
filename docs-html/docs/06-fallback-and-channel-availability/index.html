@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>06 - Fallback y Disponibilidad de Canales · Kodenix Verify</title><meta name="docs-version" content="10cfb29e6e17" /><link rel="stylesheet" href="../../assets/docs.10cfb29e6e17.css" /></head>
+<title>06 - Fallback y Disponibilidad de Canales · Kodenix Verify</title><meta name="docs-version" content="57643e8cdc68" /><link rel="stylesheet" href="../../assets/docs.57643e8cdc68.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 <div class="nav-section">admin</div><a class="nav-link" href="../../admin/admin-portal-spec/">Admin Portal Spec</a>
 <a class="nav-link" href="../../admin/tenant-license-configuration/">Tenant License Configuration</a>
@@ -250,4 +250,4 @@ SMS falla → intentar Email si:
 <p>El mock configurable permite probar <code>send(channel, fallbackAllowed)</code> y errores de target/canal sin proveedores reales. Con <code>mockEnabled == false</code>, la misma fachada crea el transporte HTTP. <code>send</code> y <code>resend</code> no deben reintentarse automáticamente: no son acciones idempotentes y el fallback debe obedecer la política del backend.</p>
 <p>El mock requiere teléfono para WhatsApp/SMS y email para Email. Si falta devuelve <code>OTP_TARGET_REQUIRED</code> con <code>REQUEST_PHONE</code> o <code>REQUEST_EMAIL</code>. Views y Compose respetan <code>OtpSession.getPreferredChannel()</code>; no fuerzan <code>AUTO</code>.</p>
 
-</article></main></div><script src="../../assets/docs.10cfb29e6e17.js"></script></body></html>
+</article></main></div><script src="../../assets/docs.57643e8cdc68.js"></script></body></html>
