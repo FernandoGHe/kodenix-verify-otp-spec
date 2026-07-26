@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>05 - Especificación de Seguridad · Kodenix Verify</title><meta name="docs-version" content="2d29f4025dab" /><link rel="stylesheet" href="../../assets/docs.2d29f4025dab.css" /></head>
+<title>05 - Especificación de Seguridad · Kodenix Verify</title><meta name="docs-version" content="10cfb29e6e17" /><link rel="stylesheet" href="../../assets/docs.10cfb29e6e17.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 <div class="nav-section">admin</div><a class="nav-link" href="../../admin/admin-portal-spec/">Admin Portal Spec</a>
 <a class="nav-link" href="../../admin/tenant-license-configuration/">Tenant License Configuration</a>
@@ -99,7 +99,7 @@
 </code></pre>
 <h3>Android</h3>
 <p>La identidad implementada incluye package name/applicationId efectivo, todos los SHA-256 de firma aplicables, plataforma, ambiente y versión del SDK. Se obtiene de la app instalada y soporta flavors, firmantes múltiples e historial de rotación. El integrador no puede sobrescribirla. El backend es siempre la autoridad; el mock local no acredita una licencia.</p>
-<p>El SDK recibe únicamente <code>operationId</code> y <code>sdkToken</code> temporal. Nunca se distribuyen en la app API keys privadas, claves privadas, credenciales de servidor/proveedor, contraseñas de keystore ni tokens permanentes. El transporte envía internamente Bearer y los cinco headers de identidad. El OpenAPI declara Platform y Package-Name, pero aún debe incorporar Certificate-Sha256, Environment y Sdk-Version.</p>
+<p>El SDK recibe únicamente <code>operationId</code> y <code>sdkToken</code> temporal. Nunca se distribuyen en la app API keys privadas, claves privadas, credenciales de servidor/proveedor, contraseñas de keystore ni tokens permanentes. El transporte envía internamente Bearer y los cinco headers de identidad, todos declarados en el OpenAPI público.</p>
 <p>Los targets se muestran únicamente enmascarados. Si existe <code>maskedTarget</code> del backend se prefiere ese valor; el enmascaramiento local es respaldo. No se registran targets completos ni se incluyen en resultados de Activity.</p>
 <p>Validar package y certificate fingerprint.</p>
 <h3>iOS</h3>
@@ -176,4 +176,4 @@ X-Kodenix-Signature: sha256=...
 </tr>
 </tbody></table>
 
-</article></main></div><script src="../../assets/docs.2d29f4025dab.js"></script></body></html>
+</article></main></div><script src="../../assets/docs.10cfb29e6e17.js"></script></body></html>

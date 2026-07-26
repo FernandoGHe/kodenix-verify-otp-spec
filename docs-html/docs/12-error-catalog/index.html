@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>12 - Catálogo de Errores · Kodenix Verify</title><meta name="docs-version" content="2d29f4025dab" /><link rel="stylesheet" href="../../assets/docs.2d29f4025dab.css" /></head>
+<title>12 - Catálogo de Errores · Kodenix Verify</title><meta name="docs-version" content="10cfb29e6e17" /><link rel="stylesheet" href="../../assets/docs.10cfb29e6e17.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 <div class="nav-section">admin</div><a class="nav-link" href="../../admin/admin-portal-spec/">Admin Portal Spec</a>
 <a class="nav-link" href="../../admin/tenant-license-configuration/">Tenant License Configuration</a>
@@ -47,6 +47,109 @@
 <div class="nav-section">Principal</div><a class="nav-link" href="../../swagger-ui/README/">Swagger UI</a>
 </div></aside><main class="content"><article class="doc"><div class="top-actions"><a class="btn" href="../../../">Landing</a><a class="btn" href="../../../swagger-ui/">Swagger UI</a></div><div class="crumb">docs/12-error-catalog.md</div>
 <h1>12 - Catálogo de Errores</h1>
+<h2>Contrato tipado Android y wire</h2>
+<table>
+<thead>
+<tr>
+<th>Enum Android</th>
+<th>Valor wire</th>
+<th>Acción típica</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>INVALID_PHONE</code></td>
+<td><code>OTP_INVALID_PHONE</code></td>
+<td><code>CORRECT_PHONE</code></td>
+</tr>
+<tr>
+<td><code>INVALID_EMAIL</code></td>
+<td><code>OTP_INVALID_EMAIL</code></td>
+<td><code>CORRECT_EMAIL</code></td>
+</tr>
+<tr>
+<td><code>TARGET_REQUIRED</code></td>
+<td><code>OTP_TARGET_REQUIRED</code></td>
+<td><code>REQUEST_PHONE</code> o <code>REQUEST_EMAIL</code></td>
+</tr>
+<tr>
+<td><code>TARGET_UNREACHABLE</code></td>
+<td><code>OTP_TARGET_UNREACHABLE</code></td>
+<td><code>CHOOSE_ANOTHER_CHANNEL</code></td>
+</tr>
+<tr>
+<td><code>PHONE_NOT_REGISTERED</code></td>
+<td><code>OTP_PHONE_NOT_REGISTERED</code></td>
+<td><code>CHOOSE_ANOTHER_CHANNEL</code></td>
+</tr>
+<tr>
+<td><code>EMAIL_REJECTED</code></td>
+<td><code>OTP_EMAIL_REJECTED</code></td>
+<td><code>CHOOSE_ANOTHER_CHANNEL</code></td>
+</tr>
+<tr>
+<td><code>MAILBOX_UNAVAILABLE</code></td>
+<td><code>OTP_MAILBOX_UNAVAILABLE</code></td>
+<td><code>CHOOSE_ANOTHER_CHANNEL</code></td>
+</tr>
+<tr>
+<td><code>CHANNEL_UNAVAILABLE</code></td>
+<td><code>OTP_CHANNEL_UNAVAILABLE</code></td>
+<td><code>CHOOSE_ANOTHER_CHANNEL</code></td>
+</tr>
+<tr>
+<td><code>DELIVERY_FAILED</code></td>
+<td><code>OTP_DELIVERY_FAILED</code></td>
+<td><code>CHOOSE_ANOTHER_CHANNEL</code></td>
+</tr>
+<tr>
+<td><code>INVALID_CODE</code></td>
+<td><code>OTP_INVALID_CODE</code></td>
+<td><code>RETRY</code></td>
+</tr>
+<tr>
+<td><code>MAX_ATTEMPTS_REACHED</code></td>
+<td><code>OTP_MAX_ATTEMPTS_REACHED</code></td>
+<td><code>CONTACT_SUPPORT</code> o <code>NONE</code></td>
+</tr>
+<tr>
+<td><code>ALREADY_VERIFIED</code></td>
+<td><code>OTP_ALREADY_VERIFIED</code></td>
+<td><code>NONE</code></td>
+</tr>
+<tr>
+<td><code>RATE_LIMITED</code></td>
+<td><code>OTP_RATE_LIMITED</code></td>
+<td><code>RESEND</code> o <code>RETRY</code> cuando proceda</td>
+</tr>
+<tr>
+<td><code>PROVIDER_UNAVAILABLE</code></td>
+<td><code>OTP_PROVIDER_UNAVAILABLE</code></td>
+<td><code>CHOOSE_ANOTHER_CHANNEL</code> o <code>RETRY</code></td>
+</tr>
+<tr>
+<td><code>NETWORK_ERROR</code></td>
+<td><code>OTP_NETWORK_ERROR</code></td>
+<td><code>RETRY</code></td>
+</tr>
+<tr>
+<td><code>SDK_ERROR</code></td>
+<td><code>OTP_SDK_ERROR</code></td>
+<td><code>CONTACT_SUPPORT</code> o <code>NONE</code></td>
+</tr>
+</tbody></table>
+<p><code>OtpErrorCode.UNKNOWN</code> y <code>OtpErrorAction.UNKNOWN</code> protegen al SDK frente a valores futuros; el backend no debe emitir <code>OTP_UNKNOWN</code> o <code>UNKNOWN</code> como valores normales. <code>OtpErrorAction</code> también admite <code>NONE</code>, <code>REQUEST_PHONE</code>, <code>REQUEST_EMAIL</code>, <code>CORRECT_PHONE</code>, <code>CORRECT_EMAIL</code>, <code>RETRY</code>, <code>RESEND</code>, <code>CHOOSE_ANOTHER_CHANNEL</code> y <code>CONTACT_SUPPORT</code>. La acción es una recomendación y el integrador decide la navegación final.</p>
+<h2>Forma HTTP estándar</h2>
+<p>Las peticiones fallidas responden HTTP 4xx/5xx con el mismo objeto estructurado. Si por compatibilidad un endpoint devuelve HTTP 2xx con <code>success: false</code>, debe conservar exactamente <code>error.code</code>, <code>message</code>, <code>recoverable</code> y <code>action</code>.</p>
+<pre><code class="language-json">{
+  &quot;error&quot;: {
+    &quot;code&quot;: &quot;OTP_TARGET_UNREACHABLE&quot;,
+    &quot;message&quot;: &quot;No fue posible entregar el código&quot;,
+    &quot;recoverable&quot;: true,
+    &quot;action&quot;: &quot;CHOOSE_ANOTHER_CHANNEL&quot;
+  }
+}
+</code></pre>
+<p>Los errores de formato pueden detectarse sincrónicamente. Destino inexistente, teléfono no registrado, buzón no disponible o email rechazado suelen conocerse asíncronamente y deben propagarse al backend integrador mediante eventos/webhooks.</p>
 <h2>Licencia</h2>
 <table>
 <thead>
@@ -247,4 +350,4 @@
 <p>Android entrega código, mensaje, recuperabilidad, acción, HTTP opcional y causa en <code>OtpError</code>. No deben mostrarse causas internas ni registrarse tokens, OTP o targets.
 | OTP_OPERATION_NOT_FOUND | 404 | No | Crear operación |</p>
 
-</article></main></div><script src="../../assets/docs.2d29f4025dab.js"></script></body></html>
+</article></main></div><script src="../../assets/docs.10cfb29e6e17.js"></script></body></html>

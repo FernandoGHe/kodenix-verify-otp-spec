@@ -222,12 +222,13 @@ Para integraciones AndroidX nuevas se recomienda Activity Result API:
 private val otpLauncher =
     registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         val data = result.data
-        when (data?.getStringExtra(KodenixOtpResult.EXTRA_STATUS)) {
-            "VERIFIED" -> {
+        when (KodenixOtpResult.getStatus(data)) {
+            OtpStatus.VERIFIED -> {
                 val operationId = data.getStringExtra(KodenixOtpResult.EXTRA_OPERATION_ID)
                 val verificationId = data.getStringExtra(KodenixOtpResult.EXTRA_VERIFICATION_ID)
             }
-            "CANCELLED" -> { /* El usuario canceló el flujo. */ }
+            OtpStatus.CANCELLED -> { /* El usuario canceló el flujo. */ }
+            else -> Unit
         }
     }
 
@@ -264,7 +265,7 @@ private void startOtp() {
 @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode != REQUEST_OTP || data == null) return;
-    String status = data.getStringExtra(KodenixOtpResult.EXTRA_STATUS);
+    OtpStatus status = KodenixOtpResult.getStatus(data);
     String operationId = data.getStringExtra(KodenixOtpResult.EXTRA_OPERATION_ID);
     String verificationId = data.getStringExtra(KodenixOtpResult.EXTRA_VERIFICATION_ID);
 }
@@ -328,13 +329,62 @@ No expone creación de operaciones, estado/eventos administrativos, administraci
 
 ## Errores y estado validado
 
+### Enums públicos
+
+El SDK convierte los strings wire del backend en tipos seguros. `UNKNOWN` existe únicamente como protección local ante valores futuros y no es un valor que el backend deba emitir normalmente.
+
+| `OtpStatus` | Significado |
+|---|---|
+| `PENDING` | Operación pendiente. |
+| `PENDING_DELIVERY` | Pendiente de iniciar/confirmar envío. |
+| `SENDING` | Envío en curso. |
+| `SENT` | El proveedor aceptó el envío; no garantiza entrega. |
+| `DELIVERED` | Entrega confirmada cuando el proveedor la informa. |
+| `VERIFIED` | OTP verificado. |
+| `DELIVERY_FAILED` | Rechazo o fallo conocido posteriormente. |
+| `EXPIRED` | OTP expirado. |
+| `CANCELLED` | Operación cancelada. |
+| `BLOCKED` | Operación bloqueada. |
+| `UNKNOWN` | Fallback local para compatibilidad futura. |
+
+`OtpErrorCode` expone `INVALID_PHONE`, `INVALID_EMAIL`, `TARGET_REQUIRED`, `TARGET_UNREACHABLE`, `PHONE_NOT_REGISTERED`, `EMAIL_REJECTED`, `MAILBOX_UNAVAILABLE`, `CHANNEL_UNAVAILABLE`, `DELIVERY_FAILED`, `INVALID_CODE`, `MAX_ATTEMPTS_REACHED`, `ALREADY_VERIFIED`, `RATE_LIMITED`, `PROVIDER_UNAVAILABLE`, `NETWORK_ERROR`, `SDK_ERROR` y `UNKNOWN`. Sus valores wire tienen prefijo `OTP_`, por ejemplo `OtpErrorCode.TARGET_UNREACHABLE.getWireValue()` es `OTP_TARGET_UNREACHABLE`.
+
+`OtpErrorAction` expone `NONE`, `REQUEST_PHONE`, `REQUEST_EMAIL`, `CORRECT_PHONE`, `CORRECT_EMAIL`, `RETRY`, `RESEND`, `CHOOSE_ANOTHER_CHANNEL`, `CONTACT_SUPPORT` y `UNKNOWN`. La acción es una recomendación; la aplicación integradora conserva la decisión final.
+
+```kotlin
+override fun onError(error: OtpError) {
+    when (error.action) {
+        OtpErrorAction.CORRECT_PHONE -> showPhoneEditor()
+        OtpErrorAction.CORRECT_EMAIL -> showEmailEditor()
+        OtpErrorAction.CHOOSE_ANOTHER_CHANNEL -> showChannelSelector()
+        OtpErrorAction.RETRY -> showRetry()
+        OtpErrorAction.CONTACT_SUPPORT -> showSupport()
+        else -> showGenericError(error.message)
+    }
+}
+```
+
+```java
+@Override public void onError(OtpError error) {
+    switch (error.getAction()) {
+        case CORRECT_PHONE: showPhoneEditor(); break;
+        case CORRECT_EMAIL: showEmailEditor(); break;
+        case CHOOSE_ANOTHER_CHANNEL: showChannelSelector(); break;
+        case RETRY: showRetry(); break;
+        default: showGenericError(error.getMessage());
+    }
+}
+```
+
+Un formato de teléfono/email inválido puede fallar sincrónicamente. Un número inexistente/no registrado, buzón inexistente o email rechazado puede conocerse después; esos cambios llegan al backend integrador por eventos/webhooks. La app móvil no consulta endpoints privados con API key.
+
 Trate como mínimo los errores `LICENSE_NOT_FOUND`, `LICENSE_EXPIRED`, `LICENSE_SUSPENDED`, `LICENSE_REVOKED`, `LICENSE_OVER_QUOTA`, `LICENSE_PACKAGE_NOT_ALLOWED`, `LICENSE_CHANNEL_NOT_ALLOWED`, `LICENSE_ENVIRONMENT_NOT_ALLOWED`, `OTP_NETWORK_ERROR` y `OTP_SDK_ERROR`. `LICENSE_PACKAGE_NOT_ALLOWED` significa que la combinación instalada de package y certificado no está autorizada.
 
 Se reportaron correctos `:otp-core:testDebugUnitTest`, `:otp-core:assembleRelease`, `:otp-ui-views:assembleRelease`, `:otp-ui-compose:assembleRelease` y `:app:assembleDebug`.
 
-## Discrepancia OpenAPI
+## Contrato OpenAPI Android
 
-La implementación envía los cinco headers Android. `openapi/otp-public-api.yaml` declara actualmente `X-Kodenix-Platform` y `X-Kodenix-Package-Name`, pero faltan `X-Kodenix-Certificate-Sha256`, `X-Kodenix-Environment` y `X-Kodenix-Sdk-Version`. Deben añadirse mediante un cambio contractual explícito; esta actualización no modifica silenciosamente el OpenAPI.
+`openapi/otp-public-api.yaml` declara los cinco headers que envía la implementación: `X-Kodenix-Platform`, `X-Kodenix-Package-Name`, `X-Kodenix-Certificate-Sha256`, `X-Kodenix-Environment` y `X-Kodenix-Sdk-Version`. También tipa status, códigos y acciones con los mismos valores wire que el SDK.
 
 ## Estado legal
 

@@ -18,12 +18,16 @@ Todos los artefactos de una integración deben usar la misma versión.
 
 WhatsApp/SMS requieren teléfono; Email requiere correo. El SDK no inventa targets. Views y Compose respetan `getPreferredChannel()` y solo muestran targets enmascarados. La captura interna de target ausente continúa pendiente.
 
+## Estados y errores tipados
+
+Resultados y Activity exponen `OtpStatus`; errores exponen `OtpErrorCode` y `OtpErrorAction`. Los integradores comparan enums (`OtpStatus.VERIFIED`, `OtpErrorAction.RETRY`), nunca strings literales. `UNKNOWN` es solo tolerancia local ante valores futuros y no amplía el contrato wire permitido. `SENT` es aceptación del proveedor, `DELIVERED` confirma entrega cuando existe esa señal y `DELIVERY_FAILED` informa un fallo posterior conocido.
+
 ## Transporte e identidad
 
 El cliente real usa `/v1/otp/config`, `/target`, `/send`, `/resend`, `/verify` y `/cancel`. Obtiene del `Context` el applicationId efectivo y del `PackageManager` los SHA-256 de firmas legacy/API 28+ `SigningInfo`, incluyendo múltiples firmantes e historial.
 
 Envía Bearer sdkToken y `X-Kodenix-Platform`, `X-Kodenix-Package-Name`, `X-Kodenix-Certificate-Sha256`, `X-Kodenix-Environment`, `X-Kodenix-Sdk-Version`. El backend es autoritativo; no existe bypass o licencia local.
 
-El OpenAPI público solo declara actualmente Platform y Package-Name; faltan Certificate-Sha256, Environment y Sdk-Version. Requiere actualización contractual explícita.
+El OpenAPI público declara los cinco headers Android y los enums wire de status, código y acción alineados con el SDK.
 
 Consulte la [guía Android](../docs/android/getting-started.md).

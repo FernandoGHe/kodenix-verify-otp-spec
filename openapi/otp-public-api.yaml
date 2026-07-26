@@ -58,6 +58,10 @@ paths:
           schema: { type: string }
         - $ref: '#/components/parameters/KodenixOrigin'
         - $ref: '#/components/parameters/KodenixPlatform'
+        - $ref: '#/components/parameters/KodenixPackageName'
+        - $ref: '#/components/parameters/KodenixCertificateSha256'
+        - $ref: '#/components/parameters/KodenixEnvironment'
+        - $ref: '#/components/parameters/KodenixSdkVersion'
       responses:
         '200':
           description: Configuración SDK
@@ -76,6 +80,10 @@ paths:
       parameters:
         - $ref: '#/components/parameters/KodenixOrigin'
         - $ref: '#/components/parameters/KodenixPlatform'
+        - $ref: '#/components/parameters/KodenixPackageName'
+        - $ref: '#/components/parameters/KodenixCertificateSha256'
+        - $ref: '#/components/parameters/KodenixEnvironment'
+        - $ref: '#/components/parameters/KodenixSdkVersion'
       requestBody:
         required: true
         content:
@@ -102,6 +110,12 @@ paths:
       operationId: verifyOtp
       security:
         - SdkTokenAuth: []
+      parameters:
+        - $ref: '#/components/parameters/KodenixPlatform'
+        - $ref: '#/components/parameters/KodenixPackageName'
+        - $ref: '#/components/parameters/KodenixCertificateSha256'
+        - $ref: '#/components/parameters/KodenixEnvironment'
+        - $ref: '#/components/parameters/KodenixSdkVersion'
       requestBody:
         required: true
         content:
@@ -124,6 +138,12 @@ paths:
       operationId: resendOtp
       security:
         - SdkTokenAuth: []
+      parameters:
+        - $ref: '#/components/parameters/KodenixPlatform'
+        - $ref: '#/components/parameters/KodenixPackageName'
+        - $ref: '#/components/parameters/KodenixCertificateSha256'
+        - $ref: '#/components/parameters/KodenixEnvironment'
+        - $ref: '#/components/parameters/KodenixSdkVersion'
       requestBody:
         required: true
         content:
@@ -146,6 +166,12 @@ paths:
       operationId: updateOtpTarget
       security:
         - SdkTokenAuth: []
+      parameters:
+        - $ref: '#/components/parameters/KodenixPlatform'
+        - $ref: '#/components/parameters/KodenixPackageName'
+        - $ref: '#/components/parameters/KodenixCertificateSha256'
+        - $ref: '#/components/parameters/KodenixEnvironment'
+        - $ref: '#/components/parameters/KodenixSdkVersion'
       requestBody:
         required: true
         content:
@@ -166,6 +192,12 @@ paths:
       operationId: cancelOtpOperation
       security:
         - SdkTokenAuth: []
+      parameters:
+        - $ref: '#/components/parameters/KodenixPlatform'
+        - $ref: '#/components/parameters/KodenixPackageName'
+        - $ref: '#/components/parameters/KodenixCertificateSha256'
+        - $ref: '#/components/parameters/KodenixEnvironment'
+        - $ref: '#/components/parameters/KodenixSdkVersion'
       requestBody:
         required: true
         content:
@@ -247,12 +279,41 @@ components:
       in: header
       required: false
       schema: { type: string, example: 'com.cliente.app' }
+    KodenixCertificateSha256:
+      name: X-Kodenix-Certificate-Sha256
+      in: header
+      required: false
+      description: Huella SHA-256 del certificado instalado; obligatoria para clientes Android.
+      schema: { type: string, example: 'AA:BB:CC:DD:EE:FF' }
+    KodenixEnvironment:
+      name: X-Kodenix-Environment
+      in: header
+      required: false
+      description: Ambiente configurado por el SDK móvil.
+      schema: { type: string, enum: [sandbox, qa, staging, production] }
+    KodenixSdkVersion:
+      name: X-Kodenix-Sdk-Version
+      in: header
+      required: false
+      description: Versión del SDK que origina la petición.
+      schema: { type: string, example: '0.1.0' }
     KodenixBundleId:
       name: X-Kodenix-Bundle-Id
       in: header
       required: false
       schema: { type: string, example: 'com.cliente.ios' }
   schemas:
+    OtpStatus:
+      type: string
+      description: Estado wire público. SENT confirma aceptación del proveedor, no entrega.
+      enum: [PENDING, PENDING_DELIVERY, SENDING, SENT, DELIVERED, VERIFIED, DELIVERY_FAILED, EXPIRED, CANCELLED, BLOCKED]
+    OtpErrorCode:
+      type: string
+      enum: [OTP_INVALID_PHONE, OTP_INVALID_EMAIL, OTP_TARGET_REQUIRED, OTP_TARGET_UNREACHABLE, OTP_PHONE_NOT_REGISTERED, OTP_EMAIL_REJECTED, OTP_MAILBOX_UNAVAILABLE, OTP_CHANNEL_UNAVAILABLE, OTP_DELIVERY_FAILED, OTP_INVALID_CODE, OTP_MAX_ATTEMPTS_REACHED, OTP_ALREADY_VERIFIED, OTP_RATE_LIMITED, OTP_PROVIDER_UNAVAILABLE, OTP_NETWORK_ERROR, OTP_SDK_ERROR]
+    OtpErrorAction:
+      type: string
+      description: Recomendación; el integrador conserva la decisión final.
+      enum: [NONE, REQUEST_PHONE, REQUEST_EMAIL, CORRECT_PHONE, CORRECT_EMAIL, RETRY, RESEND, CHOOSE_ANOTHER_CHANNEL, CONTACT_SUPPORT]
     CreateOtpOperationRequest:
       type: object
       required: [clientId, applicationId, licenseId, platform, environment]
@@ -355,11 +416,21 @@ components:
         fallbackAllowed: { type: boolean, default: true }
     SendOtpResponse:
       type: object
+      example:
+        success: true
+        operationId: op_123
+        challengeId: challenge_456
+        status: SENT
+        channel: whatsapp
+        maskedTarget: '+******5678'
+        expiresIn: 300
+        resendAvailableIn: 30
+        fallback: { used: false }
       properties:
         success: { type: boolean }
         operationId: { type: string }
         challengeId: { type: string }
-        status: { type: string, example: SENT }
+        status: { $ref: '#/components/schemas/OtpStatus' }
         channel: { type: string, enum: [whatsapp, sms, email] }
         maskedTarget: { type: string }
         expiresIn: { type: integer }
@@ -406,7 +477,7 @@ components:
         verified: { type: boolean }
         operationId: { type: string }
         verificationId: { type: string }
-        status: { type: string, example: VERIFIED }
+        status: { $ref: '#/components/schemas/OtpStatus' }
         remainingAttempts: { type: integer }
         error: { $ref: '#/components/schemas/KodenixError' }
     ResendOtpRequest:
@@ -428,6 +499,7 @@ components:
       properties:
         success: { type: boolean }
         operationId: { type: string }
+        status: { $ref: '#/components/schemas/OtpStatus' }
         targetState: { $ref: '#/components/schemas/TargetState' }
     CancelOtpRequest:
       type: object
@@ -440,7 +512,7 @@ components:
       properties:
         success: { type: boolean }
         operationId: { type: string }
-        status: { type: string }
+        status: { $ref: '#/components/schemas/OtpStatus' }
         licenseId: { type: string }
         attempts: { type: integer }
         maxAttempts: { type: integer }
@@ -461,39 +533,41 @@ components:
         payload: { type: object, additionalProperties: true }
     KodenixError:
       type: object
+      required: [code, message, recoverable, action]
       properties:
-        code: { type: string }
+        code: { $ref: '#/components/schemas/OtpErrorCode' }
         message: { type: string }
         recoverable: { type: boolean }
-        action: { type: string }
+        action: { $ref: '#/components/schemas/OtpErrorAction' }
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        success: { type: boolean, example: false }
+        error: { $ref: '#/components/schemas/KodenixError' }
   responses:
     BadRequest:
       description: Solicitud inválida
       content:
         application/json:
-          schema: { $ref: '#/components/schemas/SendOtpResponse' }
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
     Unauthorized:
       description: No autorizado
     LicenseRejected:
       description: Rechazo por licencia, origen, app o canal
       content:
         application/json:
-          schema:
-            type: object
-            properties:
-              success: { type: boolean, example: false }
-              error: { $ref: '#/components/schemas/KodenixError' }
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
     OverQuota:
       description: Cuota agotada
       content:
         application/json:
-          schema:
-            type: object
-            properties:
-              success: { type: boolean, example: false }
-              error: { $ref: '#/components/schemas/KodenixError' }
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
     RateLimited:
       description: Rate limit excedido
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
     FallbackTargetMissing:
       description: No existe teléfono/email para canal alterno
       content:
@@ -501,7 +575,16 @@ components:
           schema: { $ref: '#/components/schemas/SendOtpResponse' }
     ProviderUnavailable:
       description: Proveedor no disponible sin fallback posible
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
     OtpExpired:
       description: OTP expirado
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
     OtpBlocked:
       description: Operación bloqueada
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }

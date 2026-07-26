@@ -73,7 +73,7 @@ Si `Origin=https://landing.cliente.com` y licencia solo permite `https://onboard
 
 La identidad implementada incluye package name/applicationId efectivo, todos los SHA-256 de firma aplicables, plataforma, ambiente y versión del SDK. Se obtiene de la app instalada y soporta flavors, firmantes múltiples e historial de rotación. El integrador no puede sobrescribirla. El backend es siempre la autoridad; el mock local no acredita una licencia.
 
-El SDK recibe únicamente `operationId` y `sdkToken` temporal. Nunca se distribuyen en la app API keys privadas, claves privadas, credenciales de servidor/proveedor, contraseñas de keystore ni tokens permanentes. El transporte envía internamente Bearer y los cinco headers de identidad. El OpenAPI declara Platform y Package-Name, pero aún debe incorporar Certificate-Sha256, Environment y Sdk-Version.
+El SDK recibe únicamente `operationId` y `sdkToken` temporal. Nunca se distribuyen en la app API keys privadas, claves privadas, credenciales de servidor/proveedor, contraseñas de keystore ni tokens permanentes. El transporte envía internamente Bearer y los cinco headers de identidad, todos declarados en el OpenAPI público.
 
 Los targets se muestran únicamente enmascarados. Si existe `maskedTarget` del backend se prefiere ese valor; el enmascaramiento local es respaldo. No se registran targets completos ni se incluyen en resultados de Activity.
 

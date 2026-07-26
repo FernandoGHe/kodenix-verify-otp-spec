@@ -1,5 +1,45 @@
 # 12 - Catálogo de Errores
 
+## Contrato tipado Android y wire
+
+| Enum Android | Valor wire | Acción típica |
+|---|---|---|
+| `INVALID_PHONE` | `OTP_INVALID_PHONE` | `CORRECT_PHONE` |
+| `INVALID_EMAIL` | `OTP_INVALID_EMAIL` | `CORRECT_EMAIL` |
+| `TARGET_REQUIRED` | `OTP_TARGET_REQUIRED` | `REQUEST_PHONE` o `REQUEST_EMAIL` |
+| `TARGET_UNREACHABLE` | `OTP_TARGET_UNREACHABLE` | `CHOOSE_ANOTHER_CHANNEL` |
+| `PHONE_NOT_REGISTERED` | `OTP_PHONE_NOT_REGISTERED` | `CHOOSE_ANOTHER_CHANNEL` |
+| `EMAIL_REJECTED` | `OTP_EMAIL_REJECTED` | `CHOOSE_ANOTHER_CHANNEL` |
+| `MAILBOX_UNAVAILABLE` | `OTP_MAILBOX_UNAVAILABLE` | `CHOOSE_ANOTHER_CHANNEL` |
+| `CHANNEL_UNAVAILABLE` | `OTP_CHANNEL_UNAVAILABLE` | `CHOOSE_ANOTHER_CHANNEL` |
+| `DELIVERY_FAILED` | `OTP_DELIVERY_FAILED` | `CHOOSE_ANOTHER_CHANNEL` |
+| `INVALID_CODE` | `OTP_INVALID_CODE` | `RETRY` |
+| `MAX_ATTEMPTS_REACHED` | `OTP_MAX_ATTEMPTS_REACHED` | `CONTACT_SUPPORT` o `NONE` |
+| `ALREADY_VERIFIED` | `OTP_ALREADY_VERIFIED` | `NONE` |
+| `RATE_LIMITED` | `OTP_RATE_LIMITED` | `RESEND` o `RETRY` cuando proceda |
+| `PROVIDER_UNAVAILABLE` | `OTP_PROVIDER_UNAVAILABLE` | `CHOOSE_ANOTHER_CHANNEL` o `RETRY` |
+| `NETWORK_ERROR` | `OTP_NETWORK_ERROR` | `RETRY` |
+| `SDK_ERROR` | `OTP_SDK_ERROR` | `CONTACT_SUPPORT` o `NONE` |
+
+`OtpErrorCode.UNKNOWN` y `OtpErrorAction.UNKNOWN` protegen al SDK frente a valores futuros; el backend no debe emitir `OTP_UNKNOWN` o `UNKNOWN` como valores normales. `OtpErrorAction` también admite `NONE`, `REQUEST_PHONE`, `REQUEST_EMAIL`, `CORRECT_PHONE`, `CORRECT_EMAIL`, `RETRY`, `RESEND`, `CHOOSE_ANOTHER_CHANNEL` y `CONTACT_SUPPORT`. La acción es una recomendación y el integrador decide la navegación final.
+
+## Forma HTTP estándar
+
+Las peticiones fallidas responden HTTP 4xx/5xx con el mismo objeto estructurado. Si por compatibilidad un endpoint devuelve HTTP 2xx con `success: false`, debe conservar exactamente `error.code`, `message`, `recoverable` y `action`.
+
+```json
+{
+  "error": {
+    "code": "OTP_TARGET_UNREACHABLE",
+    "message": "No fue posible entregar el código",
+    "recoverable": true,
+    "action": "CHOOSE_ANOTHER_CHANNEL"
+  }
+}
+```
+
+Los errores de formato pueden detectarse sincrónicamente. Destino inexistente, teléfono no registrado, buzón no disponible o email rechazado suelen conocerse asíncronamente y deben propagarse al backend integrador mediante eventos/webhooks.
+
 ## Licencia
 
 | Código | HTTP | Recuperable | Acción |

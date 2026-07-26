@@ -2,10 +2,19 @@ openapi: 3.0.3
 info:
   title: Kodenix Verify Webhooks
   version: 2.0.0
+servers:
+  - url: '{webhookBaseUrl}'
+    description: URL HTTPS registrada por el integrador.
+    variables:
+      webhookBaseUrl:
+        default: https://webhook.cliente.example
 paths:
   /client-defined-webhook-url:
     post:
       summary: Endpoint que implementa el cliente para recibir eventos Kodenix
+      operationId: receiveKodenixWebhook
+      security:
+        - WebhookSignature: []
       parameters:
         - name: X-Kodenix-Event-Id
           in: header
@@ -24,10 +33,33 @@ paths:
         content:
           application/json:
             schema: { $ref: '#/components/schemas/WebhookEvent' }
+            example:
+              id: wh_evt_456
+              type: otp.delivery_failed
+              operationId: op_123
+              createdAt: '2026-07-25T20:00:00Z'
+              data:
+                challengeId: challenge_456
+                status: DELIVERY_FAILED
+                channel: whatsapp
+                error:
+                  code: OTP_PHONE_NOT_REGISTERED
+                  message: El teléfono no está registrado en WhatsApp
+                  recoverable: true
+                  action: CHOOSE_ANOTHER_CHANNEL
+                occurredAt: '2026-07-25T20:00:00Z'
       responses:
         '200': { description: Recibido }
         '202': { description: Aceptado }
+        '400': { description: Payload inválido }
+        '401': { description: Firma o timestamp inválido }
 components:
+  securitySchemes:
+    WebhookSignature:
+      type: apiKey
+      in: header
+      name: X-Kodenix-Signature
+      description: Firma HMAC sobre timestamp y body crudo; validar también X-Kodenix-Timestamp.
   schemas:
     WebhookEvent:
       type: object
@@ -42,4 +74,35 @@ components:
         licenseId: { type: string }
         operationId: { type: string }
         createdAt: { type: string, format: date-time }
-        data: { type: object, additionalProperties: true }
+        data:
+          description: Para eventos OTP de entrega sigue OtpDeliveryEventData; otros eventos conservan payload extensible.
+          anyOf:
+            - $ref: '#/components/schemas/OtpDeliveryEventData'
+            - type: object
+              additionalProperties: true
+    OtpStatus:
+      type: string
+      enum: [PENDING, PENDING_DELIVERY, SENDING, SENT, DELIVERED, VERIFIED, DELIVERY_FAILED, EXPIRED, CANCELLED, BLOCKED]
+    OtpErrorCode:
+      type: string
+      enum: [OTP_INVALID_PHONE, OTP_INVALID_EMAIL, OTP_TARGET_REQUIRED, OTP_TARGET_UNREACHABLE, OTP_PHONE_NOT_REGISTERED, OTP_EMAIL_REJECTED, OTP_MAILBOX_UNAVAILABLE, OTP_CHANNEL_UNAVAILABLE, OTP_DELIVERY_FAILED, OTP_INVALID_CODE, OTP_MAX_ATTEMPTS_REACHED, OTP_ALREADY_VERIFIED, OTP_RATE_LIMITED, OTP_PROVIDER_UNAVAILABLE, OTP_NETWORK_ERROR, OTP_SDK_ERROR]
+    OtpErrorAction:
+      type: string
+      enum: [NONE, REQUEST_PHONE, REQUEST_EMAIL, CORRECT_PHONE, CORRECT_EMAIL, RETRY, RESEND, CHOOSE_ANOTHER_CHANNEL, CONTACT_SUPPORT]
+    OtpError:
+      type: object
+      required: [code, message, recoverable, action]
+      properties:
+        code: { $ref: '#/components/schemas/OtpErrorCode' }
+        message: { type: string }
+        recoverable: { type: boolean }
+        action: { $ref: '#/components/schemas/OtpErrorAction' }
+    OtpDeliveryEventData:
+      type: object
+      required: [challengeId, status, channel, occurredAt]
+      properties:
+        challengeId: { type: string }
+        status: { $ref: '#/components/schemas/OtpStatus' }
+        channel: { type: string, enum: [whatsapp, sms, email] }
+        error: { $ref: '#/components/schemas/OtpError' }
+        occurredAt: { type: string, format: date-time }

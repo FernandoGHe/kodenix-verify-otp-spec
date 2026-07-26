@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>13 - Webhooks · Kodenix Verify</title><meta name="docs-version" content="2d29f4025dab" /><link rel="stylesheet" href="../../assets/docs.2d29f4025dab.css" /></head>
+<title>13 - Webhooks · Kodenix Verify</title><meta name="docs-version" content="10cfb29e6e17" /><link rel="stylesheet" href="../../assets/docs.10cfb29e6e17.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 <div class="nav-section">admin</div><a class="nav-link" href="../../admin/admin-portal-spec/">Admin Portal Spec</a>
 <a class="nav-link" href="../../admin/tenant-license-configuration/">Tenant License Configuration</a>
@@ -80,5 +80,27 @@
 <pre><code class="language-http">X-Kodenix-Timestamp: 1783123456
 X-Kodenix-Signature: sha256=...
 </code></pre>
+<h2>Entrega asíncrona OTP</h2>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;wh_evt_456&quot;,
+  &quot;type&quot;: &quot;otp.delivery_failed&quot;,
+  &quot;operationId&quot;: &quot;op_123&quot;,
+  &quot;createdAt&quot;: &quot;2026-07-25T20:00:00Z&quot;,
+  &quot;data&quot;: {
+    &quot;challengeId&quot;: &quot;challenge_456&quot;,
+    &quot;status&quot;: &quot;DELIVERY_FAILED&quot;,
+    &quot;channel&quot;: &quot;whatsapp&quot;,
+    &quot;error&quot;: {
+      &quot;code&quot;: &quot;OTP_PHONE_NOT_REGISTERED&quot;,
+      &quot;message&quot;: &quot;El teléfono no está registrado en WhatsApp&quot;,
+      &quot;recoverable&quot;: true,
+      &quot;action&quot;: &quot;CHOOSE_ANOTHER_CHANNEL&quot;
+    },
+    &quot;occurredAt&quot;: &quot;2026-07-25T20:00:00Z&quot;
+  }
+}
+</code></pre>
+<p>El receptor deduplica por <code>X-Kodenix-Event-Id</code>/<code>id</code>, verifica timestamp y firma sobre el body crudo antes de procesar, y responde 2xx solo cuando acepta el evento. Los reintentos pueden duplicar eventos. El consumidor debe tolerar llegada fuera de orden usando <code>occurredAt</code> y no retroceder un estado terminal por un evento más antiguo.</p>
+<p>La política exacta de backoff, ventana máxima de reintentos y garantía formal de orden aún requiere definición backend. Hasta fijarla, no se promete entrega exactamente una vez ni orden global. La aplicación móvil no consulta endpoints privados; el backend integrador recibe estos cambios.</p>
 
-</article></main></div><script src="../../assets/docs.2d29f4025dab.js"></script></body></html>
+</article></main></div><script src="../../assets/docs.10cfb29e6e17.js"></script></body></html>

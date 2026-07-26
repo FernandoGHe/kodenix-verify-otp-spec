@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>SDK Android Contract · Kodenix Verify</title><meta name="docs-version" content="2d29f4025dab" /><link rel="stylesheet" href="../../assets/docs.2d29f4025dab.css" /></head>
+<title>SDK Android Contract · Kodenix Verify</title><meta name="docs-version" content="10cfb29e6e17" /><link rel="stylesheet" href="../../assets/docs.10cfb29e6e17.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 <div class="nav-section">admin</div><a class="nav-link" href="../../admin/admin-portal-spec/">Admin Portal Spec</a>
 <a class="nav-link" href="../../admin/tenant-license-configuration/">Tenant License Configuration</a>
@@ -56,10 +56,12 @@
 <h2>Cliente y targets</h2>
 <p><code>KodenixOtpClient</code> expone <code>loadConfiguration</code>, <code>updateTarget</code>, <code>send</code>, <code>resend</code>, <code>verify</code> y <code>cancel</code> mediante <code>OtpCallback</code>/<code>OtpRequest</code>. Callbacks llegan al hilo principal; cancelar el request desconecta HTTP y suprime el callback, mientras <code>client.cancel</code> cancela la operación.</p>
 <p>WhatsApp/SMS requieren teléfono; Email requiere correo. El SDK no inventa targets. Views y Compose respetan <code>getPreferredChannel()</code> y solo muestran targets enmascarados. La captura interna de target ausente continúa pendiente.</p>
+<h2>Estados y errores tipados</h2>
+<p>Resultados y Activity exponen <code>OtpStatus</code>; errores exponen <code>OtpErrorCode</code> y <code>OtpErrorAction</code>. Los integradores comparan enums (<code>OtpStatus.VERIFIED</code>, <code>OtpErrorAction.RETRY</code>), nunca strings literales. <code>UNKNOWN</code> es solo tolerancia local ante valores futuros y no amplía el contrato wire permitido. <code>SENT</code> es aceptación del proveedor, <code>DELIVERED</code> confirma entrega cuando existe esa señal y <code>DELIVERY_FAILED</code> informa un fallo posterior conocido.</p>
 <h2>Transporte e identidad</h2>
 <p>El cliente real usa <code>/v1/otp/config</code>, <code>/target</code>, <code>/send</code>, <code>/resend</code>, <code>/verify</code> y <code>/cancel</code>. Obtiene del <code>Context</code> el applicationId efectivo y del <code>PackageManager</code> los SHA-256 de firmas legacy/API 28+ <code>SigningInfo</code>, incluyendo múltiples firmantes e historial.</p>
 <p>Envía Bearer sdkToken y <code>X-Kodenix-Platform</code>, <code>X-Kodenix-Package-Name</code>, <code>X-Kodenix-Certificate-Sha256</code>, <code>X-Kodenix-Environment</code>, <code>X-Kodenix-Sdk-Version</code>. El backend es autoritativo; no existe bypass o licencia local.</p>
-<p>El OpenAPI público solo declara actualmente Platform y Package-Name; faltan Certificate-Sha256, Environment y Sdk-Version. Requiere actualización contractual explícita.</p>
+<p>El OpenAPI público declara los cinco headers Android y los enums wire de status, código y acción alineados con el SDK.</p>
 <p>Consulte la <a href="../docs/android/getting-started.md">guía Android</a>.</p>
 
-</article></main></div><script src="../../assets/docs.2d29f4025dab.js"></script></body></html>
+</article></main></div><script src="../../assets/docs.10cfb29e6e17.js"></script></body></html>

@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Kodenix Verify OTP — Android SDK · Kodenix Verify</title><meta name="docs-version" content="2d29f4025dab" /><link rel="stylesheet" href="../../../assets/docs.2d29f4025dab.css" /></head>
+<title>Kodenix Verify OTP — Android SDK · Kodenix Verify</title><meta name="docs-version" content="10cfb29e6e17" /><link rel="stylesheet" href="../../../assets/docs.10cfb29e6e17.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 <div class="nav-section">admin</div><a class="nav-link" href="../../../admin/admin-portal-spec/">Admin Portal Spec</a>
 <a class="nav-link" href="../../../admin/tenant-license-configuration/">Tenant License Configuration</a>
@@ -316,12 +316,13 @@ client.cancel(callback); // cancela la operación OTP en backend
 <pre><code class="language-kotlin">private val otpLauncher =
     registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result -&gt;
         val data = result.data
-        when (data?.getStringExtra(KodenixOtpResult.EXTRA_STATUS)) {
-            &quot;VERIFIED&quot; -&gt; {
+        when (KodenixOtpResult.getStatus(data)) {
+            OtpStatus.VERIFIED -&gt; {
                 val operationId = data.getStringExtra(KodenixOtpResult.EXTRA_OPERATION_ID)
                 val verificationId = data.getStringExtra(KodenixOtpResult.EXTRA_VERIFICATION_ID)
             }
-            &quot;CANCELLED&quot; -&gt; { /* El usuario canceló el flujo. */ }
+            OtpStatus.CANCELLED -&gt; { /* El usuario canceló el flujo. */ }
+            else -&gt; Unit
         }
     }
 
@@ -354,7 +355,7 @@ private void startOtp() {
 @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode != REQUEST_OTP || data == null) return;
-    String status = data.getStringExtra(KodenixOtpResult.EXTRA_STATUS);
+    OtpStatus status = KodenixOtpResult.getStatus(data);
     String operationId = data.getStringExtra(KodenixOtpResult.EXTRA_OPERATION_ID);
     String verificationId = data.getStringExtra(KodenixOtpResult.EXTRA_VERIFICATION_ID);
 }
@@ -423,10 +424,88 @@ X-Kodenix-Sdk-Version: {sdkVersion}
 </tbody></table>
 <p>No expone creación de operaciones, estado/eventos administrativos, administración o analytics privados: pertenecen al backend integrador.</p>
 <h2>Errores y estado validado</h2>
+<h3>Enums públicos</h3>
+<p>El SDK convierte los strings wire del backend en tipos seguros. <code>UNKNOWN</code> existe únicamente como protección local ante valores futuros y no es un valor que el backend deba emitir normalmente.</p>
+<table>
+<thead>
+<tr>
+<th><code>OtpStatus</code></th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>PENDING</code></td>
+<td>Operación pendiente.</td>
+</tr>
+<tr>
+<td><code>PENDING_DELIVERY</code></td>
+<td>Pendiente de iniciar/confirmar envío.</td>
+</tr>
+<tr>
+<td><code>SENDING</code></td>
+<td>Envío en curso.</td>
+</tr>
+<tr>
+<td><code>SENT</code></td>
+<td>El proveedor aceptó el envío; no garantiza entrega.</td>
+</tr>
+<tr>
+<td><code>DELIVERED</code></td>
+<td>Entrega confirmada cuando el proveedor la informa.</td>
+</tr>
+<tr>
+<td><code>VERIFIED</code></td>
+<td>OTP verificado.</td>
+</tr>
+<tr>
+<td><code>DELIVERY_FAILED</code></td>
+<td>Rechazo o fallo conocido posteriormente.</td>
+</tr>
+<tr>
+<td><code>EXPIRED</code></td>
+<td>OTP expirado.</td>
+</tr>
+<tr>
+<td><code>CANCELLED</code></td>
+<td>Operación cancelada.</td>
+</tr>
+<tr>
+<td><code>BLOCKED</code></td>
+<td>Operación bloqueada.</td>
+</tr>
+<tr>
+<td><code>UNKNOWN</code></td>
+<td>Fallback local para compatibilidad futura.</td>
+</tr>
+</tbody></table>
+<p><code>OtpErrorCode</code> expone <code>INVALID_PHONE</code>, <code>INVALID_EMAIL</code>, <code>TARGET_REQUIRED</code>, <code>TARGET_UNREACHABLE</code>, <code>PHONE_NOT_REGISTERED</code>, <code>EMAIL_REJECTED</code>, <code>MAILBOX_UNAVAILABLE</code>, <code>CHANNEL_UNAVAILABLE</code>, <code>DELIVERY_FAILED</code>, <code>INVALID_CODE</code>, <code>MAX_ATTEMPTS_REACHED</code>, <code>ALREADY_VERIFIED</code>, <code>RATE_LIMITED</code>, <code>PROVIDER_UNAVAILABLE</code>, <code>NETWORK_ERROR</code>, <code>SDK_ERROR</code> y <code>UNKNOWN</code>. Sus valores wire tienen prefijo <code>OTP_</code>, por ejemplo <code>OtpErrorCode.TARGET_UNREACHABLE.getWireValue()</code> es <code>OTP_TARGET_UNREACHABLE</code>.</p>
+<p><code>OtpErrorAction</code> expone <code>NONE</code>, <code>REQUEST_PHONE</code>, <code>REQUEST_EMAIL</code>, <code>CORRECT_PHONE</code>, <code>CORRECT_EMAIL</code>, <code>RETRY</code>, <code>RESEND</code>, <code>CHOOSE_ANOTHER_CHANNEL</code>, <code>CONTACT_SUPPORT</code> y <code>UNKNOWN</code>. La acción es una recomendación; la aplicación integradora conserva la decisión final.</p>
+<pre><code class="language-kotlin">override fun onError(error: OtpError) {
+    when (error.action) {
+        OtpErrorAction.CORRECT_PHONE -&gt; showPhoneEditor()
+        OtpErrorAction.CORRECT_EMAIL -&gt; showEmailEditor()
+        OtpErrorAction.CHOOSE_ANOTHER_CHANNEL -&gt; showChannelSelector()
+        OtpErrorAction.RETRY -&gt; showRetry()
+        OtpErrorAction.CONTACT_SUPPORT -&gt; showSupport()
+        else -&gt; showGenericError(error.message)
+    }
+}
+</code></pre>
+<pre><code class="language-java">@Override public void onError(OtpError error) {
+    switch (error.getAction()) {
+        case CORRECT_PHONE: showPhoneEditor(); break;
+        case CORRECT_EMAIL: showEmailEditor(); break;
+        case CHOOSE_ANOTHER_CHANNEL: showChannelSelector(); break;
+        case RETRY: showRetry(); break;
+        default: showGenericError(error.getMessage());
+    }
+}
+</code></pre>
+<p>Un formato de teléfono/email inválido puede fallar sincrónicamente. Un número inexistente/no registrado, buzón inexistente o email rechazado puede conocerse después; esos cambios llegan al backend integrador por eventos/webhooks. La app móvil no consulta endpoints privados con API key.</p>
 <p>Trate como mínimo los errores <code>LICENSE_NOT_FOUND</code>, <code>LICENSE_EXPIRED</code>, <code>LICENSE_SUSPENDED</code>, <code>LICENSE_REVOKED</code>, <code>LICENSE_OVER_QUOTA</code>, <code>LICENSE_PACKAGE_NOT_ALLOWED</code>, <code>LICENSE_CHANNEL_NOT_ALLOWED</code>, <code>LICENSE_ENVIRONMENT_NOT_ALLOWED</code>, <code>OTP_NETWORK_ERROR</code> y <code>OTP_SDK_ERROR</code>. <code>LICENSE_PACKAGE_NOT_ALLOWED</code> significa que la combinación instalada de package y certificado no está autorizada.</p>
 <p>Se reportaron correctos <code>:otp-core:testDebugUnitTest</code>, <code>:otp-core:assembleRelease</code>, <code>:otp-ui-views:assembleRelease</code>, <code>:otp-ui-compose:assembleRelease</code> y <code>:app:assembleDebug</code>.</p>
-<h2>Discrepancia OpenAPI</h2>
-<p>La implementación envía los cinco headers Android. <code>openapi/otp-public-api.yaml</code> declara actualmente <code>X-Kodenix-Platform</code> y <code>X-Kodenix-Package-Name</code>, pero faltan <code>X-Kodenix-Certificate-Sha256</code>, <code>X-Kodenix-Environment</code> y <code>X-Kodenix-Sdk-Version</code>. Deben añadirse mediante un cambio contractual explícito; esta actualización no modifica silenciosamente el OpenAPI.</p>
+<h2>Contrato OpenAPI Android</h2>
+<p><code>openapi/otp-public-api.yaml</code> declara los cinco headers que envía la implementación: <code>X-Kodenix-Platform</code>, <code>X-Kodenix-Package-Name</code>, <code>X-Kodenix-Certificate-Sha256</code>, <code>X-Kodenix-Environment</code> y <code>X-Kodenix-Sdk-Version</code>. También tipa status, códigos y acciones con los mismos valores wire que el SDK.</p>
 <h2>Estado legal</h2>
 <p>La licencia del SDK Android continúa marcada <strong>DRAFT — LEGAL REVIEW REQUIRED BEFORE DISTRIBUTION</strong>; no es una licencia comercial aprobada.</p>
 <h2>Referencias</h2>
@@ -437,4 +516,4 @@ X-Kodenix-Sdk-Version: {sdkVersion}
 <li><a href="../12-error-catalog.md">Catálogo de errores</a></li>
 </ul>
 
-</article></main></div><script src="../../../assets/docs.2d29f4025dab.js"></script></body></html>
+</article></main></div><script src="../../../assets/docs.10cfb29e6e17.js"></script></body></html>

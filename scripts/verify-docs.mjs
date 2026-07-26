@@ -27,6 +27,9 @@ for (const concept of ["dependencias transitivas", "dependencia mínima", "Views
   requireText(guide, new RegExp(concept, "is"), `instalación: ${concept}`);
 for (const concept of ["argumentos posicionales", "ActivityResultContracts", "startActivityForResult", "123456", "2468", "Java legacy", "Views/XML"])
   requireText(guide, new RegExp(concept, "i"), `integración Android: ${concept}`);
+for (const concept of ["OtpStatus", "OtpErrorCode", "OtpErrorAction", "OtpStatus.VERIFIED", "OtpErrorAction.CORRECT_PHONE", "no garantiza", "DELIVERY_FAILED", "webhook"])
+  requireText(guide, new RegExp(concept.replaceAll(".", "\\."), "is"), `contrato tipado: ${concept}`);
+if (/getStringExtra\s*\(\s*KodenixOtpResult\.EXTRA_STATUS/.test(read(guide))) failures.push(`${guide}: compara estado wire en vez de KodenixOtpResult.getStatus`);
 if (/\bcreateMock\s*\(/.test(read(guide))) failures.push(`${guide}: inicializador mock separado ya no es API pública`);
 
 for (const file of ["README.md", "MANIFEST.md", guide, "sdk/sdk-android-contract.md"])
@@ -61,12 +64,20 @@ if (androidRoot) {
     "otp-core/src/main/java/com/kodenix/verify/otp/api/MockOtpScenario.java",
     "otp-core/src/main/java/com/kodenix/verify/otp/api/OtpTarget.java",
     "otp-core/src/main/java/com/kodenix/verify/otp/api/KodenixOtpConfiguration.java",
+    "otp-core/src/main/java/com/kodenix/verify/otp/api/OtpStatus.java",
+    "otp-core/src/main/java/com/kodenix/verify/otp/api/OtpErrorCode.java",
+    "otp-core/src/main/java/com/kodenix/verify/otp/api/OtpErrorAction.java",
+    "otp-core/src/main/java/com/kodenix/verify/otp/api/OtpError.java",
+    "otp-core/src/main/java/com/kodenix/verify/otp/api/OtpSendResult.java",
+    "otp-core/src/main/java/com/kodenix/verify/otp/api/OtpVerificationResult.java",
+    "otp-core/src/main/java/com/kodenix/verify/otp/api/OtpOperationStatus.java",
     "otp-core/src/main/java/com/kodenix/verify/otp/internal/MockKodenixOtpClient.java",
     "otp-core/src/main/java/com/kodenix/verify/otp/internal/HttpKodenixOtpClient.java",
     "otp-core/src/main/java/com/kodenix/verify/otp/internal/AndroidAppIdentity.java",
     "otp-core/src/main/java/com/kodenix/verify/otp/internal/UrlConnectionOtpTransport.java",
     "otp-core-ktx/src/main/java/com/kodenix/verify/otp/ktx/OtpExtensions.kt",
     "otp-ui-views/src/main/java/com/kodenix/verify/otp/ui/views/KodenixOtpActivity.java",
+    "otp-ui-views/src/main/java/com/kodenix/verify/otp/ui/views/KodenixOtpResult.java",
     "otp-ui-compose/src/main/java/com/kodenix/verify/otp/ui/compose/KodenixOtpScreen.kt",
   ].map(androidRead).join("\n");
   for (const symbol of ["create", "isMockEnabled", "loadConfiguration", "updateTarget", "send", "resend", "verify", "cancel", "createIntent", "KodenixOtpScreen"])
@@ -76,7 +87,18 @@ if (androidRoot) {
     if (!api.includes(behavior)) failures.push(`API pública Android: falta comportamiento ${behavior}`);
   for (const header of ["X-Kodenix-Platform", "X-Kodenix-Package-Name", "X-Kodenix-Certificate-Sha256", "X-Kodenix-Environment", "X-Kodenix-Sdk-Version"])
     if (!api.includes(header)) failures.push(`Transporte Android: falta header ${header}`);
+  for (const enumName of ["OtpStatus", "OtpErrorCode", "OtpErrorAction"])
+    if (!api.includes(`enum ${enumName}`)) failures.push(`API Android: falta enum ${enumName}`);
 }
+
+const otpOpenApi = read("openapi/otp-public-api.yaml");
+for (const schema of ["OtpStatus", "OtpErrorCode", "OtpErrorAction", "ErrorResponse"])
+  if (!new RegExp(`^    ${schema}:`, "m").test(otpOpenApi)) failures.push(`OpenAPI OTP: falta schema ${schema}`);
+for (const header of ["X-Kodenix-Platform", "X-Kodenix-Package-Name", "X-Kodenix-Certificate-Sha256", "X-Kodenix-Environment", "X-Kodenix-Sdk-Version"])
+  if (!otpOpenApi.includes(`name: ${header}`)) failures.push(`OpenAPI OTP: falta header ${header}`);
+for (const forbidden of [/status:\s*\{\s*type:\s*string\s*,\s*example:\s*(?:SENT|VERIFIED)/, /^\s{8}(?:code|action):\s*\{\s*type:\s*string\s*\}/m])
+  if (forbidden.test(otpOpenApi)) failures.push("OpenAPI OTP: status/code/action OTP sin enum explícito");
+requireText("swagger-ui/index.html", /\.model-title[\s\S]*\.prop-type[\s\S]*\.opblock-summary-path/, "contraste oscuro de modelos y rutas Swagger");
 
 const before = new Map(walk(path.join(root, "docs-html")).map(file => [file, digest(file)]));
 const build = spawnSync(process.execPath, [path.join(root, "scripts/build-docs.mjs")], { cwd: root, encoding: "utf8" });

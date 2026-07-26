@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>08 - Máquina de Estados · Kodenix Verify</title><meta name="docs-version" content="2d29f4025dab" /><link rel="stylesheet" href="../../assets/docs.2d29f4025dab.css" /></head>
+<title>08 - Máquina de Estados · Kodenix Verify</title><meta name="docs-version" content="10cfb29e6e17" /><link rel="stylesheet" href="../../assets/docs.10cfb29e6e17.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 <div class="nav-section">admin</div><a class="nav-link" href="../../admin/admin-portal-spec/">Admin Portal Spec</a>
 <a class="nav-link" href="../../admin/tenant-license-configuration/">Tenant License Configuration</a>
@@ -76,8 +76,11 @@ CANCELLED
 <li><code>PENDING_TARGET</code> se usa cuando el SDK requiere teléfono/email adicional.</li>
 </ul>
 <p>Ver <code>diagrams/state-machine.mmd</code>.</p>
+<h2>Contrato público del SDK</h2>
+<p>El SDK Android proyecta el estado backend al enum <code>OtpStatus</code>: <code>PENDING</code>, <code>PENDING_DELIVERY</code>, <code>SENDING</code>, <code>SENT</code>, <code>DELIVERED</code>, <code>VERIFIED</code>, <code>DELIVERY_FAILED</code>, <code>EXPIRED</code>, <code>CANCELLED</code> y <code>BLOCKED</code>. Otros estados internos de orquestación no se exponen como valores públicos. <code>UNKNOWN</code> es un fallback local de compatibilidad, no un estado emitible normal del backend.</p>
+<p><code>SENT</code> solo confirma que el proveedor aceptó el envío. No prueba entrega. <code>DELIVERED</code> confirma entrega cuando el proveedor ofrece esa señal; <code>DELIVERY_FAILED</code> representa un rechazo o fallo conocido posteriormente. Por ello una operación puede avanzar de <code>SENT</code> a <code>DELIVERED</code> o <code>DELIVERY_FAILED</code> mediante eventos asíncronos.</p>
 <p>Cancelar un <code>OtpRequest</code> Android es control local y no cambia esta máquina; <code>KodenixOtpClient.cancel</code> sí solicita <code>CANCELLED</code>. El mock reproduce transiciones principales en memoria, pero no representa entrega, facturación o licencia autoritativa.</p>
 <p>En transporte HTTP, cancelar el request desconecta la conexión activa y suprime el callback; no equivale a la transición de dominio <code>CANCELLED</code>.</p>
 <p>En Android, enviar sin el target requerido conserva el flujo en <code>PENDING_TARGET</code> y entrega <code>OTP_TARGET_REQUIRED</code>. La UI no inventa el destino; la captura interna permanece pendiente en 0.1.0.</p>
 
-</article></main></div><script src="../../assets/docs.2d29f4025dab.js"></script></body></html>
+</article></main></div><script src="../../assets/docs.10cfb29e6e17.js"></script></body></html>

@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>07 - API Contract Overview · Kodenix Verify</title><meta name="docs-version" content="2d29f4025dab" /><link rel="stylesheet" href="../../assets/docs.2d29f4025dab.css" /></head>
+<title>07 - API Contract Overview · Kodenix Verify</title><meta name="docs-version" content="10cfb29e6e17" /><link rel="stylesheet" href="../../assets/docs.10cfb29e6e17.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 <div class="nav-section">admin</div><a class="nav-link" href="../../admin/admin-portal-spec/">Admin Portal Spec</a>
 <a class="nav-link" href="../../admin/tenant-license-configuration/">Tenant License Configuration</a>
@@ -48,7 +48,7 @@
 </div></aside><main class="content"><article class="doc"><div class="top-actions"><a class="btn" href="../../../">Landing</a><a class="btn" href="../../../swagger-ui/">Swagger UI</a></div><div class="crumb">docs/07-api-contract-overview.md</div>
 <h1>07 - API Contract Overview</h1>
 <h2>Cliente móvil Android</h2>
-<p>Android usa Bearer <code>sdkToken</code> para GET <code>/v1/otp/config</code>, PATCH <code>/v1/otp/target</code> y POST <code>/v1/otp/send</code>, <code>/resend</code>, <code>/verify</code>, <code>/cancel</code>. Envía internamente Platform, Package-Name, Certificate-Sha256, Environment y Sdk-Version. El OpenAPI actual solo declara explícitamente los dos primeros; los tres restantes son una discrepancia contractual pendiente.</p>
+<p>Android usa Bearer <code>sdkToken</code> para GET <code>/v1/otp/config</code>, PATCH <code>/v1/otp/target</code> y POST <code>/v1/otp/send</code>, <code>/resend</code>, <code>/verify</code>, <code>/cancel</code>. Envía internamente Platform, Package-Name, Certificate-Sha256, Environment y Sdk-Version; el OpenAPI declara los cinco y tipa status/error/action.</p>
 <h2>Swagger incluido</h2>
 <p>Este paquete incluye los siguientes contratos OpenAPI:</p>
 <table>
@@ -116,4 +116,4 @@ POST /v1/licenses/validate
 }
 </code></pre>
 
-</article></main></div><script src="../../assets/docs.2d29f4025dab.js"></script></body></html>
+</article></main></div><script src="../../assets/docs.10cfb29e6e17.js"></script></body></html>

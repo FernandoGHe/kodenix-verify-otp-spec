@@ -33,6 +33,12 @@ CANCELLED
 
 Ver `diagrams/state-machine.mmd`.
 
+## Contrato público del SDK
+
+El SDK Android proyecta el estado backend al enum `OtpStatus`: `PENDING`, `PENDING_DELIVERY`, `SENDING`, `SENT`, `DELIVERED`, `VERIFIED`, `DELIVERY_FAILED`, `EXPIRED`, `CANCELLED` y `BLOCKED`. Otros estados internos de orquestación no se exponen como valores públicos. `UNKNOWN` es un fallback local de compatibilidad, no un estado emitible normal del backend.
+
+`SENT` solo confirma que el proveedor aceptó el envío. No prueba entrega. `DELIVERED` confirma entrega cuando el proveedor ofrece esa señal; `DELIVERY_FAILED` representa un rechazo o fallo conocido posteriormente. Por ello una operación puede avanzar de `SENT` a `DELIVERED` o `DELIVERY_FAILED` mediante eventos asíncronos.
+
 Cancelar un `OtpRequest` Android es control local y no cambia esta máquina; `KodenixOtpClient.cancel` sí solicita `CANCELLED`. El mock reproduce transiciones principales en memoria, pero no representa entrega, facturación o licencia autoritativa.
 
 En transporte HTTP, cancelar el request desconecta la conexión activa y suprime el callback; no equivale a la transición de dominio `CANCELLED`.

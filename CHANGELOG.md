@@ -13,7 +13,10 @@
 
 - Documentada la fachada única Android `KodenixOtp.create(...)` para HTTP y mock configurable.
 - Documentados transporte HTTP, identidad automática de la app instalada y cancelación de conexión.
-- Precisado que OpenAPI ya declara Platform/Package-Name y aún omite Certificate-Sha256, Environment y Sdk-Version.
+- Completados en OpenAPI los cinco headers Android y los enums wire de status/error/action.
+
+- Mejorado el contraste de Swagger UI en modo oscuro para modelos, parámetros, rutas y respuestas.
+- Documentada la semántica de entrega asíncrona y el webhook `otp.delivery_failed`.
 
 - Documentados targets opcionales, matriz canal/target y validaciones del mock.
 - Aclarado que Views y Compose respetan el canal preferido y que la captura interna de target sigue pendiente.
