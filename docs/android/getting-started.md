@@ -99,6 +99,60 @@ El mock cubre carga de configuración, target enmascarado, `send`, `resend`,
 `verify`, `cancel`, `updateTarget`, código inválido y bloqueo por intentos. Rechaza
 `OtpEnvironment.PRODUCTION`. Nunca use ni recomiende `createMock()` en producción.
 
+## Targets y canales en el mock
+
+`OtpTarget(phone, email)` admite teléfono, email o ambos; al construirlo al menos uno debe estar presente. Si la sesión no tiene ninguno, pase `null` como target. El SDK no asume que siempre existe un teléfono ni inventa destinos faltantes.
+
+| Teléfono | Email | WhatsApp | SMS | Email |
+|---|---|---|---|---|
+| Sí | Sí | Disponible | Disponible | Disponible |
+| Sí | No | Disponible | Disponible | Requiere email |
+| No | Sí | Requiere teléfono | Requiere teléfono | Disponible |
+| No | No | Requiere teléfono | Requiere teléfono | Requiere email |
+
+WhatsApp y SMS requieren teléfono; Email requiere correo. Estas validaciones locales mejoran la experiencia, pero el backend continúa siendo autoritativo.
+
+```kotlin
+val both = OtpSession(operationId, sdkToken, OtpTarget("+525512345678", "usuario@example.com"), OtpChannel.WHATSAPP, true)
+val phoneOnly = OtpSession(operationId, sdkToken, OtpTarget("+525512345678", null), OtpChannel.SMS, true)
+val emailOnly = OtpSession(operationId, sdkToken, OtpTarget(null, "usuario@example.com"), OtpChannel.EMAIL, true)
+val withoutTarget = OtpSession(operationId, sdkToken, null, OtpChannel.EMAIL, true)
+```
+
+```java
+OtpSession both = new OtpSession(operationId, sdkToken, new OtpTarget("+525512345678", "usuario@example.com"), OtpChannel.WHATSAPP, true);
+OtpSession phoneOnly = new OtpSession(operationId, sdkToken, new OtpTarget("+525512345678", null), OtpChannel.SMS, true);
+OtpSession emailOnly = new OtpSession(operationId, sdkToken, new OtpTarget(null, "usuario@example.com"), OtpChannel.EMAIL, true);
+```
+
+Si falta el target requerido, el mock devuelve `OTP_TARGET_REQUIRED`, recuperable, con `REQUEST_PHONE` para WhatsApp/SMS o `REQUEST_EMAIL` para Email. Un teléfono inválido produce `OTP_INVALID_PHONE`/`CORRECT_PHONE`; un email inválido produce `OTP_INVALID_EMAIL`/`CORRECT_EMAIL`.
+
+El teléfono esperado usa `+[código de país][número]`. Se eliminan espacios, guiones y paréntesis, pero nunca se completa automáticamente un código de país ambiguo. El email elimina espacios accidentales en los extremos.
+
+Las UIs Views y Compose envían con `session.getPreferredChannel()`; ya no fuerzan `AUTO`. Los canales son `WHATSAPP`, `SMS`, `EMAIL` y `AUTO`.
+
+Cuando existen ambos targets, la UI muestra ambos enmascarados, por ejemplo `+******5678` y `u***@example.com`. Debe preferirse `maskedTarget` del backend y usar enmascaramiento local solo como respaldo. Nunca muestre, registre, persista o devuelva en resultados targets completos.
+
+Si las reglas runtime permiten `allowUserInput` y `allowTargetUpdate`, una UI podrá solicitar el dato faltante. La captura interna todavía está pendiente de completarse en todas las variantes UI y no se considera funcional en 0.1.0.
+
+### Demo y pruebas manuales
+
+La demo permite introducir `operationId`, `sdkToken`, teléfono/email opcionales y canal preferido. Su escenario actual acepta `2468`, longitud 4, cooldown de 10 segundos y máximo de 3 intentos; `123456` es el valor predeterminado de `MockOtpScenario`, no el código actual de la demo.
+
+| Teléfono | Email | Canal | Resultado esperado |
+|---|---|---|---|
+| Válido | Válido | WhatsApp | Envío simulado correcto |
+| Válido | Válido | Email | Envío simulado correcto |
+| Válido | Vacío | SMS | Envío simulado correcto |
+| Válido | Vacío | Email | `OTP_TARGET_REQUIRED` |
+| Vacío | Válido | Email | Envío simulado correcto |
+| Vacío | Válido | WhatsApp | `OTP_TARGET_REQUIRED` |
+| Vacío | Vacío | WhatsApp | `OTP_TARGET_REQUIRED` |
+| Inválido | Válido | SMS | `OTP_INVALID_PHONE` |
+| Válido | Inválido | Email | `OTP_INVALID_EMAIL` |
+
+Estado técnico reportado para esta actualización: `:otp-core:testDebugUnitTest`, `:otp-ui-views:assembleRelease`, `:otp-ui-compose:assembleRelease` y `:app:assembleDebug` correctos; también se verificó la correspondencia entre declaraciones package y rutas físicas.
+
 ## API Java headless
 
 Los callbacks se entregan en el hilo principal. Cada operación devuelve un

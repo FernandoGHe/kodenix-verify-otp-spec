@@ -20,6 +20,8 @@
 | Código | HTTP | Recuperable | Acción |
 |---|---:|---:|---|
 | OTP_TARGET_REQUIRED | 400 | Sí | Pedir teléfono/email |
+
+En el mock Android, `OTP_TARGET_REQUIRED` usa `REQUEST_PHONE` para WhatsApp/SMS y `REQUEST_EMAIL` para Email. `OTP_INVALID_PHONE` usa `CORRECT_PHONE`; `OTP_INVALID_EMAIL`, `CORRECT_EMAIL`.
 | OTP_INVALID_PHONE | 400 | Sí | Corregir teléfono |
 | OTP_INVALID_EMAIL | 400 | Sí | Corregir email |
 | OTP_CHANNEL_NOT_AVAILABLE | 400 | Sí | Elegir otro canal |

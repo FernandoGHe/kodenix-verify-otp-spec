@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>08 - Máquina de Estados · Kodenix Verify</title><meta name="docs-version" content="127ddd2b27eb" /><link rel="stylesheet" href="../../assets/docs.127ddd2b27eb.css" /></head>
+<title>08 - Máquina de Estados · Kodenix Verify</title><meta name="docs-version" content="3fb59b085d27" /><link rel="stylesheet" href="../../assets/docs.3fb59b085d27.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 <div class="nav-section">admin</div><a class="nav-link" href="../../admin/admin-portal-spec/">Admin Portal Spec</a>
 <a class="nav-link" href="../../admin/tenant-license-configuration/">Tenant License Configuration</a>
@@ -77,5 +77,6 @@ CANCELLED
 </ul>
 <p>Ver <code>diagrams/state-machine.mmd</code>.</p>
 <p>Cancelar un <code>OtpRequest</code> Android es control local y no cambia esta máquina; <code>KodenixOtpClient.cancel</code> sí solicita <code>CANCELLED</code>. El mock reproduce transiciones principales en memoria, pero no representa entrega, facturación o licencia autoritativa.</p>
+<p>En Android, enviar sin el target requerido conserva el flujo en <code>PENDING_TARGET</code> y entrega <code>OTP_TARGET_REQUIRED</code>. La UI no inventa el destino; la captura interna permanece pendiente en 0.1.0.</p>
 
-</article></main></div><script src="../../assets/docs.127ddd2b27eb.js"></script></body></html>
+</article></main></div><script src="../../assets/docs.3fb59b085d27.js"></script></body></html>

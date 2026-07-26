@@ -17,6 +17,8 @@
 
 `target` es opcional. Puede venir:
 
+Al construir un target debe existir al menos teléfono o email; para una sesión sin destino se usa `target: null`. WhatsApp/SMS requieren teléfono y Email requiere correo. El SDK no inventa valores faltantes y el backend mantiene la decisión autoritativa.
+
 - phone + email
 - phone only
 - email only

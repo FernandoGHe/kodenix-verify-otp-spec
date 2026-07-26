@@ -21,6 +21,8 @@ for (const symbol of ["createMock", "MockOtpScenario", "loadConfiguration", "upd
   requireText(guide, new RegExp(`\\b${symbol}\\b`), `símbolo público ${symbol}`);
 for (const concept of ["operationId", "sdkToken", "PRODUCTION", "transporte\\s+HTTP", "pendiente", "X-Kodenix-Package-Name", "DRAFT"])
   requireText(guide, new RegExp(concept, "i"), concept);
+for (const concept of ["REQUEST_PHONE", "REQUEST_EMAIL", "CORRECT_PHONE", "CORRECT_EMAIL", "getPreferredChannel", "2468", "captura interna"])
+  requireText(guide, new RegExp(concept, "i"), `targets/canales: ${concept}`);
 
 for (const file of ["README.md", "MANIFEST.md", guide, "sdk/sdk-android-contract.md"])
   if (/https:\/\/github\.com\/[^\s)"']*android/i.test(read(file))) failures.push(`${file}: enlaza al repositorio Android privado`);
@@ -39,6 +41,8 @@ if (androidRoot) {
     "otp-core/src/main/java/com/kodenix/verify/otp/api/KodenixOtp.java",
     "otp-core/src/main/java/com/kodenix/verify/otp/api/KodenixOtpClient.java",
     "otp-core/src/main/java/com/kodenix/verify/otp/api/MockOtpScenario.java",
+    "otp-core/src/main/java/com/kodenix/verify/otp/api/OtpTarget.java",
+    "otp-core/src/main/java/com/kodenix/verify/otp/internal/MockKodenixOtpClient.java",
     "otp-core-ktx/src/main/java/com/kodenix/verify/otp/ktx/OtpExtensions.kt",
     "otp-ui-views/src/main/java/com/kodenix/verify/otp/ui/views/KodenixOtpActivity.java",
     "otp-ui-compose/src/main/java/com/kodenix/verify/otp/ui/compose/KodenixOtpScreen.kt",
@@ -46,6 +50,8 @@ if (androidRoot) {
   for (const symbol of ["createMock", "loadConfiguration", "updateTarget", "send", "resend", "verify", "cancel", "createIntent", "KodenixOtpScreen"])
     if (!api.includes(`${symbol}(`)) failures.push(`API pública Android: no existe ${symbol}`);
   if (/static\s+KodenixOtpClient\s+create\s*\(/.test(api)) failures.push("API Android: revise la guía, create(...) ya existe");
+  for (const behavior of ["REQUEST_PHONE", "REQUEST_EMAIL", "CORRECT_PHONE", "CORRECT_EMAIL", "getPreferredChannel"])
+    if (!api.includes(behavior)) failures.push(`API pública Android: falta comportamiento ${behavior}`);
 }
 
 const before = new Map(walk(path.join(root, "docs-html")).map(file => [file, digest(file)]));

@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>12 - Catálogo de Errores · Kodenix Verify</title><meta name="docs-version" content="127ddd2b27eb" /><link rel="stylesheet" href="../../assets/docs.127ddd2b27eb.css" /></head>
+<title>12 - Catálogo de Errores · Kodenix Verify</title><meta name="docs-version" content="3fb59b085d27" /><link rel="stylesheet" href="../../assets/docs.3fb59b085d27.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 <div class="nav-section">admin</div><a class="nav-link" href="../../admin/admin-portal-spec/">Admin Portal Spec</a>
 <a class="nav-link" href="../../admin/tenant-license-configuration/">Tenant License Configuration</a>
@@ -134,37 +134,13 @@
 <td align="right">Sí</td>
 <td>Pedir teléfono/email</td>
 </tr>
-<tr>
-<td>OTP_INVALID_PHONE</td>
-<td align="right">400</td>
-<td align="right">Sí</td>
-<td>Corregir teléfono</td>
-</tr>
-<tr>
-<td>OTP_INVALID_EMAIL</td>
-<td align="right">400</td>
-<td align="right">Sí</td>
-<td>Corregir email</td>
-</tr>
-<tr>
-<td>OTP_CHANNEL_NOT_AVAILABLE</td>
-<td align="right">400</td>
-<td align="right">Sí</td>
-<td>Elegir otro canal</td>
-</tr>
-<tr>
-<td>OTP_FALLBACK_TARGET_MISSING</td>
-<td align="right">409</td>
-<td align="right">Sí</td>
-<td>Capturar target alterno</td>
-</tr>
-<tr>
-<td>OTP_NO_FALLBACK_AVAILABLE</td>
-<td align="right">409</td>
-<td align="right">No</td>
-<td>Terminar flujo o reintentar después</td>
-</tr>
 </tbody></table>
+<p>En el mock Android, <code>OTP_TARGET_REQUIRED</code> usa <code>REQUEST_PHONE</code> para WhatsApp/SMS y <code>REQUEST_EMAIL</code> para Email. <code>OTP_INVALID_PHONE</code> usa <code>CORRECT_PHONE</code>; <code>OTP_INVALID_EMAIL</code>, <code>CORRECT_EMAIL</code>.
+| OTP_INVALID_PHONE | 400 | Sí | Corregir teléfono |
+| OTP_INVALID_EMAIL | 400 | Sí | Corregir email |
+| OTP_CHANNEL_NOT_AVAILABLE | 400 | Sí | Elegir otro canal |
+| OTP_FALLBACK_TARGET_MISSING | 409 | Sí | Capturar target alterno |
+| OTP_NO_FALLBACK_AVAILABLE | 409 | No | Terminar flujo o reintentar después |</p>
 <h2>Envío/proveedor</h2>
 <table>
 <thead>
@@ -285,4 +261,4 @@
 <p>Android entrega código, mensaje, recuperabilidad, acción, HTTP opcional y causa en <code>OtpError</code>. No deben mostrarse causas internas ni registrarse tokens, OTP o targets.
 | OTP_OPERATION_NOT_FOUND | 404 | No | Crear operación |</p>
 
-</article></main></div><script src="../../assets/docs.127ddd2b27eb.js"></script></body></html>
+</article></main></div><script src="../../assets/docs.3fb59b085d27.js"></script></body></html>

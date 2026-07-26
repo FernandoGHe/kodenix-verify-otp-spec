@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>01 - Alcance Funcional · Kodenix Verify</title><meta name="docs-version" content="127ddd2b27eb" /><link rel="stylesheet" href="../../assets/docs.127ddd2b27eb.css" /></head>
+<title>01 - Alcance Funcional · Kodenix Verify</title><meta name="docs-version" content="3fb59b085d27" /><link rel="stylesheet" href="../../assets/docs.3fb59b085d27.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 <div class="nav-section">admin</div><a class="nav-link" href="../../admin/admin-portal-spec/">Admin Portal Spec</a>
 <a class="nav-link" href="../../admin/tenant-license-configuration/">Tenant License Configuration</a>
@@ -125,6 +125,7 @@
 <p>La prioridad y disponibilidad real dependen de reglas, licencia, cuotas, target disponible y salud de proveedores. Ver <code>docs/06-fallback-and-channel-availability.md</code>.</p>
 <h2>Modos de inicialización SDK</h2>
 <p>El SDK puede iniciar con ambos datos, solo teléfono, solo email o sin target. El comportamiento exacto depende de <code>allowUserInput</code>, <code>allowTargetUpdate</code>, licencia, reglas y canales permitidos.</p>
+<p>En Android 0.1.0 el mock valida el target por canal y las UIs respetan <code>preferredChannel</code>. La captura interna cuando no existe teléfono ni email continúa pendiente; no forma parte todavía del alcance funcional implementado.</p>
 <table>
 <thead>
 <tr>
@@ -232,4 +233,4 @@
 </tr>
 </tbody></table>
 
-</article></main></div><script src="../../assets/docs.127ddd2b27eb.js"></script></body></html>
+</article></main></div><script src="../../assets/docs.3fb59b085d27.js"></script></body></html>

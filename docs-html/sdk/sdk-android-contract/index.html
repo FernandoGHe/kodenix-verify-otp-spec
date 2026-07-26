@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>SDK Android Contract · Kodenix Verify</title><meta name="docs-version" content="127ddd2b27eb" /><link rel="stylesheet" href="../../assets/docs.127ddd2b27eb.css" /></head>
+<title>SDK Android Contract · Kodenix Verify</title><meta name="docs-version" content="3fb59b085d27" /><link rel="stylesheet" href="../../assets/docs.3fb59b085d27.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 <div class="nav-section">admin</div><a class="nav-link" href="../../admin/admin-portal-spec/">Admin Portal Spec</a>
 <a class="nav-link" href="../../admin/tenant-license-configuration/">Tenant License Configuration</a>
@@ -65,6 +65,7 @@ Las extensiones KTX propagan la cancelación de coroutine al request subyacente.
 <p>El mock es explícito, en memoria, sin persistencia ni servicios externos; cubre
 envío, reenvío, verificación, target enmascarado, código inválido y bloqueo. No es
 una validación autoritativa de licencia.</p>
+<p><code>OtpTarget</code> contiene teléfono, email o ambos; si no existe ninguno, la sesión usa target <code>null</code>. WhatsApp/SMS requieren teléfono y Email requiere correo. El mock responde <code>OTP_TARGET_REQUIRED</code> con <code>REQUEST_PHONE</code> o <code>REQUEST_EMAIL</code>, y valida formatos mediante <code>OTP_INVALID_PHONE</code>/<code>CORRECT_PHONE</code> y <code>OTP_INVALID_EMAIL</code>/<code>CORRECT_EMAIL</code>. Views y Compose respetan <code>OtpSession.getPreferredChannel()</code> y muestran todos los targets solo enmascarados. La captura interna de un target ausente sigue pendiente.</p>
 <h2>UI</h2>
 <p>Views se inicia con <code>KodenixOtpActivity.createIntent</code>; sus extras de resultado no
 incluyen tokens, targets completos ni fingerprints. Compose expone
@@ -80,4 +81,4 @@ completo <code>X-Kodenix-Package-Name</code>, <code>X-Kodenix-Certificate-Sha256
 <code>X-Kodenix-Environment</code>, <code>X-Kodenix-Sdk-Version</code> y <code>X-Kodenix-Platform</code>.</p>
 <p>Consulte la <a href="../docs/android/getting-started.md">guía Android</a>.</p>
 
-</article></main></div><script src="../../assets/docs.127ddd2b27eb.js"></script></body></html>
+</article></main></div><script src="../../assets/docs.3fb59b085d27.js"></script></body></html>

@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Android: integración real y modo mock · Kodenix Verify</title><meta name="docs-version" content="127ddd2b27eb" /><link rel="stylesheet" href="../../../assets/docs.127ddd2b27eb.css" /></head>
+<title>Android: integración real y modo mock · Kodenix Verify</title><meta name="docs-version" content="3fb59b085d27" /><link rel="stylesheet" href="../../../assets/docs.3fb59b085d27.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 <div class="nav-section">admin</div><a class="nav-link" href="../../../admin/admin-portal-spec/">Admin Portal Spec</a>
 <a class="nav-link" href="../../../admin/tenant-license-configuration/">Tenant License Configuration</a>
@@ -154,6 +154,129 @@ KodenixOtpClient client = KodenixOtp.createMock(
 <p>El mock cubre carga de configuración, target enmascarado, <code>send</code>, <code>resend</code>,
 <code>verify</code>, <code>cancel</code>, <code>updateTarget</code>, código inválido y bloqueo por intentos. Rechaza
 <code>OtpEnvironment.PRODUCTION</code>. Nunca use ni recomiende <code>createMock()</code> en producción.</p>
+<h2>Targets y canales en el mock</h2>
+<p><code>OtpTarget(phone, email)</code> admite teléfono, email o ambos; al construirlo al menos uno debe estar presente. Si la sesión no tiene ninguno, pase <code>null</code> como target. El SDK no asume que siempre existe un teléfono ni inventa destinos faltantes.</p>
+<table>
+<thead>
+<tr>
+<th>Teléfono</th>
+<th>Email</th>
+<th>WhatsApp</th>
+<th>SMS</th>
+<th>Email</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Sí</td>
+<td>Sí</td>
+<td>Disponible</td>
+<td>Disponible</td>
+<td>Disponible</td>
+</tr>
+<tr>
+<td>Sí</td>
+<td>No</td>
+<td>Disponible</td>
+<td>Disponible</td>
+<td>Requiere email</td>
+</tr>
+<tr>
+<td>No</td>
+<td>Sí</td>
+<td>Requiere teléfono</td>
+<td>Requiere teléfono</td>
+<td>Disponible</td>
+</tr>
+<tr>
+<td>No</td>
+<td>No</td>
+<td>Requiere teléfono</td>
+<td>Requiere teléfono</td>
+<td>Requiere email</td>
+</tr>
+</tbody></table>
+<p>WhatsApp y SMS requieren teléfono; Email requiere correo. Estas validaciones locales mejoran la experiencia, pero el backend continúa siendo autoritativo.</p>
+<pre><code class="language-kotlin">val both = OtpSession(operationId, sdkToken, OtpTarget(&quot;+525512345678&quot;, &quot;usuario@example.com&quot;), OtpChannel.WHATSAPP, true)
+val phoneOnly = OtpSession(operationId, sdkToken, OtpTarget(&quot;+525512345678&quot;, null), OtpChannel.SMS, true)
+val emailOnly = OtpSession(operationId, sdkToken, OtpTarget(null, &quot;usuario@example.com&quot;), OtpChannel.EMAIL, true)
+val withoutTarget = OtpSession(operationId, sdkToken, null, OtpChannel.EMAIL, true)
+</code></pre>
+<pre><code class="language-java">OtpSession both = new OtpSession(operationId, sdkToken, new OtpTarget(&quot;+525512345678&quot;, &quot;usuario@example.com&quot;), OtpChannel.WHATSAPP, true);
+OtpSession phoneOnly = new OtpSession(operationId, sdkToken, new OtpTarget(&quot;+525512345678&quot;, null), OtpChannel.SMS, true);
+OtpSession emailOnly = new OtpSession(operationId, sdkToken, new OtpTarget(null, &quot;usuario@example.com&quot;), OtpChannel.EMAIL, true);
+</code></pre>
+<p>Si falta el target requerido, el mock devuelve <code>OTP_TARGET_REQUIRED</code>, recuperable, con <code>REQUEST_PHONE</code> para WhatsApp/SMS o <code>REQUEST_EMAIL</code> para Email. Un teléfono inválido produce <code>OTP_INVALID_PHONE</code>/<code>CORRECT_PHONE</code>; un email inválido produce <code>OTP_INVALID_EMAIL</code>/<code>CORRECT_EMAIL</code>.</p>
+<p>El teléfono esperado usa <code>+[código de país][número]</code>. Se eliminan espacios, guiones y paréntesis, pero nunca se completa automáticamente un código de país ambiguo. El email elimina espacios accidentales en los extremos.</p>
+<p>Las UIs Views y Compose envían con <code>session.getPreferredChannel()</code>; ya no fuerzan <code>AUTO</code>. Los canales son <code>WHATSAPP</code>, <code>SMS</code>, <code>EMAIL</code> y <code>AUTO</code>.</p>
+<p>Cuando existen ambos targets, la UI muestra ambos enmascarados, por ejemplo <code>+******5678</code> y <code>u***@example.com</code>. Debe preferirse <code>maskedTarget</code> del backend y usar enmascaramiento local solo como respaldo. Nunca muestre, registre, persista o devuelva en resultados targets completos.</p>
+<p>Si las reglas runtime permiten <code>allowUserInput</code> y <code>allowTargetUpdate</code>, una UI podrá solicitar el dato faltante. La captura interna todavía está pendiente de completarse en todas las variantes UI y no se considera funcional en 0.1.0.</p>
+<h3>Demo y pruebas manuales</h3>
+<p>La demo permite introducir <code>operationId</code>, <code>sdkToken</code>, teléfono/email opcionales y canal preferido. Su escenario actual acepta <code>2468</code>, longitud 4, cooldown de 10 segundos y máximo de 3 intentos; <code>123456</code> es el valor predeterminado de <code>MockOtpScenario</code>, no el código actual de la demo.</p>
+<table>
+<thead>
+<tr>
+<th>Teléfono</th>
+<th>Email</th>
+<th>Canal</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Válido</td>
+<td>Válido</td>
+<td>WhatsApp</td>
+<td>Envío simulado correcto</td>
+</tr>
+<tr>
+<td>Válido</td>
+<td>Válido</td>
+<td>Email</td>
+<td>Envío simulado correcto</td>
+</tr>
+<tr>
+<td>Válido</td>
+<td>Vacío</td>
+<td>SMS</td>
+<td>Envío simulado correcto</td>
+</tr>
+<tr>
+<td>Válido</td>
+<td>Vacío</td>
+<td>Email</td>
+<td><code>OTP_TARGET_REQUIRED</code></td>
+</tr>
+<tr>
+<td>Vacío</td>
+<td>Válido</td>
+<td>Email</td>
+<td>Envío simulado correcto</td>
+</tr>
+<tr>
+<td>Vacío</td>
+<td>Válido</td>
+<td>WhatsApp</td>
+<td><code>OTP_TARGET_REQUIRED</code></td>
+</tr>
+<tr>
+<td>Vacío</td>
+<td>Vacío</td>
+<td>WhatsApp</td>
+<td><code>OTP_TARGET_REQUIRED</code></td>
+</tr>
+<tr>
+<td>Inválido</td>
+<td>Válido</td>
+<td>SMS</td>
+<td><code>OTP_INVALID_PHONE</code></td>
+</tr>
+<tr>
+<td>Válido</td>
+<td>Inválido</td>
+<td>Email</td>
+<td><code>OTP_INVALID_EMAIL</code></td>
+</tr>
+</tbody></table>
+<p>Estado técnico reportado para esta actualización: <code>:otp-core:testDebugUnitTest</code>, <code>:otp-ui-views:assembleRelease</code>, <code>:otp-ui-compose:assembleRelease</code> y <code>:app:assembleDebug</code> correctos; también se verificó la correspondencia entre declaraciones package y rutas físicas.</p>
 <h2>API Java headless</h2>
 <p>Los callbacks se entregan en el hilo principal. Cada operación devuelve un
 <code>OtpRequest</code>; llamar <code>OtpRequest.cancel()</code> cancela esa solicitud local y suprime su
@@ -298,4 +421,4 @@ DISTRIBUTION</strong>. No es una licencia comercial aprobada ni autoriza distrib
 <li><a href="../05-security-specification.md">Seguridad</a></li>
 </ul>
 
-</article></main></div><script src="../../../assets/docs.127ddd2b27eb.js"></script></body></html>
+</article></main></div><script src="../../../assets/docs.3fb59b085d27.js"></script></body></html>

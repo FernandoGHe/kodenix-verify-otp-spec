@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Kodenix Verify OTP · Kodenix Verify</title><meta name="docs-version" content="127ddd2b27eb" /><link rel="stylesheet" href="../assets/docs.127ddd2b27eb.css" /></head>
+<title>Kodenix Verify OTP · Kodenix Verify</title><meta name="docs-version" content="3fb59b085d27" /><link rel="stylesheet" href="../assets/docs.3fb59b085d27.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 <div class="nav-section">admin</div><a class="nav-link" href="../admin/admin-portal-spec/">Admin Portal Spec</a>
 <a class="nav-link" href="../admin/tenant-license-configuration/">Tenant License Configuration</a>
@@ -52,8 +52,8 @@ de <strong>Kodenix Verify OTP</strong>.</p>
 <h2>Arquitectura de repositorios</h2>
 <ul>
 <li>Documentación: <code>kodenix-verify-otp-spec</code> (este repositorio).</li>
-<li>Android SDK: repositorio independiente con <code>otp-core</code>, <code>otp-ui</code> y aplicación
-demo; su integración pública se documenta aquí.</li>
+<li>Android SDK: repositorio privado independiente con <code>otp-core</code>, <code>otp-core-ktx</code>,
+<code>otp-ui-views</code> y <code>otp-ui-compose</code>; su integración pública se documenta aquí.</li>
 <li>iOS y Web tendrán repositorios independientes.</li>
 <li><code>sdk/</code>: contratos comunes y por plataforma.</li>
 <li><code>openapi/</code>: contratos de las APIs.</li>
@@ -142,6 +142,7 @@ este repositorio documental.</p>
 <blockquote>
 <p>Android 0.1.0 ofrece un mock funcional fuera de producción. El transporte HTTP de la nueva API Java está pendiente; esta versión no se presenta como lista para producción.</p>
 </blockquote>
+<p>El target puede contener teléfono, email, ambos o estar ausente. WhatsApp/SMS requieren teléfono y Email requiere correo; Views y Compose respetan el canal preferido de la sesión. La captura interna de un target ausente todavía está pendiente.</p>
 <ul>
 <li><a href="docs-html/sdk/sdk-contract-common/">Common SDK Contract</a></li>
 <li><a href="docs-html/sdk/sdk-web-contract/">Web SDK Contract</a></li>
@@ -186,4 +187,4 @@ ejecutar la validación.</p>
 <h2>Seguridad documental</h2>
 <p>Los valores incluidos en este repositorio son ejemplos de especificación. No forman parte del material autorizado: secretos reales, tokens productivos, credenciales de proveedores, llaves privadas o URLs internas sensibles.</p>
 
-</article></main></div><script src="../assets/docs.127ddd2b27eb.js"></script></body></html>
+</article></main></div><script src="../assets/docs.3fb59b085d27.js"></script></body></html>

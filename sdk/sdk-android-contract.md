@@ -24,6 +24,8 @@ El mock es explícito, en memoria, sin persistencia ni servicios externos; cubre
 envío, reenvío, verificación, target enmascarado, código inválido y bloqueo. No es
 una validación autoritativa de licencia.
 
+`OtpTarget` contiene teléfono, email o ambos; si no existe ninguno, la sesión usa target `null`. WhatsApp/SMS requieren teléfono y Email requiere correo. El mock responde `OTP_TARGET_REQUIRED` con `REQUEST_PHONE` o `REQUEST_EMAIL`, y valida formatos mediante `OTP_INVALID_PHONE`/`CORRECT_PHONE` y `OTP_INVALID_EMAIL`/`CORRECT_EMAIL`. Views y Compose respetan `OtpSession.getPreferredChannel()` y muestran todos los targets solo enmascarados. La captura interna de un target ausente sigue pendiente.
+
 ## UI
 
 Views se inicia con `KodenixOtpActivity.createIntent`; sus extras de resultado no

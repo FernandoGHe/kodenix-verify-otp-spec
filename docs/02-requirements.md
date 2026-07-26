@@ -19,6 +19,8 @@
 | RF-013 | Permitir SDK headless | Alta |
 | RF-014 | Permitir inicialización con phone/email/both/none | Alta |
 | RF-015 | Permitir pantalla inicial de captura cuando no haya target | Alta |
+
+> Estado Android 0.1.0: RF-015 permanece pendiente en las variantes UI. El mock devuelve `OTP_TARGET_REQUIRED` y no inventa teléfono o email.
 | RF-016 | Bloquear operación por intentos fallidos | Alta |
 | RF-017 | Expirar OTP por TTL | Alta |
 | RF-018 | Exponer webhooks de eventos principales | Media |

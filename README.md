@@ -6,8 +6,8 @@ de **Kodenix Verify OTP**.
 ## Arquitectura de repositorios
 
 - Documentación: `kodenix-verify-otp-spec` (este repositorio).
-- Android SDK: repositorio independiente con `otp-core`, `otp-ui` y aplicación
-  demo; su integración pública se documenta aquí.
+- Android SDK: repositorio privado independiente con `otp-core`, `otp-core-ktx`,
+  `otp-ui-views` y `otp-ui-compose`; su integración pública se documenta aquí.
 - iOS y Web tendrán repositorios independientes.
 - `sdk/`: contratos comunes y por plataforma.
 - `openapi/`: contratos de las APIs.
@@ -96,6 +96,8 @@ este repositorio documental.
 ## SDK contracts
 
 > Android 0.1.0 ofrece un mock funcional fuera de producción. El transporte HTTP de la nueva API Java está pendiente; esta versión no se presenta como lista para producción.
+
+El target puede contener teléfono, email, ambos o estar ausente. WhatsApp/SMS requieren teléfono y Email requiere correo; Views y Compose respetan el canal preferido de la sesión. La captura interna de un target ausente todavía está pendiente.
 
 - [Common SDK Contract](docs-html/sdk/sdk-contract-common/)
 - [Web SDK Contract](docs-html/sdk/sdk-web-contract/)

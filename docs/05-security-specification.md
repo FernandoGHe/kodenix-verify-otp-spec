@@ -75,6 +75,8 @@ La identidad planificada incluye package name/applicationId, todos los SHA-256 d
 
 El SDK recibe únicamente `operationId` y `sdkToken` temporal. Nunca se distribuyen en la app API keys privadas, claves privadas, credenciales de servidor/proveedor, contraseñas de keystore ni tokens permanentes. El OpenAPI público aún debe incorporar explícitamente los headers de identidad Android antes del transporte productivo.
 
+Los targets se muestran únicamente enmascarados. Si existe `maskedTarget` del backend se prefiere ese valor; el enmascaramiento local es respaldo. No se registran targets completos ni se incluyen en resultados de Activity.
+
 Validar package y certificate fingerprint.
 
 ### iOS

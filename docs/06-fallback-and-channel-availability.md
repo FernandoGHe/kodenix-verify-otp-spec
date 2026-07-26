@@ -173,3 +173,5 @@ Configuración:
 ## Android 0.1.0
 
 El mock permite probar `send(channel, fallbackAllowed)` y errores de target/canal, pero no consulta proveedores ni ejecuta fallback real. El transporte productivo no debe reintentar automáticamente `send` o `resend`: no son acciones idempotentes y el fallback debe obedecer la política del backend.
+
+El mock requiere teléfono para WhatsApp/SMS y email para Email. Si falta devuelve `OTP_TARGET_REQUIRED` con `REQUEST_PHONE` o `REQUEST_EMAIL`. Views y Compose respetan `OtpSession.getPreferredChannel()`; no fuerzan `AUTO`.

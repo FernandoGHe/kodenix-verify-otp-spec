@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>SDK Contract Common · Kodenix Verify</title><meta name="docs-version" content="127ddd2b27eb" /><link rel="stylesheet" href="../../assets/docs.127ddd2b27eb.css" /></head>
+<title>SDK Contract Common · Kodenix Verify</title><meta name="docs-version" content="3fb59b085d27" /><link rel="stylesheet" href="../../assets/docs.3fb59b085d27.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 <div class="nav-section">admin</div><a class="nav-link" href="../../admin/admin-portal-spec/">Admin Portal Spec</a>
 <a class="nav-link" href="../../admin/tenant-license-configuration/">Tenant License Configuration</a>
@@ -60,6 +60,7 @@
 }
 </code></pre>
 <p><code>target</code> es opcional. Puede venir:</p>
+<p>Al construir un target debe existir al menos teléfono o email; para una sesión sin destino se usa <code>target: null</code>. WhatsApp/SMS requieren teléfono y Email requiere correo. El SDK no inventa valores faltantes y el backend mantiene la decisión autoritativa.</p>
 <ul>
 <li>phone + email</li>
 <li>phone only</li>
@@ -99,4 +100,4 @@
 <h2>Estado de transporte por plataforma</h2>
 <p>La documentación de cada SDK debe distinguir mock, sandbox y producción. En Android 0.1.0 el mock es funcional, pero el transporte HTTP de la nueva API Java está pendiente; no debe inferirse disponibilidad productiva. Cancelar una solicitud local impide su callback; cancelar la operación es una acción de dominio independiente.</p>
 
-</article></main></div><script src="../../assets/docs.127ddd2b27eb.js"></script></body></html>
+</article></main></div><script src="../../assets/docs.3fb59b085d27.js"></script></body></html>

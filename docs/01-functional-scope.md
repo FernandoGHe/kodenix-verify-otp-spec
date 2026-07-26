@@ -55,6 +55,8 @@ La prioridad y disponibilidad real dependen de reglas, licencia, cuotas, target 
 
 El SDK puede iniciar con ambos datos, solo teléfono, solo email o sin target. El comportamiento exacto depende de `allowUserInput`, `allowTargetUpdate`, licencia, reglas y canales permitidos.
 
+En Android 0.1.0 el mock valida el target por canal y las UIs respetan `preferredChannel`. La captura interna cuando no existe teléfono ni email continúa pendiente; no forma parte todavía del alcance funcional implementado.
+
 | Modo | Target recibido | Resultado general |
 |---|---|---|
 | A | phone + email | Permite canales que usen teléfono y email según licencia |
