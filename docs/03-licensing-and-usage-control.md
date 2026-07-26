@@ -2,6 +2,10 @@
 
 ## Objetivo
 
+### Identidad Android
+
+El SDK obtiene del `Context` el applicationId/package efectivo y de `PackageManager` los SHA-256 de certificados instalados; el integrador no puede configurarlos. Se contemplan flavors, firmas legacy, `SigningInfo`, múltiples firmantes e historial de rotación. El backend valida esta identidad junto con ambiente, versión mínima, estado, cuota y canales; no existe bypass local autoritativo.
+
 Evitar que un cliente use una API key o token en cualquier cantidad de sitios, apps o ambientes. Cada uso debe estar asociado a una licencia autorizada.
 
 ## Modelo jerárquico

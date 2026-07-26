@@ -56,4 +56,4 @@ Al construir un target debe existir al menos teléfono o email; para una sesión
 
 ## Estado de transporte por plataforma
 
-La documentación de cada SDK debe distinguir mock, sandbox y producción. En Android 0.1.0 el mock es funcional, pero el transporte HTTP de la nueva API Java está pendiente; no debe inferirse disponibilidad productiva. Cancelar una solicitud local impide su callback; cancelar la operación es una acción de dominio independiente.
+La documentación de cada SDK debe distinguir mock, sandbox y producción. Android 0.1.0 utiliza la misma fachada `create(...)`: la configuración elige mock o transporte HTTP real. Cancelar una solicitud local desconecta el transporte e impide su callback; cancelar la operación es una acción de dominio independiente.

@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>SDK Android Contract · Kodenix Verify</title><meta name="docs-version" content="3fb59b085d27" /><link rel="stylesheet" href="../../assets/docs.3fb59b085d27.css" /></head>
+<title>SDK Android Contract · Kodenix Verify</title><meta name="docs-version" content="c0fbfe83c9e1" /><link rel="stylesheet" href="../../assets/docs.c0fbfe83c9e1.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 <div class="nav-section">admin</div><a class="nav-link" href="../../admin/admin-portal-spec/">Admin Portal Spec</a>
 <a class="nav-link" href="../../admin/tenant-license-configuration/">Tenant License Configuration</a>
@@ -27,7 +27,7 @@
 <a class="nav-link" href="../../docs/14-sla-and-availability/">14 - SLA y Disponibilidad</a>
 <a class="nav-link" href="../../docs/15-release-versioning/">15 - Versionado y Releases</a>
 <a class="nav-link" href="../../docs/16-published-documentation-surface/">Published Documentation Surface</a>
-<a class="nav-link" href="../../docs/android/getting-started/">Android: integración real y modo mock</a>
+<a class="nav-link" href="../../docs/android/getting-started/">Android: inicialización, mocks e identidad de licencia</a>
 <div class="nav-section">Principal</div><a class="nav-link" href="../../MANIFEST/">Manifest - Kodenix Verify OTP</a>
 <div class="nav-section">openapi</div><a class="nav-link" href="../../openapi/README/">OpenAPI Catalog</a>
 <div class="nav-section">operations</div><a class="nav-link" href="../../operations/capacity-planning/">Capacity Planning</a>
@@ -47,38 +47,16 @@
 <div class="nav-section">Principal</div><a class="nav-link" href="../../swagger-ui/README/">Swagger UI</a>
 </div></aside><main class="content"><article class="doc"><div class="top-actions"><a class="btn" href="../../../">Landing</a><a class="btn" href="../../../swagger-ui/">Swagger UI</a></div><div class="crumb">sdk/sdk-android-contract.md</div>
 <h1>SDK Android Contract</h1>
-<h2>Estado 0.1.0</h2>
-<p>La API pública se distribuye en <code>otp-core</code>, <code>otp-core-ktx</code>, <code>otp-ui-views</code> y
-<code>otp-ui-compose</code>. El flujo mock está implementado y validado; el transporte HTTP
-de la nueva API Java está pendiente. <code>KodenixOtp.createMock(...)</code> es solo para
-sandbox/no producción y <code>KodenixOtp.create(...)</code> permanece como contrato
-planificado, no como funcionalidad disponible.</p>
-<p>La aplicación recibe desde el backend integrador <code>operationId</code>, <code>sdkToken</code>
-temporal y, opcionalmente, <code>target</code>, <code>preferredChannel</code> y <code>autoSend</code>. Nunca contiene
-una API key privada.</p>
-<h2>Operaciones públicas</h2>
-<p><code>KodenixOtpClient</code> expone <code>loadConfiguration</code>, <code>updateTarget</code>, dos variantes de
-<code>send</code>, <code>resend</code>, <code>verify</code> y <code>cancel</code>, todas mediante <code>OtpCallback</code> y
-<code>OtpRequest</code>. Los callbacks se entregan en el hilo principal. Cancelar un
-<code>OtpRequest</code> suprime ese callback; <code>KodenixOtpClient.cancel</code> cancela la operación.
-Las extensiones KTX propagan la cancelación de coroutine al request subyacente.</p>
-<p>El mock es explícito, en memoria, sin persistencia ni servicios externos; cubre
-envío, reenvío, verificación, target enmascarado, código inválido y bloqueo. No es
-una validación autoritativa de licencia.</p>
-<p><code>OtpTarget</code> contiene teléfono, email o ambos; si no existe ninguno, la sesión usa target <code>null</code>. WhatsApp/SMS requieren teléfono y Email requiere correo. El mock responde <code>OTP_TARGET_REQUIRED</code> con <code>REQUEST_PHONE</code> o <code>REQUEST_EMAIL</code>, y valida formatos mediante <code>OTP_INVALID_PHONE</code>/<code>CORRECT_PHONE</code> y <code>OTP_INVALID_EMAIL</code>/<code>CORRECT_EMAIL</code>. Views y Compose respetan <code>OtpSession.getPreferredChannel()</code> y muestran todos los targets solo enmascarados. La captura interna de un target ausente sigue pendiente.</p>
-<h2>UI</h2>
-<p>Views se inicia con <code>KodenixOtpActivity.createIntent</code>; sus extras de resultado no
-incluyen tokens, targets completos ni fingerprints. Compose expone
-<code>KodenixOtpScreen(client, onFinished)</code>. Ambas superficies actuales operan con el
-mock de sandbox mientras el transporte real está pendiente.</p>
-<h2>Licencia de aplicación planificada</h2>
-<p>El backend validará package name/applicationId, SHA-256 de certificados,
-plataforma, ambiente y versión del SDK. Deben contemplarse product flavors,
-firmantes múltiples e historial de rotación (<code>SigningInfo</code> desde API 28; firmas
-legacy en API 24–27). El backend es la autoridad.</p>
-<p>Existe una discrepancia pendiente: <code>openapi/otp-public-api.yaml</code> no declara por
-completo <code>X-Kodenix-Package-Name</code>, <code>X-Kodenix-Certificate-Sha256</code>,
-<code>X-Kodenix-Environment</code>, <code>X-Kodenix-Sdk-Version</code> y <code>X-Kodenix-Platform</code>.</p>
+<h2>Inicialización única 0.1.0</h2>
+<p>La única fachada pública es <code>KodenixOtp.create(context, configuration, session)</code>. <code>KodenixOtpConfiguration.isMockEnabled()</code> selecciona el cliente mock o HTTP; no existe un inicializador público separado para mocks. Mock con <code>PRODUCTION</code> se rechaza al construir la configuración.</p>
+<p>La sesión contiene <code>operationId</code>, <code>sdkToken</code> temporal, target opcional, canal preferido y autoSend. El integrador nunca proporciona package, fingerprint, plataforma, versión, keystore o API key privada.</p>
+<h2>Cliente y targets</h2>
+<p><code>KodenixOtpClient</code> expone <code>loadConfiguration</code>, <code>updateTarget</code>, <code>send</code>, <code>resend</code>, <code>verify</code> y <code>cancel</code> mediante <code>OtpCallback</code>/<code>OtpRequest</code>. Callbacks llegan al hilo principal; cancelar el request desconecta HTTP y suprime el callback, mientras <code>client.cancel</code> cancela la operación.</p>
+<p>WhatsApp/SMS requieren teléfono; Email requiere correo. El SDK no inventa targets. Views y Compose respetan <code>getPreferredChannel()</code> y solo muestran targets enmascarados. La captura interna de target ausente continúa pendiente.</p>
+<h2>Transporte e identidad</h2>
+<p>El cliente real usa <code>/v1/otp/config</code>, <code>/target</code>, <code>/send</code>, <code>/resend</code>, <code>/verify</code> y <code>/cancel</code>. Obtiene del <code>Context</code> el applicationId efectivo y del <code>PackageManager</code> los SHA-256 de firmas legacy/API 28+ <code>SigningInfo</code>, incluyendo múltiples firmantes e historial.</p>
+<p>Envía Bearer sdkToken y <code>X-Kodenix-Platform</code>, <code>X-Kodenix-Package-Name</code>, <code>X-Kodenix-Certificate-Sha256</code>, <code>X-Kodenix-Environment</code>, <code>X-Kodenix-Sdk-Version</code>. El backend es autoritativo; no existe bypass o licencia local.</p>
+<p>El OpenAPI público solo declara actualmente Platform y Package-Name; faltan Certificate-Sha256, Environment y Sdk-Version. Requiere actualización contractual explícita.</p>
 <p>Consulte la <a href="../docs/android/getting-started.md">guía Android</a>.</p>
 
-</article></main></div><script src="../../assets/docs.3fb59b085d27.js"></script></body></html>
+</article></main></div><script src="../../assets/docs.c0fbfe83c9e1.js"></script></body></html>

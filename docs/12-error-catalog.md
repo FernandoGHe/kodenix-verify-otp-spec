@@ -11,6 +11,8 @@
 | LICENSE_OVER_QUOTA | 402/429 | No | Comprar/ampliar cuota |
 | LICENSE_ORIGIN_NOT_ALLOWED | 403 | No | Crear licencia para URL |
 | LICENSE_PACKAGE_NOT_ALLOWED | 403 | No | Autorizar package/fingerprint |
+
+`LICENSE_PACKAGE_NOT_ALLOWED` indica que la combinación instalada de package y certificado SHA-256 no está autorizada; no debe resolverse con un bypass local.
 | LICENSE_BUNDLE_NOT_ALLOWED | 403 | No | Autorizar bundle/team |
 | LICENSE_CHANNEL_NOT_ALLOWED | 403 | No | Habilitar canal |
 | LICENSE_ENVIRONMENT_NOT_ALLOWED | 403 | No | Usar un ambiente autorizado |

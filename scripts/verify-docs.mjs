@@ -17,12 +17,13 @@ for (const file of ["README.md", "MANIFEST.md", "docs/16-published-documentation
 const guide = "docs/android/getting-started.md";
 for (const artifact of ["otp-core", "otp-core-ktx", "otp-ui-views", "otp-ui-compose"])
   requireText(guide, new RegExp(`com\\.kodenix\\.verify:${artifact}:0\\.1\\.0`), `coordenada ${artifact}`);
-for (const symbol of ["createMock", "MockOtpScenario", "loadConfiguration", "updateTarget", "send", "resend", "verify", "cancel", "OtpRequest", "KodenixOtpActivity", "KodenixOtpScreen", "onFinished"])
+for (const symbol of ["create", "MockOtpScenario", "mockEnabled", "loadConfiguration", "updateTarget", "send", "resend", "verify", "cancel", "OtpRequest", "KodenixOtpActivity", "KodenixOtpScreen"])
   requireText(guide, new RegExp(`\\b${symbol}\\b`), `símbolo público ${symbol}`);
-for (const concept of ["operationId", "sdkToken", "PRODUCTION", "transporte\\s+HTTP", "pendiente", "X-Kodenix-Package-Name", "DRAFT"])
+for (const concept of ["operationId", "sdkToken", "PRODUCTION", "transporte\\s+HTTP", "X-Kodenix-Package-Name", "X-Kodenix-Certificate-Sha256", "X-Kodenix-Environment", "X-Kodenix-Sdk-Version", "X-Kodenix-Platform", "DRAFT"])
   requireText(guide, new RegExp(concept, "i"), concept);
 for (const concept of ["REQUEST_PHONE", "REQUEST_EMAIL", "CORRECT_PHONE", "CORRECT_EMAIL", "getPreferredChannel", "2468", "captura interna"])
   requireText(guide, new RegExp(concept, "i"), `targets/canales: ${concept}`);
+if (/\bcreateMock\s*\(/.test(read(guide))) failures.push(`${guide}: inicializador mock separado ya no es API pública`);
 
 for (const file of ["README.md", "MANIFEST.md", guide, "sdk/sdk-android-contract.md"])
   if (/https:\/\/github\.com\/[^\s)"']*android/i.test(read(file))) failures.push(`${file}: enlaza al repositorio Android privado`);
@@ -42,16 +43,22 @@ if (androidRoot) {
     "otp-core/src/main/java/com/kodenix/verify/otp/api/KodenixOtpClient.java",
     "otp-core/src/main/java/com/kodenix/verify/otp/api/MockOtpScenario.java",
     "otp-core/src/main/java/com/kodenix/verify/otp/api/OtpTarget.java",
+    "otp-core/src/main/java/com/kodenix/verify/otp/api/KodenixOtpConfiguration.java",
     "otp-core/src/main/java/com/kodenix/verify/otp/internal/MockKodenixOtpClient.java",
+    "otp-core/src/main/java/com/kodenix/verify/otp/internal/HttpKodenixOtpClient.java",
+    "otp-core/src/main/java/com/kodenix/verify/otp/internal/AndroidAppIdentity.java",
+    "otp-core/src/main/java/com/kodenix/verify/otp/internal/UrlConnectionOtpTransport.java",
     "otp-core-ktx/src/main/java/com/kodenix/verify/otp/ktx/OtpExtensions.kt",
     "otp-ui-views/src/main/java/com/kodenix/verify/otp/ui/views/KodenixOtpActivity.java",
     "otp-ui-compose/src/main/java/com/kodenix/verify/otp/ui/compose/KodenixOtpScreen.kt",
   ].map(androidRead).join("\n");
-  for (const symbol of ["createMock", "loadConfiguration", "updateTarget", "send", "resend", "verify", "cancel", "createIntent", "KodenixOtpScreen"])
+  for (const symbol of ["create", "isMockEnabled", "loadConfiguration", "updateTarget", "send", "resend", "verify", "cancel", "createIntent", "KodenixOtpScreen"])
     if (!api.includes(`${symbol}(`)) failures.push(`API pública Android: no existe ${symbol}`);
-  if (/static\s+KodenixOtpClient\s+create\s*\(/.test(api)) failures.push("API Android: revise la guía, create(...) ya existe");
+  if (/static\s+KodenixOtpClient\s+createMock\s*\(/.test(api)) failures.push("API Android: createMock(...) reapareció; revise la guía");
   for (const behavior of ["REQUEST_PHONE", "REQUEST_EMAIL", "CORRECT_PHONE", "CORRECT_EMAIL", "getPreferredChannel"])
     if (!api.includes(behavior)) failures.push(`API pública Android: falta comportamiento ${behavior}`);
+  for (const header of ["X-Kodenix-Platform", "X-Kodenix-Package-Name", "X-Kodenix-Certificate-Sha256", "X-Kodenix-Environment", "X-Kodenix-Sdk-Version"])
+    if (!api.includes(header)) failures.push(`Transporte Android: falta header ${header}`);
 }
 
 const before = new Map(walk(path.join(root, "docs-html")).map(file => [file, digest(file)]));

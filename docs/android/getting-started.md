@@ -1,307 +1,179 @@
-# Android: integración real y modo mock
+# Android: inicialización, mocks e identidad de licencia
 
-Guía pública de **Kodenix Verify OTP Android 0.1.0**. La versión actual permite
-integrar y validar de extremo a extremo un flujo mock en memoria. El transporte
-HTTP para backend Kodenix todavía no está conectado a la nueva API Java; por
-tanto, la integración no-mock descrita al final es un contrato planificado y no
-debe considerarse lista para producción.
+Guía pública de **Kodenix Verify OTP Android 0.1.0**. El SDK expone una única fachada: `KodenixOtp.create(...)`. La misma llamada crea el transporte HTTP real o el cliente mock según `KodenixOtpConfiguration`; no existe un inicializador público separado para mocks.
 
-## Requisitos
+## Artefactos y requisitos
 
-- Android API 24 o posterior (`minSdk 24`).
-- Proyecto AndroidX y Java 8 o posterior.
-- Kotlin es opcional para `otp-core` y `otp-ui-views`.
-- Kotlin y Jetpack Compose son obligatorios para `otp-ui-compose`.
+| Artefacto | Java legacy | Kotlin moderno | Compose |
+|---|---:|---:|---:|
+| `com.kodenix.verify:otp-core:0.1.0` | Sí | Sí | No |
+| `com.kodenix.verify:otp-core-ktx:0.1.0` | No requerido | Sí | No |
+| `com.kodenix.verify:otp-ui-views:0.1.0` | Sí | Sí | No |
+| `com.kodenix.verify:otp-ui-compose:0.1.0` | No | Sí | Sí |
 
-## Artefactos 0.1.0
+Requiere Android API 24+, AndroidX y Java 8+. Kotlin es opcional salvo para KTX/Compose; Compose requiere Jetpack Compose.
 
-| Artefacto | Java legacy | Kotlin moderno | Compose | Uso |
-|---|---:|---:|---:|---|
-| `otp-core` | Sí | Sí | No | API Java headless, modelos y flujo mock. |
-| `otp-core-ktx` | No requerido | Sí | No | Extensiones `suspend` sobre `otp-core`. |
-| `otp-ui-views` | Sí | Sí | No | Flujo visual basado en Views/Activity. |
-| `otp-ui-compose` | No | Sí | Sí | Pantalla Compose reutilizable. |
+## Sesión del integrador
 
-### Java con Views
-
-```kotlin
-dependencies {
-    implementation("com.kodenix.verify:otp-core:0.1.0")
-    implementation("com.kodenix.verify:otp-ui-views:0.1.0")
-}
-```
-
-### Kotlin sin Compose
-
-```kotlin
-dependencies {
-    implementation("com.kodenix.verify:otp-core:0.1.0")
-    implementation("com.kodenix.verify:otp-core-ktx:0.1.0")
-}
-```
-
-### Kotlin con Compose
-
-```kotlin
-dependencies {
-    implementation("com.kodenix.verify:otp-core-ktx:0.1.0")
-    implementation("com.kodenix.verify:otp-ui-compose:0.1.0")
-}
-```
-
-## Sesión y seguridad
-
-El backend del integrador crea la operación y entrega a la app solamente
-`operationId` y un `sdkToken` temporal. También puede entregar `target`,
-`preferredChannel` y `autoSend`.
+El backend integrador entrega únicamente `operationId`, `sdkToken` temporal, target opcional, `preferredChannel` y `autoSend`.
 
 ```java
-OtpSession minimal = new OtpSession(operationId, sdkToken);
-
-OtpSession complete = new OtpSession(
-    operationId,
-    sdkToken,
-    new OtpTarget("+525512345678", null), // opcional
-    OtpChannel.WHATSAPP,
-    true
+OtpSession session = new OtpSession(
+    operationId, sdkToken, target, OtpChannel.EMAIL, true
 );
 ```
 
-Nunca incluya en una app `X-Kodenix-Api-Key`, API keys privadas, credenciales de
-servidor o proveedores, contraseñas de keystore ni tokens permanentes. No persista
-ni registre el `sdkToken`, el OTP o targets completos.
+El integrador no proporciona applicationId/package name, fingerprints, plataforma, versión del SDK, credenciales de keystore ni API keys privadas. Nunca incluya `X-Kodenix-Api-Key`, secretos server-to-server o tokens permanentes en Android.
 
-## Modo mock funcional
+## Inicialización productiva
 
-El mock se selecciona explícitamente con `createMock`, funciona solo fuera de
-`PRODUCTION`, no usa servicios externos ni persistencia y mantiene su estado en
-memoria. No valida licencias de forma autoritativa. El código aceptado por defecto
-es `123456`.
+```kotlin
+val configuration = KodenixOtpConfiguration(OtpEnvironment.PRODUCTION)
+val session = OtpSession(
+    operationId, sdkToken,
+    OtpTarget("+525512345678", "usuario@example.com"),
+    OtpChannel.WHATSAPP, true,
+)
+val client = KodenixOtp.create(context, configuration, session)
+```
 
 ```java
 KodenixOtpConfiguration configuration =
-    new KodenixOtpConfiguration(OtpEnvironment.SANDBOX);
-KodenixOtpClient client = KodenixOtp.createMock(
-    context, configuration, new OtpSession(operationId, sdkToken)
+    new KodenixOtpConfiguration(OtpEnvironment.PRODUCTION);
+OtpSession session = new OtpSession(
+    operationId, sdkToken,
+    new OtpTarget("+525512345678", "usuario@example.com"),
+    OtpChannel.WHATSAPP, true
 );
+KodenixOtpClient client = KodenixOtp.create(context, configuration, session);
 ```
 
-Un escenario permite códigos de 4, 6 u 8 dígitos, cooldown y máximo de intentos:
+Con `mockEnabled == false`, `create()` utiliza el transporte HTTP real.
+
+## Inicialización mock
+
+El mock se activa exclusivamente en configuración y conserva la misma API pública:
+
+```kotlin
+val scenario = MockOtpScenario("2468", 4, 10, 3)
+val configuration = KodenixOtpConfiguration(
+    OtpEnvironment.SANDBOX, true, scenario,
+)
+val session = OtpSession(
+    "demo-operation", "demo-token",
+    OtpTarget("+525512345678", "usuario@example.com"),
+    OtpChannel.WHATSAPP, true,
+)
+val client = KodenixOtp.create(context, configuration, session)
+```
 
 ```java
-MockOtpScenario scenario = new MockOtpScenario("246810", 6, 30, 3);
-KodenixOtpClient client = KodenixOtp.createMock(
-    context, configuration, session, scenario
-);
+MockOtpScenario scenario = new MockOtpScenario("2468", 4, 10, 3);
+KodenixOtpConfiguration configuration =
+    new KodenixOtpConfiguration(OtpEnvironment.SANDBOX, true, scenario);
+KodenixOtpClient client = KodenixOtp.create(context, configuration, session);
 ```
 
-El mock cubre carga de configuración, target enmascarado, `send`, `resend`,
-`verify`, `cancel`, `updateTarget`, código inválido y bloqueo por intentos. Rechaza
-`OtpEnvironment.PRODUCTION`. Nunca use ni recomiende `createMock()` en producción.
+Activar mock con `OtpEnvironment.PRODUCTION` falla inmediatamente. El mock funciona en memoria, no llama al backend, no envía mensajes reales, no persiste OTP y permite simular longitud, cooldown e intentos. Úselo solo en desarrollo y pruebas.
 
-## Targets y canales en el mock
+## Targets y canales
 
-`OtpTarget(phone, email)` admite teléfono, email o ambos; al construirlo al menos uno debe estar presente. Si la sesión no tiene ninguno, pase `null` como target. El SDK no asume que siempre existe un teléfono ni inventa destinos faltantes.
+`OtpTarget(phone, email)` admite ambos o uno; no construya uno con ambos vacíos. Para una sesión sin target use `null`.
 
 | Teléfono | Email | WhatsApp | SMS | Email |
 |---|---|---|---|---|
 | Sí | Sí | Disponible | Disponible | Disponible |
-| Sí | No | Disponible | Disponible | Requiere email |
-| No | Sí | Requiere teléfono | Requiere teléfono | Disponible |
-| No | No | Requiere teléfono | Requiere teléfono | Requiere email |
+| Sí | No | Disponible | Disponible | `OTP_TARGET_REQUIRED` |
+| No | Sí | `OTP_TARGET_REQUIRED` | `OTP_TARGET_REQUIRED` | Disponible |
+| No | No | `OTP_TARGET_REQUIRED` | `OTP_TARGET_REQUIRED` | `OTP_TARGET_REQUIRED` |
 
-WhatsApp y SMS requieren teléfono; Email requiere correo. Estas validaciones locales mejoran la experiencia, pero el backend continúa siendo autoritativo.
+Las acciones son `REQUEST_PHONE`, `REQUEST_EMAIL`, `CORRECT_PHONE` y `CORRECT_EMAIL`. Views y Compose respetan `session.getPreferredChannel()`; los canales son `WHATSAPP`, `SMS`, `EMAIL` y `AUTO`. El backend permanece autoritativo.
+
+El teléfono esperado usa `+[código de país][número]`; se eliminan espacios, guiones y paréntesis sin inventar códigos de país. El email elimina espacios exteriores. Las UIs muestran ambos targets enmascarados —por ejemplo `+******5678` y `u***@example.com`—, prefieren `maskedTarget` del backend y no devuelven targets completos.
+
+La captura interna de target cuando la sesión inicia sin teléfono/email sigue pendiente en todas las variantes UI.
+
+## API headless, threading y cancelación
+
+`KodenixOtpClient` expone `loadConfiguration`, `updateTarget`, `send`, `resend`, `verify` y `cancel`. El transporte ejecuta HTTP fuera del hilo principal y entrega callbacks en el hilo principal.
+
+```java
+OtpRequest request = client.send(OtpChannel.WHATSAPP, callback);
+request.cancel();       // desconecta la solicitud HTTP y suprime el callback
+client.cancel(callback); // cancela la operación OTP en backend
+```
+
+Cancelar una solicitud no debe retener una referencia fuerte a la pantalla. En KTX, cancelar la coroutine cancela el `OtpRequest` subyacente.
+
+## Views y Compose
+
+Views se inicia con `KodenixOtpActivity.createIntent(context, configuration, session)` y devuelve solo estado, operationId, verificationId y error recuperable/acción. No devuelve token, OTP, target completo o fingerprint.
+
+Compose usa la misma instancia:
 
 ```kotlin
-val both = OtpSession(operationId, sdkToken, OtpTarget("+525512345678", "usuario@example.com"), OtpChannel.WHATSAPP, true)
-val phoneOnly = OtpSession(operationId, sdkToken, OtpTarget("+525512345678", null), OtpChannel.SMS, true)
-val emailOnly = OtpSession(operationId, sdkToken, OtpTarget(null, "usuario@example.com"), OtpChannel.EMAIL, true)
-val withoutTarget = OtpSession(operationId, sdkToken, null, OtpChannel.EMAIL, true)
+KodenixOtpScreen(client = client) { result ->
+    if (result.isVerified) continueIntegratorFlow()
+}
 ```
 
-```java
-OtpSession both = new OtpSession(operationId, sdkToken, new OtpTarget("+525512345678", "usuario@example.com"), OtpChannel.WHATSAPP, true);
-OtpSession phoneOnly = new OtpSession(operationId, sdkToken, new OtpTarget("+525512345678", null), OtpChannel.SMS, true);
-OtpSession emailOnly = new OtpSession(operationId, sdkToken, new OtpTarget(null, "usuario@example.com"), OtpChannel.EMAIL, true);
+Ambas UIs soportan longitud dinámica, verificación automática, progreso, errores, cooldown, reenvío, cancelación y target enmascarado.
+
+## Identidad Android y licencia
+
+El SDK obtiene obligatoriamente la identidad de la app instalada; no es configuración ni parte de `OtpSession`, y el integrador no puede sobrescribirla. Obtiene el package/applicationId efectivo desde el `Context` y los certificados mediante `PackageManager`.
+
+- API 24–27: firmas legacy.
+- API 28+: `SigningInfo`.
+- Incluye múltiples firmantes, historial y rotación.
+- Calcula SHA-256 de los certificados instalados.
+- Usa el applicationId efectivo de cada product flavor, sin package hardcodeado.
+
+El transporte envía internamente:
+
+```http
+Authorization: Bearer {sdkToken}
+X-Kodenix-Platform: android
+X-Kodenix-Package-Name: {packageName efectivo}
+X-Kodenix-Certificate-Sha256: {fingerprint instalado}
+X-Kodenix-Environment: {environment}
+X-Kodenix-Sdk-Version: {sdkVersion}
 ```
 
-Si falta el target requerido, el mock devuelve `OTP_TARGET_REQUIRED`, recuperable, con `REQUEST_PHONE` para WhatsApp/SMS o `REQUEST_EMAIL` para Email. Un teléfono inválido produce `OTP_INVALID_PHONE`/`CORRECT_PHONE`; un email inválido produce `OTP_INVALID_EMAIL`/`CORRECT_EMAIL`.
+No se solicitan al integrador, no se devuelven en UI, no se guardan en preferencias y no deben registrarse completos en producción. El backend valida package/certificado, ambiente, versión mínima, licencia, cuota y canales. El SDK no implementa bypass local, lista autoritativa de packages, códigos maestros, validación solo con BuildConfig, credenciales privadas ni lectura de JKS.
 
-El teléfono esperado usa `+[código de país][número]`. Se eliminan espacios, guiones y paréntesis, pero nunca se completa automáticamente un código de país ambiguo. El email elimina espacios accidentales en los extremos.
+Cada applicationId de flavors —por ejemplo `com.cliente.app.sandbox` y `com.cliente.app`— debe estar autorizado por la licencia correspondiente.
 
-Las UIs Views y Compose envían con `session.getPreferredChannel()`; ya no fuerzan `AUTO`. Los canales son `WHATSAPP`, `SMS`, `EMAIL` y `AUTO`.
+## Operaciones HTTP móviles
 
-Cuando existen ambos targets, la UI muestra ambos enmascarados, por ejemplo `+******5678` y `u***@example.com`. Debe preferirse `maskedTarget` del backend y usar enmascaramiento local solo como respaldo. Nunca muestre, registre, persista o devuelva en resultados targets completos.
-
-Si las reglas runtime permiten `allowUserInput` y `allowTargetUpdate`, una UI podrá solicitar el dato faltante. La captura interna todavía está pendiente de completarse en todas las variantes UI y no se considera funcional en 0.1.0.
-
-### Demo y pruebas manuales
-
-La demo permite introducir `operationId`, `sdkToken`, teléfono/email opcionales y canal preferido. Su escenario actual acepta `2468`, longitud 4, cooldown de 10 segundos y máximo de 3 intentos; `123456` es el valor predeterminado de `MockOtpScenario`, no el código actual de la demo.
-
-| Teléfono | Email | Canal | Resultado esperado |
-|---|---|---|---|
-| Válido | Válido | WhatsApp | Envío simulado correcto |
-| Válido | Válido | Email | Envío simulado correcto |
-| Válido | Vacío | SMS | Envío simulado correcto |
-| Válido | Vacío | Email | `OTP_TARGET_REQUIRED` |
-| Vacío | Válido | Email | Envío simulado correcto |
-| Vacío | Válido | WhatsApp | `OTP_TARGET_REQUIRED` |
-| Vacío | Vacío | WhatsApp | `OTP_TARGET_REQUIRED` |
-| Inválido | Válido | SMS | `OTP_INVALID_PHONE` |
-| Válido | Inválido | Email | `OTP_INVALID_EMAIL` |
-
-Estado técnico reportado para esta actualización: `:otp-core:testDebugUnitTest`, `:otp-ui-views:assembleRelease`, `:otp-ui-compose:assembleRelease` y `:app:assembleDebug` correctos; también se verificó la correspondencia entre declaraciones package y rutas físicas.
-
-## API Java headless
-
-Los callbacks se entregan en el hilo principal. Cada operación devuelve un
-`OtpRequest`; llamar `OtpRequest.cancel()` cancela esa solicitud local y suprime su
-callback. Es distinto de `client.cancel(...)`, que cancela la operación OTP.
-
-```java
-OtpRequest load = client.loadConfiguration(new OtpCallback<OtpRuntimeConfiguration>() {
-    @Override public void onSuccess(OtpRuntimeConfiguration value) {
-        int otpLength = value.getRules().getOtpLength();
-    }
-    @Override public void onError(OtpError error) { handle(error); }
-});
-
-client.updateTarget(new OtpTarget(null, "cliente@example.com"), callback);
-client.send(OtpChannel.AUTO, callback);
-client.send(OtpChannel.WHATSAPP, false, callback); // sin fallback
-client.resend(callback);
-client.verify(code, challengeId, callback); // valide longitud desde configuración
-```
-
-Cancelaciones:
-
-```java
-load.cancel();                  // solo la solicitud local; no llega callback
-client.cancel(operationCallback); // cancela la operación OTP
-```
-
-Servicios de `KodenixOtpClient`:
-
-| Servicio | Resultado |
+| Método | Ruta |
 |---|---|
-| `loadConfiguration(callback)` | Reglas, canales y textos. |
-| `updateTarget(target, callback)` | Actualiza teléfono/email permitido. |
-| `send(channel, callback)` | Envía con fallback permitido. |
-| `send(channel, fallbackAllowed, callback)` | Control explícito de fallback. |
-| `resend(callback)` | Reenvía respetando cooldown. |
-| `verify(code, challengeId, callback)` | Verifica con longitud dinámica. |
-| `cancel(callback)` | Cancela la operación. |
+| GET | `/v1/otp/config` |
+| PATCH | `/v1/otp/target` |
+| POST | `/v1/otp/send` |
+| POST | `/v1/otp/resend` |
+| POST | `/v1/otp/verify` |
+| POST | `/v1/otp/cancel` |
 
-## Kotlin KTX headless
+No expone creación de operaciones, estado/eventos administrativos, administración o analytics privados: pertenecen al backend integrador.
 
-`otp-core-ktx` adapta callbacks a coroutines. La cancelación de la coroutine
-cancela el `OtpRequest` subyacente.
+## Errores y estado validado
 
-```kotlin
-try {
-    val runtime = client.loadConfigurationAwait()
-    val sent = client.send(OtpChannel.AUTO, fallbackAllowed = true)
-    val verified = client.verify(code, sent.challengeId)
-    client.resendAwait()
-    client.cancelAwait()
-} catch (error: OtpException) {
-    handle(error.error)
-}
-```
+Trate como mínimo los errores `LICENSE_NOT_FOUND`, `LICENSE_EXPIRED`, `LICENSE_SUSPENDED`, `LICENSE_REVOKED`, `LICENSE_OVER_QUOTA`, `LICENSE_PACKAGE_NOT_ALLOWED`, `LICENSE_CHANNEL_NOT_ALLOWED`, `LICENSE_ENVIRONMENT_NOT_ALLOWED`, `OTP_NETWORK_ERROR` y `OTP_SDK_ERROR`. `LICENSE_PACKAGE_NOT_ALLOWED` significa que la combinación instalada de package y certificado no está autorizada.
 
-## UI con Views
+Se reportaron correctos `:otp-core:testDebugUnitTest`, `:otp-core:assembleRelease`, `:otp-ui-views:assembleRelease`, `:otp-ui-compose:assembleRelease` y `:app:assembleDebug`.
 
-```java
-Intent intent = KodenixOtpActivity.createIntent(context, configuration, session);
-launcher.launch(intent);
-```
+## Discrepancia OpenAPI
 
-Lea el resultado mediante `KodenixOtpResult.EXTRA_STATUS`,
-`EXTRA_OPERATION_ID`, `EXTRA_VERIFICATION_ID`, `EXTRA_ERROR_CODE`,
-`EXTRA_RECOVERABLE` y `EXTRA_ACTION`. La UI no devuelve secretos, targets
-completos ni huellas de certificado. Incluye longitud dinámica, autoavance,
-accesibilidad, feedback de error/éxito, cooldown y reenvío.
-
-En 0.1.0 `KodenixOtpActivity` crea internamente un cliente mock y rechaza
-`PRODUCTION`; es una experiencia sandbox mientras se conecta el transporte real.
-
-## UI con Compose
-
-```kotlin
-val client = KodenixOtp.createMock(context, configuration, session)
-
-KodenixOtpScreen(
-    client = client,
-    onFinished = { result -> finishOtpFlow(result.operationId) },
-)
-```
-
-La pantalla carga reglas, envía, muestra el target enmascarado, adapta la longitud
-del OTP, verifica automáticamente al completarse, controla cooldown/reenvío y
-presenta estados de error, éxito y cancelación.
-
-## Errores
-
-Trate `OtpError.getCode()`, `isRecoverable()`, `getAction()` y
-`getHttpStatus()` sin mostrar detalles internos:
-
-```java
-private void handle(OtpError error) {
-    if (error.isRecoverable()) showRetry(error.getCode());
-    else finishWithError(error.getCode(), error.getAction());
-}
-```
-
-El catálogo incluye errores de licencia, target, canal, fallback, proveedor,
-entrega, rate limit, código inválido/expirado, máximo de intentos, operación y red.
-
-## Contrato no-mock planificado
-
-`KodenixOtp.create(...)` **no forma parte de la API funcional 0.1.0**. Cuando se
-implemente, el transporte deberá ejecutar HTTP fuera del hilo principal, entregar
-callbacks en el hilo principal, autenticar con `Authorization: Bearer <sdkToken>`
-y enviar la identidad Android requerida. No deberá reintentar automáticamente
-`send` o `resend`, persistir/loguear datos sensibles ni exponer endpoints internos.
-Deberá propagar errores de red y servidor mediante `OtpError`.
-
-El uso previsto, que no compila contra la fachada 0.1.0 actual, será:
-
-```java
-KodenixOtpClient client = KodenixOtp.create(
-    context,
-    new KodenixOtpConfiguration(OtpEnvironment.PRODUCTION),
-    new OtpSession(operationId, sdkToken, target, OtpChannel.WHATSAPP, true)
-);
-```
-
-## Identidad y licenciamiento Android planificados
-
-El backend será la autoridad. La identidad esperada combina:
-
-- package name/applicationId;
-- SHA-256 de los certificados de firma;
-- plataforma, ambiente y versión del SDK.
-
-Cada product flavor y ambiente debe registrar sus valores autorizados. En API
-24–27 se consideran las firmas legacy; en API 28+ se usa `SigningInfo`, incluyendo
-múltiples firmantes e historial para rotación de certificados. La recolección y
-envío automático de esta identidad pertenece al transporte real pendiente.
-
-El OpenAPI actual aún no declara completamente los headers
-`X-Kodenix-Package-Name`, `X-Kodenix-Certificate-Sha256`,
-`X-Kodenix-Environment`, `X-Kodenix-Sdk-Version` y `X-Kodenix-Platform`. Esta
-discrepancia debe resolverse en `openapi/otp-public-api.yaml` antes de conectar el
-transporte; esta actualización documental no cambia silenciosamente el contrato.
+La implementación envía los cinco headers Android. `openapi/otp-public-api.yaml` declara actualmente `X-Kodenix-Platform` y `X-Kodenix-Package-Name`, pero faltan `X-Kodenix-Certificate-Sha256`, `X-Kodenix-Environment` y `X-Kodenix-Sdk-Version`. Deben añadirse mediante un cambio contractual explícito; esta actualización no modifica silenciosamente el OpenAPI.
 
 ## Estado legal
 
-La licencia del SDK Android está marcada **DRAFT — LEGAL REVIEW REQUIRED BEFORE
-DISTRIBUTION**. No es una licencia comercial aprobada ni autoriza distribución.
+La licencia del SDK Android continúa marcada **DRAFT — LEGAL REVIEW REQUIRED BEFORE DISTRIBUTION**; no es una licencia comercial aprobada.
 
 ## Referencias
 
-- [Contrato común de SDK](../../sdk/sdk-contract-common.md)
+- [Contrato común](../../sdk/sdk-contract-common.md)
 - [Contrato Android](../../sdk/sdk-android-contract.md)
-- [Catálogo de errores](../12-error-catalog.md)
 - [Seguridad](../05-security-specification.md)
+- [Catálogo de errores](../12-error-catalog.md)

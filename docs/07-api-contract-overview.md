@@ -1,5 +1,9 @@
 # 07 - API Contract Overview
 
+## Cliente móvil Android
+
+Android usa Bearer `sdkToken` para GET `/v1/otp/config`, PATCH `/v1/otp/target` y POST `/v1/otp/send`, `/resend`, `/verify`, `/cancel`. Envía internamente Platform, Package-Name, Certificate-Sha256, Environment y Sdk-Version. El OpenAPI actual solo declara explícitamente los dos primeros; los tres restantes son una discrepancia contractual pendiente.
+
 ## Swagger incluido
 
 Este paquete incluye los siguientes contratos OpenAPI:

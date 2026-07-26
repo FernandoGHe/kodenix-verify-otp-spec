@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Kodenix Verify OTP · Kodenix Verify</title><meta name="docs-version" content="3fb59b085d27" /><link rel="stylesheet" href="../assets/docs.3fb59b085d27.css" /></head>
+<title>Kodenix Verify OTP · Kodenix Verify</title><meta name="docs-version" content="c0fbfe83c9e1" /><link rel="stylesheet" href="../assets/docs.c0fbfe83c9e1.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 <div class="nav-section">admin</div><a class="nav-link" href="../admin/admin-portal-spec/">Admin Portal Spec</a>
 <a class="nav-link" href="../admin/tenant-license-configuration/">Tenant License Configuration</a>
@@ -27,7 +27,7 @@
 <a class="nav-link" href="../docs/14-sla-and-availability/">14 - SLA y Disponibilidad</a>
 <a class="nav-link" href="../docs/15-release-versioning/">15 - Versionado y Releases</a>
 <a class="nav-link" href="../docs/16-published-documentation-surface/">Published Documentation Surface</a>
-<a class="nav-link" href="../docs/android/getting-started/">Android: integración real y modo mock</a>
+<a class="nav-link" href="../docs/android/getting-started/">Android: inicialización, mocks e identidad de licencia</a>
 <div class="nav-section">Principal</div><a class="nav-link" href="../MANIFEST/">Manifest - Kodenix Verify OTP</a>
 <div class="nav-section">openapi</div><a class="nav-link" href="../openapi/README/">OpenAPI Catalog</a>
 <div class="nav-section">operations</div><a class="nav-link" href="../operations/capacity-planning/">Capacity Planning</a>
@@ -140,7 +140,7 @@ este repositorio documental.</p>
 </ul>
 <h2>SDK contracts</h2>
 <blockquote>
-<p>Android 0.1.0 ofrece un mock funcional fuera de producción. El transporte HTTP de la nueva API Java está pendiente; esta versión no se presenta como lista para producción.</p>
+<p>Android 0.1.0 usa una única fachada <code>KodenixOtp.create(...)</code>: configuración normal selecciona el transporte HTTP real y <code>mockEnabled</code> selecciona el mock fuera de producción. No existe un método público separado para mocks.</p>
 </blockquote>
 <p>El target puede contener teléfono, email, ambos o estar ausente. WhatsApp/SMS requieren teléfono y Email requiere correo; Views y Compose respetan el canal preferido de la sesión. La captura interna de un target ausente todavía está pendiente.</p>
 <ul>
@@ -187,4 +187,4 @@ ejecutar la validación.</p>
 <h2>Seguridad documental</h2>
 <p>Los valores incluidos en este repositorio son ejemplos de especificación. No forman parte del material autorizado: secretos reales, tokens productivos, credenciales de proveedores, llaves privadas o URLs internas sensibles.</p>
 
-</article></main></div><script src="../assets/docs.3fb59b085d27.js"></script></body></html>
+</article></main></div><script src="../assets/docs.c0fbfe83c9e1.js"></script></body></html>

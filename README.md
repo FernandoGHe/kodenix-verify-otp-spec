@@ -95,7 +95,7 @@ este repositorio documental.
 
 ## SDK contracts
 
-> Android 0.1.0 ofrece un mock funcional fuera de producción. El transporte HTTP de la nueva API Java está pendiente; esta versión no se presenta como lista para producción.
+> Android 0.1.0 usa una única fachada `KodenixOtp.create(...)`: configuración normal selecciona el transporte HTTP real y `mockEnabled` selecciona el mock fuera de producción. No existe un método público separado para mocks.
 
 El target puede contener teléfono, email, ambos o estar ausente. WhatsApp/SMS requieren teléfono y Email requiere correo; Views y Compose respetan el canal preferido de la sesión. La captura interna de un target ausente todavía está pendiente.
 

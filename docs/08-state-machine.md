@@ -35,4 +35,6 @@ Ver `diagrams/state-machine.mmd`.
 
 Cancelar un `OtpRequest` Android es control local y no cambia esta máquina; `KodenixOtpClient.cancel` sí solicita `CANCELLED`. El mock reproduce transiciones principales en memoria, pero no representa entrega, facturación o licencia autoritativa.
 
+En transporte HTTP, cancelar el request desconecta la conexión activa y suprime el callback; no equivale a la transición de dominio `CANCELLED`.
+
 En Android, enviar sin el target requerido conserva el flujo en `PENDING_TARGET` y entrega `OTP_TARGET_REQUIRED`. La UI no inventa el destino; la captura interna permanece pendiente en 0.1.0.
