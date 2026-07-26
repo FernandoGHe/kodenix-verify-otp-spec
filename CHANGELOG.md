@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Documentadas dependencias transitivas y declaraciones Gradle mínimas para cada integración Android.
+- Aclarado que Views no incluye KTX y que Views con coroutines requiere ambos artefactos.
+- Recomendada una única versión coordinada para todos los artefactos Kodenix Android.
+
 - Documentada la fachada única Android `KodenixOtp.create(...)` para HTTP y mock configurable.
 - Documentados transporte HTTP, identidad automática de la app instalada y cancelación de conexión.
 - Precisado que OpenAPI ya declara Platform/Package-Name y aún omite Certificate-Sha256, Environment y Sdk-Version.

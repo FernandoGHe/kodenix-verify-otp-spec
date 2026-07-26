@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Kodenix Verify OTP · Kodenix Verify</title><meta name="docs-version" content="c0fbfe83c9e1" /><link rel="stylesheet" href="../assets/docs.c0fbfe83c9e1.css" /></head>
+<title>Kodenix Verify OTP · Kodenix Verify</title><meta name="docs-version" content="b61479bd400c" /><link rel="stylesheet" href="../assets/docs.b61479bd400c.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 <div class="nav-section">admin</div><a class="nav-link" href="../admin/admin-portal-spec/">Admin Portal Spec</a>
 <a class="nav-link" href="../admin/tenant-license-configuration/">Tenant License Configuration</a>
@@ -143,6 +143,7 @@ este repositorio documental.</p>
 <p>Android 0.1.0 usa una única fachada <code>KodenixOtp.create(...)</code>: configuración normal selecciona el transporte HTTP real y <code>mockEnabled</code> selecciona el mock fuera de producción. No existe un método público separado para mocks.</p>
 </blockquote>
 <p>El target puede contener teléfono, email, ambos o estar ausente. WhatsApp/SMS requieren teléfono y Email requiere correo; Views y Compose respetan el canal preferido de la sesión. La captura interna de un target ausente todavía está pendiente.</p>
+<p>Las UIs y KTX incluyen sus dependencias core transitivamente: declare solo <code>otp-ui-views</code>, <code>otp-core-ktx</code> u <code>otp-ui-compose</code> según corresponda. Views con coroutines requiere Views + KTX. Mantenga todos los artefactos en la misma versión.</p>
 <ul>
 <li><a href="docs-html/sdk/sdk-contract-common/">Common SDK Contract</a></li>
 <li><a href="docs-html/sdk/sdk-web-contract/">Web SDK Contract</a></li>
@@ -187,4 +188,4 @@ ejecutar la validación.</p>
 <h2>Seguridad documental</h2>
 <p>Los valores incluidos en este repositorio son ejemplos de especificación. No forman parte del material autorizado: secretos reales, tokens productivos, credenciales de proveedores, llaves privadas o URLs internas sensibles.</p>
 
-</article></main></div><script src="../assets/docs.c0fbfe83c9e1.js"></script></body></html>
+</article></main></div><script src="../assets/docs.b61479bd400c.js"></script></body></html>

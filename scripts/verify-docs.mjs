@@ -23,6 +23,8 @@ for (const concept of ["operationId", "sdkToken", "PRODUCTION", "transporte\\s+H
   requireText(guide, new RegExp(concept, "i"), concept);
 for (const concept of ["REQUEST_PHONE", "REQUEST_EMAIL", "CORRECT_PHONE", "CORRECT_EMAIL", "getPreferredChannel", "2468", "captura interna"])
   requireText(guide, new RegExp(concept, "i"), `targets/canales: ${concept}`);
+for (const concept of ["dependencias transitivas", "dependencia mínima", "Views y coroutines", "misma versión", "otp-core-ktx.*otp-core", "otp-ui-compose.*otp-core-ktx"])
+  requireText(guide, new RegExp(concept, "is"), `instalación: ${concept}`);
 if (/\bcreateMock\s*\(/.test(read(guide))) failures.push(`${guide}: inicializador mock separado ya no es API pública`);
 
 for (const file of ["README.md", "MANIFEST.md", guide, "sdk/sdk-android-contract.md"])
@@ -38,6 +40,15 @@ if (androidRoot) {
     if (!version || !artifact) failures.push(`${module}: no se pudo leer artifact/version`);
     else requireText(guide, new RegExp(`com\\.kodenix\\.verify:${artifact}:${version.replaceAll(".", "\\.")}`), `coordenada vigente de ${module}`);
   }
+  const dependencyGraph = {
+    "otp-core-ktx": /api\s*\(\s*project\(\s*["']:\s*otp-core["']\s*\)\s*\)/,
+    "otp-ui-views": /api\s*\(\s*project\(\s*["']:\s*otp-core["']\s*\)\s*\)/,
+    "otp-ui-compose": /api\s*\(\s*project\(\s*["']:\s*otp-core-ktx["']\s*\)\s*\)/,
+  };
+  for (const [module, pattern] of Object.entries(dependencyGraph)) {
+    if (!pattern.test(androidRead(`${module}/build.gradle.kts`))) failures.push(`${module}: cambió la dependencia transitiva documentada`);
+  }
+  if (/otp-core-ktx/.test(androidRead("otp-ui-views/build.gradle.kts"))) failures.push("otp-ui-views: ahora incluye KTX; revise la guía");
   const api = [
     "otp-core/src/main/java/com/kodenix/verify/otp/api/KodenixOtp.java",
     "otp-core/src/main/java/com/kodenix/verify/otp/api/KodenixOtpClient.java",

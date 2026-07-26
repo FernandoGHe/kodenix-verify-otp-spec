@@ -6,6 +6,12 @@ La única fachada pública es `KodenixOtp.create(context, configuration, session
 
 La sesión contiene `operationId`, `sdkToken` temporal, target opcional, canal preferido y autoSend. El integrador nunca proporciona package, fingerprint, plataforma, versión, keystore o API key privada.
 
+## Grafo de artefactos
+
+`otp-ui-views` y `otp-core-ktx` exponen transitivamente `otp-core`; `otp-ui-compose` expone `otp-core-ktx` y, a través de él, `otp-core`. Views no incluye KTX. Las dependencias mínimas recomendadas son `otp-core` para Java/callbacks headless, `otp-ui-views` para Views, `otp-core-ktx` para coroutines headless y `otp-ui-compose` para Compose. Views con coroutines declara Views + KTX.
+
+Todos los artefactos de una integración deben usar la misma versión.
+
 ## Cliente y targets
 
 `KodenixOtpClient` expone `loadConfiguration`, `updateTarget`, `send`, `resend`, `verify` y `cancel` mediante `OtpCallback`/`OtpRequest`. Callbacks llegan al hilo principal; cancelar el request desconecta HTTP y suprime el callback, mientras `client.cancel` cancela la operación.

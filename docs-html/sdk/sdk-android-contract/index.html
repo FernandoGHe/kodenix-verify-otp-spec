@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>SDK Android Contract · Kodenix Verify</title><meta name="docs-version" content="c0fbfe83c9e1" /><link rel="stylesheet" href="../../assets/docs.c0fbfe83c9e1.css" /></head>
+<title>SDK Android Contract · Kodenix Verify</title><meta name="docs-version" content="b61479bd400c" /><link rel="stylesheet" href="../../assets/docs.b61479bd400c.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 <div class="nav-section">admin</div><a class="nav-link" href="../../admin/admin-portal-spec/">Admin Portal Spec</a>
 <a class="nav-link" href="../../admin/tenant-license-configuration/">Tenant License Configuration</a>
@@ -50,6 +50,9 @@
 <h2>Inicialización única 0.1.0</h2>
 <p>La única fachada pública es <code>KodenixOtp.create(context, configuration, session)</code>. <code>KodenixOtpConfiguration.isMockEnabled()</code> selecciona el cliente mock o HTTP; no existe un inicializador público separado para mocks. Mock con <code>PRODUCTION</code> se rechaza al construir la configuración.</p>
 <p>La sesión contiene <code>operationId</code>, <code>sdkToken</code> temporal, target opcional, canal preferido y autoSend. El integrador nunca proporciona package, fingerprint, plataforma, versión, keystore o API key privada.</p>
+<h2>Grafo de artefactos</h2>
+<p><code>otp-ui-views</code> y <code>otp-core-ktx</code> exponen transitivamente <code>otp-core</code>; <code>otp-ui-compose</code> expone <code>otp-core-ktx</code> y, a través de él, <code>otp-core</code>. Views no incluye KTX. Las dependencias mínimas recomendadas son <code>otp-core</code> para Java/callbacks headless, <code>otp-ui-views</code> para Views, <code>otp-core-ktx</code> para coroutines headless y <code>otp-ui-compose</code> para Compose. Views con coroutines declara Views + KTX.</p>
+<p>Todos los artefactos de una integración deben usar la misma versión.</p>
 <h2>Cliente y targets</h2>
 <p><code>KodenixOtpClient</code> expone <code>loadConfiguration</code>, <code>updateTarget</code>, <code>send</code>, <code>resend</code>, <code>verify</code> y <code>cancel</code> mediante <code>OtpCallback</code>/<code>OtpRequest</code>. Callbacks llegan al hilo principal; cancelar el request desconecta HTTP y suprime el callback, mientras <code>client.cancel</code> cancela la operación.</p>
 <p>WhatsApp/SMS requieren teléfono; Email requiere correo. El SDK no inventa targets. Views y Compose respetan <code>getPreferredChannel()</code> y solo muestran targets enmascarados. La captura interna de target ausente continúa pendiente.</p>
@@ -59,4 +62,4 @@
 <p>El OpenAPI público solo declara actualmente Platform y Package-Name; faltan Certificate-Sha256, Environment y Sdk-Version. Requiere actualización contractual explícita.</p>
 <p>Consulte la <a href="../docs/android/getting-started.md">guía Android</a>.</p>
 
-</article></main></div><script src="../../assets/docs.c0fbfe83c9e1.js"></script></body></html>
+</article></main></div><script src="../../assets/docs.b61479bd400c.js"></script></body></html>

@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Android: inicialización, mocks e identidad de licencia · Kodenix Verify</title><meta name="docs-version" content="c0fbfe83c9e1" /><link rel="stylesheet" href="../../../assets/docs.c0fbfe83c9e1.css" /></head>
+<title>Android: inicialización, mocks e identidad de licencia · Kodenix Verify</title><meta name="docs-version" content="b61479bd400c" /><link rel="stylesheet" href="../../../assets/docs.b61479bd400c.css" /></head>
 <body><div class="layout"><aside class="sidebar"><a class="brand" href="../../../../"><span class="mark"></span><span><strong>Kodenix Verify</strong><span>OTP Documentation</span></span></a><div class="nav-list">
 <div class="nav-section">admin</div><a class="nav-link" href="../../../admin/admin-portal-spec/">Admin Portal Spec</a>
 <a class="nav-link" href="../../../admin/tenant-license-configuration/">Tenant License Configuration</a>
@@ -84,6 +84,119 @@
 </tr>
 </tbody></table>
 <p>Requiere Android API 24+, AndroidX y Java 8+. Kotlin es opcional salvo para KTX/Compose; Compose requiere Jetpack Compose.</p>
+<h2>Instalación y dependencias transitivas</h2>
+<pre><code class="language-text">otp-ui-views ──▶ otp-core
+otp-core-ktx ──▶ otp-core
+otp-ui-compose ──▶ otp-core-ktx ──▶ otp-core
+</code></pre>
+<p>Las relaciones son transitivas; el integrador debe declarar la dependencia mínima de su tipo de integración.</p>
+<h3>Java headless</h3>
+<pre><code class="language-kotlin">dependencies {
+    implementation(&quot;com.kodenix.verify:otp-core:0.1.0&quot;)
+}
+</code></pre>
+<h3>Java o Kotlin con Views y callbacks</h3>
+<pre><code class="language-kotlin">dependencies {
+    implementation(&quot;com.kodenix.verify:otp-ui-views:0.1.0&quot;)
+}
+</code></pre>
+<p><code>otp-ui-views</code> ya aporta transitivamente toda la API core, modelos, resultados, errores, <code>KodenixOtpActivity</code>, <code>KodenixOtpResult</code>, <code>OtpView</code>, layouts y recursos XML. No incluye <code>otp-core-ktx</code>, para no imponer coroutines en aplicaciones Java legacy.</p>
+<h3>Kotlin headless</h3>
+<p>Para callbacks Java puede declararse solo <code>otp-core</code>. Para funciones <code>suspend</code>, la instalación mínima es:</p>
+<pre><code class="language-kotlin">dependencies {
+    implementation(&quot;com.kodenix.verify:otp-core-ktx:0.1.0&quot;)
+}
+</code></pre>
+<p><code>otp-core-ktx</code> ya incluye <code>otp-core</code>; no declare ambos salvo que una política interna exija dependencias directas explícitas.</p>
+<h3>Kotlin con Views y coroutines</h3>
+<pre><code class="language-kotlin">dependencies {
+    implementation(&quot;com.kodenix.verify:otp-ui-views:0.1.0&quot;)
+    implementation(&quot;com.kodenix.verify:otp-core-ktx:0.1.0&quot;)
+}
+</code></pre>
+<p>Views aporta Activity/XML/widgets y KTX aporta coroutines. Ambos comparten <code>otp-core</code>, que Gradle resuelve una sola vez.</p>
+<h3>Kotlin con Compose</h3>
+<pre><code class="language-kotlin">dependencies {
+    implementation(&quot;com.kodenix.verify:otp-ui-compose:0.1.0&quot;)
+}
+</code></pre>
+<p><code>otp-ui-compose</code> incluye transitivamente <code>otp-core-ktx</code> y <code>otp-core</code>. Solo añádalos directamente si lo exige la política de dependencias del proyecto.</p>
+<table>
+<thead>
+<tr>
+<th>Integración</th>
+<th>Dependencia mínima</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Java headless</td>
+<td><code>otp-core</code></td>
+</tr>
+<tr>
+<td>Java con Views</td>
+<td><code>otp-ui-views</code></td>
+</tr>
+<tr>
+<td>Kotlin headless con callbacks</td>
+<td><code>otp-core</code></td>
+</tr>
+<tr>
+<td>Kotlin headless con coroutines</td>
+<td><code>otp-core-ktx</code></td>
+</tr>
+<tr>
+<td>Kotlin con Views y callbacks</td>
+<td><code>otp-ui-views</code></td>
+</tr>
+<tr>
+<td>Kotlin con Views y coroutines</td>
+<td><code>otp-ui-views</code> + <code>otp-core-ktx</code></td>
+</tr>
+<tr>
+<td>Kotlin con Compose</td>
+<td><code>otp-ui-compose</code></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Artefacto</th>
+<th>Incluye transitivamente</th>
+<th align="right">Java</th>
+<th align="right">Kotlin</th>
+<th align="right">Compose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>otp-core</code></td>
+<td>Ninguno</td>
+<td align="right">Sí</td>
+<td align="right">Sí, callbacks</td>
+<td align="right">No</td>
+</tr>
+<tr>
+<td><code>otp-core-ktx</code></td>
+<td><code>otp-core</code></td>
+<td align="right">No requerido</td>
+<td align="right">Sí, coroutines</td>
+<td align="right">No</td>
+</tr>
+<tr>
+<td><code>otp-ui-views</code></td>
+<td><code>otp-core</code></td>
+<td align="right">Sí</td>
+<td align="right">Sí</td>
+<td align="right">No</td>
+</tr>
+<tr>
+<td><code>otp-ui-compose</code></td>
+<td><code>otp-core-ktx</code> → <code>otp-core</code></td>
+<td align="right">No</td>
+<td align="right">Sí</td>
+<td align="right">Sí</td>
+</tr>
+</tbody></table>
+<p>Mantenga todos los artefactos Kodenix en la misma versión (<code>0.1.0</code>); no mezcle versiones.</p>
 <h2>Sesión del integrador</h2>
 <p>El backend integrador entrega únicamente <code>operationId</code>, <code>sdkToken</code> temporal, target opcional, <code>preferredChannel</code> y <code>autoSend</code>.</p>
 <pre><code class="language-java">OtpSession session = new OtpSession(
@@ -256,4 +369,4 @@ X-Kodenix-Sdk-Version: {sdkVersion}
 <li><a href="../12-error-catalog.md">Catálogo de errores</a></li>
 </ul>
 
-</article></main></div><script src="../../../assets/docs.c0fbfe83c9e1.js"></script></body></html>
+</article></main></div><script src="../../../assets/docs.b61479bd400c.js"></script></body></html>

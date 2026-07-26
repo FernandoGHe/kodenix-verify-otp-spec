@@ -99,6 +99,8 @@ este repositorio documental.
 
 El target puede contener teléfono, email, ambos o estar ausente. WhatsApp/SMS requieren teléfono y Email requiere correo; Views y Compose respetan el canal preferido de la sesión. La captura interna de un target ausente todavía está pendiente.
 
+Las UIs y KTX incluyen sus dependencias core transitivamente: declare solo `otp-ui-views`, `otp-core-ktx` u `otp-ui-compose` según corresponda. Views con coroutines requiere Views + KTX. Mantenga todos los artefactos en la misma versión.
+
 - [Common SDK Contract](docs-html/sdk/sdk-contract-common/)
 - [Web SDK Contract](docs-html/sdk/sdk-web-contract/)
 - [Android SDK Contract](docs-html/sdk/sdk-android-contract/)

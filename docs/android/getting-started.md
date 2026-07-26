@@ -13,6 +13,86 @@ Guía pública de **Kodenix Verify OTP Android 0.1.0**. El SDK expone una única
 
 Requiere Android API 24+, AndroidX y Java 8+. Kotlin es opcional salvo para KTX/Compose; Compose requiere Jetpack Compose.
 
+## Instalación y dependencias transitivas
+
+```text
+otp-ui-views ──▶ otp-core
+otp-core-ktx ──▶ otp-core
+otp-ui-compose ──▶ otp-core-ktx ──▶ otp-core
+```
+
+Las relaciones son transitivas; el integrador debe declarar la dependencia mínima de su tipo de integración.
+
+### Java headless
+
+```kotlin
+dependencies {
+    implementation("com.kodenix.verify:otp-core:0.1.0")
+}
+```
+
+### Java o Kotlin con Views y callbacks
+
+```kotlin
+dependencies {
+    implementation("com.kodenix.verify:otp-ui-views:0.1.0")
+}
+```
+
+`otp-ui-views` ya aporta transitivamente toda la API core, modelos, resultados, errores, `KodenixOtpActivity`, `KodenixOtpResult`, `OtpView`, layouts y recursos XML. No incluye `otp-core-ktx`, para no imponer coroutines en aplicaciones Java legacy.
+
+### Kotlin headless
+
+Para callbacks Java puede declararse solo `otp-core`. Para funciones `suspend`, la instalación mínima es:
+
+```kotlin
+dependencies {
+    implementation("com.kodenix.verify:otp-core-ktx:0.1.0")
+}
+```
+
+`otp-core-ktx` ya incluye `otp-core`; no declare ambos salvo que una política interna exija dependencias directas explícitas.
+
+### Kotlin con Views y coroutines
+
+```kotlin
+dependencies {
+    implementation("com.kodenix.verify:otp-ui-views:0.1.0")
+    implementation("com.kodenix.verify:otp-core-ktx:0.1.0")
+}
+```
+
+Views aporta Activity/XML/widgets y KTX aporta coroutines. Ambos comparten `otp-core`, que Gradle resuelve una sola vez.
+
+### Kotlin con Compose
+
+```kotlin
+dependencies {
+    implementation("com.kodenix.verify:otp-ui-compose:0.1.0")
+}
+```
+
+`otp-ui-compose` incluye transitivamente `otp-core-ktx` y `otp-core`. Solo añádalos directamente si lo exige la política de dependencias del proyecto.
+
+| Integración | Dependencia mínima |
+|---|---|
+| Java headless | `otp-core` |
+| Java con Views | `otp-ui-views` |
+| Kotlin headless con callbacks | `otp-core` |
+| Kotlin headless con coroutines | `otp-core-ktx` |
+| Kotlin con Views y callbacks | `otp-ui-views` |
+| Kotlin con Views y coroutines | `otp-ui-views` + `otp-core-ktx` |
+| Kotlin con Compose | `otp-ui-compose` |
+
+| Artefacto | Incluye transitivamente | Java | Kotlin | Compose |
+|---|---|---:|---:|---:|
+| `otp-core` | Ninguno | Sí | Sí, callbacks | No |
+| `otp-core-ktx` | `otp-core` | No requerido | Sí, coroutines | No |
+| `otp-ui-views` | `otp-core` | Sí | Sí | No |
+| `otp-ui-compose` | `otp-core-ktx` → `otp-core` | No | Sí | Sí |
+
+Mantenga todos los artefactos Kodenix en la misma versión (`0.1.0`); no mezcle versiones.
+
 ## Sesión del integrador
 
 El backend integrador entrega únicamente `operationId`, `sdkToken` temporal, target opcional, `preferredChannel` y `autoSend`.
