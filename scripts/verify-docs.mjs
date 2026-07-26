@@ -25,10 +25,16 @@ for (const concept of ["REQUEST_PHONE", "REQUEST_EMAIL", "CORRECT_PHONE", "CORRE
   requireText(guide, new RegExp(concept, "i"), `targets/canales: ${concept}`);
 for (const concept of ["dependencias transitivas", "dependencia mínima", "Views y coroutines", "misma versión", "otp-core-ktx.*otp-core", "otp-ui-compose.*otp-core-ktx"])
   requireText(guide, new RegExp(concept, "is"), `instalación: ${concept}`);
+for (const concept of ["argumentos posicionales", "ActivityResultContracts", "startActivityForResult", "123456", "2468", "Java legacy", "Views/XML"])
+  requireText(guide, new RegExp(concept, "i"), `integración Android: ${concept}`);
 if (/\bcreateMock\s*\(/.test(read(guide))) failures.push(`${guide}: inicializador mock separado ya no es API pública`);
 
 for (const file of ["README.md", "MANIFEST.md", guide, "sdk/sdk-android-contract.md"])
   if (/https:\/\/github\.com\/[^\s)"']*android/i.test(read(file))) failures.push(`${file}: enlaza al repositorio Android privado`);
+
+for (const file of walk(root).filter(item => item.endsWith(".md") && !item.includes(`${path.sep}node_modules${path.sep}`))) {
+  if (/[ÃÂ]|â(?:€|™|œ|ž|–|—)/.test(fs.readFileSync(file, "utf8"))) failures.push(`${path.relative(root, file)}: contiene posible mojibake; guardar/corregir como UTF-8`);
+}
 
 const androidRoot = process.env.KODENIX_ANDROID_SDK_PATH;
 if (androidRoot) {

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Reorganizada la guía Android como integración headless, Views/XML y Compose.
+- Añadidos ejemplos completos de Activity Result API y compatibilidad Java legacy.
+- Aclarados constructores Java posicionales desde Kotlin y los códigos mock reales de las demos.
+- Añadida validación de mojibake en las fuentes Markdown públicas.
+
 - Documentadas dependencias transitivas y declaraciones Gradle mínimas para cada integración Android.
 - Aclarado que Views no incluye KTX y que Views con coroutines requiere ambos artefactos.
 - Recomendada una única versión coordinada para todos los artefactos Kodenix Android.
